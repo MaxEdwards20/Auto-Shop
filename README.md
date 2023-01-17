@@ -47,8 +47,8 @@
 
 
 ### Group Members Information
-cmiller14 chase.miller1428@gmail.com
-jvhansen08 jvhansen08@gmail.com
-satchelF satchcollege@gmail.com
-maxedwards20 maxedwards20@gmail.com
+* cmiller14 chase.miller1428@gmail.com
+* jvhansen08 jvhansen08@gmail.com
+* satchelF satchcollege@gmail.com
+* maxedwards20 maxedwards20@gmail.com
 
