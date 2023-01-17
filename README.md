@@ -38,12 +38,14 @@
 * Late fee is double 
 
 
-### Git Commands
+### Helpful Git Commands
 * Create a new branch: `git checkout -b [NAME]`
 * Merge back into main:
     * commit current branch
-    * `git checkout main`
+    * `git checkout main (or dev)`
     * `git merge [branchName]`
+* View Current Branches:
+    * `git branch -l`
 
 
 ### Group Members Information
