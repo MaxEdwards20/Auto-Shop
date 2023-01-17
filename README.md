@@ -40,6 +40,8 @@
 
 ### Helpful Git Commands
 * Create a new branch: `git checkout -b [NAME]`
+* Recommeneded to `git pull` every day before you start working, 
+this updates any changes that have been merged
 * Merge back into main:
     * commit current branch
     * `git checkout main (or dev)`
