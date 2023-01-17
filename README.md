@@ -43,7 +43,7 @@
 * Merge back into main:
     * commit current branch
     * `git checkout main`
-    * `git merge -b [branchName]`
+    * `git merge [branchName]`
 
 
 ### Group Members Information
