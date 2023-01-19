@@ -13,7 +13,7 @@
 ## System Testing Instructions
 
 ## Use Case Diagrams
-* See Use Case Diagrams [here](./deliverables/use_cases/)
+* See Use Case Diagrams [here](./deliverables/use_cases)
 
 ## Requirements
 * See requirements [here](./deliverables/requirements.md)
