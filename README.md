@@ -2,7 +2,7 @@
 
 ## Organization and Name Scheme
 
-- High-level design and planning can be found in the [deliverables](./docs/) directory. Inside this directory can be found:
+- High-level design and planning can be found in the [docs](./docs/) directory. Inside this directory can be found:
   - [Project requirements](./docs/requirements.md) for the project
   - [Use case diagrams](./docs/use_cases/) to illustrate product usage
 - The actual code will be stored in this repo
