@@ -1,10 +1,10 @@
- Auto-Shop Team 2
+# Auto-Shop Team 2
 
 ## Organization and Name Scheme
 
-- High-level design and planning can be found in the [deliverables](./deliverables/) directory. Inside this directory can be found:
-  - [Project requirements](./deliverables/requirements.md) for the project
-  - [Use case diagrams](./deliverables/use_cases/) to illustrate product usage
+- High-level design and planning can be found in the [deliverables](./docs/) directory. Inside this directory can be found:
+  - [Project requirements](./docs/requirements.md) for the project
+  - [Use case diagrams](./docs/use_cases/) to illustrate product usage
 - The actual code will be stored in this repo
 - Each Git Branch will be named after the task on the Jira story board
 - Commit messages directly describe the changes made
