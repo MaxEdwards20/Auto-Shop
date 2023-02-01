@@ -5,7 +5,10 @@ interface Error {
   message: string;
 }
 export default function ErrorPage() {
-  const error = useRouteError();
+  let error: Error = {
+    statusText: "500 Error",
+    message: "Please refresh while we try again",
+  };
   console.error(error);
 
   return (
