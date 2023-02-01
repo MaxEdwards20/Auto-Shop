@@ -15,11 +15,11 @@ function NavBar() {
             <Nav.Link href="/reservation">Make a Reservation</Nav.Link>
             <NavDropdown title="Account" id="basic-nav-dropdown">
               <NavDropdown.Item href="/reservation">
-                View Reservations
+                Reservations
               </NavDropdown.Item>
-              <NavDropdown.Item href="/account">View Funds</NavDropdown.Item>
+              <NavDropdown.Item href="/account">Account Info</NavDropdown.Item>
               <NavDropdown.Item href="/account/vehicles">
-                View Reserved Vehicles
+                Reserved Vehicles
               </NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item href="/account/login">Log In</NavDropdown.Item>
