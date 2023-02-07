@@ -7,9 +7,9 @@ import LoginPage from "./pages/log-in-page";
 import VehiclePage from "./pages/vehicle-page";
 import React, { useState } from "react";
 import { AuthContext } from "./context/AuthContext";
+
 function Router() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-
   return (
     // See tutorial at https://www.youtube.com/watch?v=Ul3y1LXxzdU
     <Routes>
@@ -25,5 +25,4 @@ function Router() {
     </Routes>
   );
 }
-
 export default Router;
