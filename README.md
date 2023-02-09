@@ -8,6 +8,7 @@
 - The actual code will be stored in this repo
 - Each Git Branch will be named after the task on the Jira story board
 - Commit messages directly describe the changes made
+- Jira board is accessible here
 
 ## Version-control Procedures
 
@@ -23,11 +24,13 @@
 ## Tool Stack and Setup
 
 - Tool Stack
+
   - We will be using GitHub for version control, Django for backend, and a yet to be determined technology for the frontend (React, Vue, Angular, or Python templates are among options)
   - Project management
 
-    - Use Jira Project Board to create, track, and complete tasks
+    - Use Jira Project Board to create, track, and complete tasks. Link [here](https://dastardlydansrentacar.atlassian.net/jira/software/projects/DDRAC/boards/1/backlog)
     - Utilize built-in Jira features to generate burndown chart and other useful analytics
+
 - Setup
   - Utilize the following git commands and best practices
     - Create a new branch: git checkout -b [NAME]
@@ -71,7 +74,6 @@
 - Go through as auto retrieval specialist and pick up the vehicle
 
 ##
-
 
 ## Group Member Contact Information
 
