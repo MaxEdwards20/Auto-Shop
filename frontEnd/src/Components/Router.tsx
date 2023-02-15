@@ -8,10 +8,10 @@ import VehiclePage from "../pages/vehicle-page";
 import React, { useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 
-function Router() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+function Router(props: any) {
   return (
     // See tutorial at https://www.youtube.com/watch?v=Ul3y1LXxzdU
+
     <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/reservation" element={<ReservationPage />} />
@@ -19,7 +19,7 @@ function Router() {
       <Route path="/account">
         <Route index element={<AccountInfoPage />} />
         <Route path="vehicles" element={<VehiclePage />} />
-        <Route path="login" element={<LoginPage />} />
+        <Route path="login" element={<LoginPage props={props} />} />
       </Route>
       <Route path="/vehicles/new"></Route>
       <Route path="*" element={<ErrorPage />}></Route>

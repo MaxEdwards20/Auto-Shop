@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { Form, FormControl, Button } from "react-bootstrap";
 import { AuthContext } from "../context/AuthContext";
 
-function LoginPage() {
+function LoginPage(props: any) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { isAuthenticated, setIsAuthenticated } = useContext(AuthContext);
