@@ -2,8 +2,9 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
+import NavBarDropdown from "./NavBarDropdown";
 
-function NavBar() {
+function NavBar(props: any) {
   return (
     <Navbar bg="light" expand="lg">
       <Container>
@@ -12,18 +13,9 @@ function NavBar() {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <Nav.Link href="/">Home</Nav.Link>
+            <Nav.Link href="/vehicles">View Our Vehicles </Nav.Link>
             <Nav.Link href="/reservation">Make a Reservation</Nav.Link>
-            <NavDropdown title="Account" id="basic-nav-dropdown">
-              <NavDropdown.Item href="/reservation">
-                Reservations
-              </NavDropdown.Item>
-              <NavDropdown.Item href="/account">Account Info</NavDropdown.Item>
-              <NavDropdown.Item href="/account/vehicles">
-                Reserved Vehicles
-              </NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item href="/account/login">Log In</NavDropdown.Item>
-            </NavDropdown>
+            <NavBarDropdown props={props}></NavBarDropdown>
           </Nav>
         </Navbar.Collapse>
       </Container>
