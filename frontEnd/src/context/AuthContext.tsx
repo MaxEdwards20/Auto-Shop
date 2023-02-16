@@ -1,11 +1,44 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useState, ReactNode } from "react";
+import { UserType } from "../types/userTypes";
 
-interface AuthContextProps {
+type AuthContextType = {
   isAuthenticated: boolean;
-  setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>; // used to trigger a state change when users are logged in
-}
+  userType: UserType | null;
+  login: (userType: UserType) => void;
+  logout: () => void;
+};
 
-export const AuthContext = createContext<AuthContextProps>({
+type AuthProviderProps = {
+  children: ReactNode;
+};
+
+export const AuthContext = createContext<AuthContextType>({
   isAuthenticated: false,
-  setIsAuthenticated: () => {},
+  userType: null,
+  login: () => {},
+  logout: () => {},
 });
+
+export const AuthProvider = ({ children }: AuthProviderProps) => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userType, setUserType] = useState<UserType | null>(null);
+
+  const login = (userType: UserType) => {
+    setIsAuthenticated(true);
+    setUserType(userType);
+  };
+
+  const logout = () => {
+    setIsAuthenticated(false);
+    setUserType(null);
+  };
+
+  const values: AuthContextType = {
+    isAuthenticated,
+    userType,
+    login,
+    logout,
+  };
+
+  return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
+};

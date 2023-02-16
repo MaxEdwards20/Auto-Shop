@@ -1,7 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import Router from "./Router";
-import NavBar from "./components/Navbar";
+import Router from "./Components/Router";
+import NavBar from "./Components/Navbar";
+import App from "./App";
 import "./index.css";
 import "react-bootstrap";
 import { BrowserRouter } from "react-router-dom";
@@ -11,9 +12,6 @@ import "bootstrap/dist/css/bootstrap.css";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <BrowserRouter>
-      <NavBar />
-      <Router></Router>
-    </BrowserRouter>
+    <App></App>
   </React.StrictMode>
 );
