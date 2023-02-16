@@ -14,4 +14,6 @@ urlpatterns = [
     # http://${location.host}/autoshop/getUserInfo?username=${username}
     path('getVehicleInfo', views.getVehicleInfoApi, name='getVehicleInfoApi'),
     # http://${location.host}/autoshop/getVehicleInfo?vim=${vim}
+    path('user/create', views.createUser, name='createUser')
+    # http://${location.host}/autoshop/user/create?name=${name}
 ]
