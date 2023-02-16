@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from .models import User, Vehicle
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
+from django.contrib.auth import authenticate
 
 
 def index(request):
@@ -77,7 +78,6 @@ def getUserInfoDatabase(username):
     userModel = get_object_or_404(User.objects.filter(username=username))
     response = {'username': userModel.username,
                 'name': userModel.name,
-                'password': userModel.password,
                 'birthDate': userModel.birthDate,
                 'balance': userModel.balance,
                 'accessLevel': userModel.accessLevel,
@@ -88,4 +88,12 @@ def getUserInfoDatabase(username):
                 'location': userModel.location,
                 }
     return response
+
+def authenticateUser(username, password):
+    user = authenticate(username, password)
+    if user is not None:
+        return True
+    else:
+        return False
+
 
