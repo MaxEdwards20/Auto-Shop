@@ -4,6 +4,7 @@ from .models import User, Vehicle
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth import authenticate
+from django.views.decorators.csrf import csrf_exempt
 
 
 def getUserInfoApi(request):
@@ -99,7 +100,7 @@ def authenticateUser(username, password):
     else:
         return False
 
-
+@csrf_exempt
 def createUser(request):
     response = {}
     response = checkValidCreateUser(request, response)
@@ -107,6 +108,11 @@ def createUser(request):
         createUserDatabase(request)
         response['userCreated'] = True
     j = JsonResponse(response)
+    if 'Origin' in request.headers:
+        j['Access-Control-Allow-Origin'] = request.headers['Origin']
+    else:
+        j['Access-Control-Allow-Origin'] = '*'
+    return j
 
 def checkValidCreateUser(request, response):
     if request.method == 'POST':
@@ -120,6 +126,12 @@ def checkValidCreateUser(request, response):
             response['error'] = 'Please enter your email.'
     if request.method == 'GET':
         response['error'] = 'You must use a post request when creating a user.'
+    #check to see if the email already exists.
+    if 'email' in request.POST:
+        email = request.POST['email']
+        user = User.objects.filter(email=email)
+        if user:
+            response['error'] = 'This user already exists.'
     return response
 
 def createUserDatabase(request):
@@ -127,7 +139,8 @@ def createUserDatabase(request):
     newUser.user.email = request.POST['email']
     newUser.user.username = request.POST['email']
     newUser.user.password = request.POST['password']
-    newUser.user.user_permissions = 'user'
+    newUser.email = request.POST['email']
+    newUser.permission = 'user'
     newUser.name = request.POST['name']
     newUser.location = 'unknown'
     newUser.balance = 0

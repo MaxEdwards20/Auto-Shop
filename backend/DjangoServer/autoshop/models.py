@@ -24,13 +24,15 @@ class Vehicle(models.Model):
 
 
 class User(models.Model):
-    user = Person() # email, phone, username, password, permissions are all accessed through this object.
+    user = Person()  # email, phone, username, password, permissions are all accessed through this object.
     name = models.CharField(max_length=200)
+    permission = models.CharField(max_length=20)
     # automatically assigns an id to each instance
     balance = models.FloatField()
     needHelp = models.BooleanField()
     ethicsViolation = models.TextField()
     location = models.CharField(max_length=20)
+    email = models.CharField(max_length=20)
 
     def __str__(self):
-        return self.username
+        return self.name
