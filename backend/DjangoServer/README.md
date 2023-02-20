@@ -1,4 +1,4 @@
- In order to run the Django Prototype, 
+In order to run the Django Prototype, 
 change into the outer autoshop  directory, if you haven’t already, 
 and run the following commands:
 
