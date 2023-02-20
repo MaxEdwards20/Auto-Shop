@@ -6,8 +6,7 @@ import { AuthContext } from "../context/AuthContext";
 import { useContext } from "react";
 
 function NavBar() {
-  const { userType, login } = useContext(AuthContext);
-  login("employee"); // for testing the different views
+  const { userType } = useContext(AuthContext);
   if (userType == "admin") {
     return (
       <Navbar bg="light" expand="lg">

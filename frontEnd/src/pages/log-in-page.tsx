@@ -1,23 +1,41 @@
 import React, { useContext, useState } from "react";
 import { Form, FormControl, Button } from "react-bootstrap";
 import { AuthContext } from "../context/AuthContext";
+import { UserType } from "../types/userTypes";
+import { loginUser } from "../urls";
+import { useNavigate } from "react-router-dom";
+import { loginUserBody } from "../dto/loginuser";
 
 function LoginPage(props: any) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { isAuthenticated, setIsAuthenticated } = useContext(AuthContext);
+  const { isAuthenticated, login } = useContext(AuthContext);
+  const [signInFailed, setSignInFailed] = useState(false);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    let url = `https://BACKEND_URL_HERE?username=${username}&pass=${password}`;
+    let url = loginUser;
     async () => {
-      let res = await fetch(url);
-      let json = await res.json();
-      if (json.result == 200) {
-        setIsAuthenticated(true);
+      const data = { username, password };
+      let res = await fetch(url, {
+        method: "POST",
+        body: JSON.stringify(data),
+      });
+      let json: loginUserBody = await res.json();
+      if (res.status == 200) {
+        // return 200 if logged in, return 401 if unauthorized
+        const userType: UserType = json.userType;
+        login(userType);
+        // Redirect to home page after signing in
+        const navigate = useNavigate();
+        navigate("/");
+      } else {
+        setSignInFailed(true);
+        setPassword("");
       }
     };
   };
+
   return (
     <div>
       <Form onSubmit={handleSubmit}>
@@ -45,7 +63,17 @@ function LoginPage(props: any) {
         {isAuthenticated ? (
           <div>Welcome!</div>
         ) : (
-          <p> Please log in to proceed </p>
+          <p className="m-2"> Please log in to proceed </p>
+        )}
+      </div>
+      <div>
+        {signInFailed ? (
+          <div className="m-2">
+            {" "}
+            Error, wrong email and password. Please try again.{" "}
+          </div>
+        ) : (
+          <p></p>
         )}
       </div>
     </div>
