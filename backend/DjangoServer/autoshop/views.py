@@ -5,6 +5,8 @@ from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth import authenticate
 from django.views.decorators.csrf import csrf_exempt
+import json
+from django.contrib.auth.models import User as Person
 
 
 def getUserInfoApi(request):
@@ -77,15 +79,12 @@ def getVehicleInfoDatabase(vim):
     return response
 
 
-def getUserInfoDatabase(username):
-    userModel = get_object_or_404(User.objects.filter(username=username))
-    response = {'username': userModel.username,
-                'name': userModel.name,
-                'birthDate': userModel.birthDate,
+def getUserInfoDatabase(email):
+    userModel = get_object_or_404(User.objects.filter(email=email))
+    response = {'name': userModel.name,
                 'balance': userModel.balance,
-                'accessLevel': userModel.accessLevel,
+                'permission': userModel.permission,
                 'email': userModel.email,
-                'phone': userModel.phone,
                 'needHelp': userModel.needHelp,
                 'ethicsViolation': userModel.ethicsViolation,
                 'location': userModel.location,
@@ -93,12 +92,38 @@ def getUserInfoDatabase(username):
     return response
 
 
-def authenticateUser(username, password):
-    user = authenticate(username, password)
-    if user is not None:
-        return True
+@csrf_exempt
+def authenticateUser(request):
+    response = {}
+    response = checkValidAuthenticate(request, response)
+    if 'error' not in response:
+        email = request.POST['email']
+        password = request.POST['password']
+        user = authenticate(request, username=email, password=password)
+        if user is not None:
+            userInfo = getUserInfoDatabase(email)
+            response = {'authenticated': True,
+                        'userInfo': userInfo}
+        else:
+            response = {'authenticated': False}
+    j = JsonResponse(response)
+    if 'Origin' in request.headers:
+        j['Access-Control-Allow-Origin'] = request.headers['Origin']
     else:
-        return False
+        j['Access-Control-Allow-Origin'] = '*'
+    return j
+
+
+def checkValidAuthenticate(request, response):
+    if request.method == 'POST':
+        if 'password' not in request.POST:
+            response['error'] = 'You must enter a valid password.'
+        if 'email' not in request.POST:
+            response['error'] = 'Please enter your email.'
+    if request.method == 'GET':
+        response['error'] = 'You must use a post request when authenticating a user.'
+    return response
+
 
 @csrf_exempt
 def createUser(request):
@@ -114,6 +139,7 @@ def createUser(request):
         j['Access-Control-Allow-Origin'] = '*'
     return j
 
+
 def checkValidCreateUser(request, response):
     if request.method == 'POST':
         if 'password' not in request.POST:
@@ -126,7 +152,7 @@ def checkValidCreateUser(request, response):
             response['error'] = 'Please enter your email.'
     if request.method == 'GET':
         response['error'] = 'You must use a post request when creating a user.'
-    #check to see if the email already exists.
+    # check to see if the email already exists.
     if 'email' in request.POST:
         email = request.POST['email']
         user = User.objects.filter(email=email)
@@ -134,11 +160,14 @@ def checkValidCreateUser(request, response):
             response['error'] = 'This user already exists.'
     return response
 
+
 def createUserDatabase(request):
     newUser = User()
-    newUser.user.email = request.POST['email']
-    newUser.user.username = request.POST['email']
-    newUser.user.password = request.POST['password']
+    newUserAuth = Person.objects.create_user(first_name=request.POST['name'],
+                                             username=request.POST['email'],
+                                             password=request.POST['password'],
+                                             )
+    newUserAuth.save()
     newUser.email = request.POST['email']
     newUser.permission = 'user'
     newUser.name = request.POST['name']
@@ -147,6 +176,3 @@ def createUserDatabase(request):
     newUser.needHelp = False
     newUser.ethicsViolation = 'None'
     newUser.save()
-
-
-
