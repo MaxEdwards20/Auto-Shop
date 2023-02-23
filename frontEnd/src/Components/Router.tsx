@@ -19,6 +19,7 @@ function Router() {
         <Route index element={<AccountInfoPage />} />
         <Route path="vehicles" element={<VehiclePage />} />
         <Route path="login" element={<LoginPage />} />
+        <Route path="create" element={<CreateAccount />} />
       </Route>
       <Route path="/vehicles/new"></Route>
       <Route path="*" element={<ErrorPage />}></Route>
