@@ -4,19 +4,21 @@ from django.db import models
 from django.db import models
 from django.contrib.auth.models import User as Person
 
+
 class Vehicle(models.Model):
     name = models.CharField(max_length=200)
     vim = models.IntegerField()
     location = models.CharField(max_length=200)
     isPurchased = models.BooleanField()
     isPending = models.BooleanField()
-    reservedDays = models.JSONField()
+    reservedDays = models.JSONField(null=True)
     vehicleType = models.CharField(max_length=20)
     isInsured = models.BooleanField()
     isLoadJacked = models.BooleanField()
-    dateCheckedOut = models.DateTimeField()
-    dateCheckedIn = models.DateTimeField()
+    dateCheckedOut = models.DateTimeField(null=True)
+    dateCheckedIn = models.DateTimeField(null=True)
     image = models.TextField()  # string to the url of the image
+
     # automatically assigns an id to each instance
 
     def __str__(self):
@@ -24,7 +26,7 @@ class Vehicle(models.Model):
 
 
 class User(models.Model):
-    user = Person()  # email, phone, username, password, permissions are all accessed through this object.
+    # email, phone, username, password, permissions are all accessed through this object.
     name = models.CharField(max_length=200)
     permission = models.CharField(max_length=20)
     # automatically assigns an id to each instance
