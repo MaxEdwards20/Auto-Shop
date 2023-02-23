@@ -7,7 +7,7 @@ interface User {
   status: "employee" | "user" | "manager";
 }
 
-const ManagerUpdateUser: React.FC = () => {
+export default function AdminUpdateUser() {
   const [users, setUsers] = useState<User[]>([]);
 
   const collectUsers = () => {
@@ -22,7 +22,7 @@ const ManagerUpdateUser: React.FC = () => {
   }, []);
 
   const handleStatusChange = (id: string, newStatus: User["status"]) => {
-    fetch(`/api/users/${id}`, {
+    fetch(`${updateUser}/${id}`, {
       method: "PUT",
       body: JSON.stringify({ status: newStatus }),
       headers: {
@@ -61,6 +61,4 @@ const ManagerUpdateUser: React.FC = () => {
       </ul>
     </div>
   );
-};
-
-export default ManagerUpdateUser;
+}

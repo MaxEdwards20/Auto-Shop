@@ -7,6 +7,9 @@ import { useContext } from "react";
 
 function NavBar() {
   const { userType } = useContext(AuthContext);
+  // Use these to test the application
+  const { login } = useContext(AuthContext);
+  login("admin");
   if (userType == "admin") {
     return (
       <Navbar bg="light" expand="lg">
@@ -19,6 +22,7 @@ function NavBar() {
               <Nav.Link href="/vehicles">View Our Vehicles </Nav.Link>
               <Nav.Link href="/reservation">Make a Reservation</Nav.Link>
               <Nav.Link href="/admin/payemployees">Pay Employees</Nav.Link>
+              <Nav.Link href="/admin/">Admin</Nav.Link>
               <NavBarDropdown />
             </Nav>
           </Navbar.Collapse>
