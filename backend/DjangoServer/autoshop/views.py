@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpRequest
 from .models import User, Vehicle
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
@@ -7,8 +7,30 @@ from django.contrib.auth import authenticate
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User as Person
 
+def userRouter(request: HttpRequest):
+    if request.method == "PUT":
+        updateUserInfo(request)
 
-def getUserInfo(request):
+    elif request.method == "GET":
+        getUserInfo(request)
+
+def vehicleRouter(request:HttpRequest):
+    if request.method == "PUT":
+        updateVehicleInfo(request)
+
+    elif request.method == "GET":
+        getVehicleInfo(request)
+
+def updateVehicleInfo(request: HttpRequest):
+    # TODO
+    pass
+
+def updateUserInfo(request):
+    # TODO
+    pass      
+
+def getUserInfo(request: HttpRequest):
+    request.method
     response = {}
     response = checkValidUserRequest(request, response)
     if 'error' not in response:
