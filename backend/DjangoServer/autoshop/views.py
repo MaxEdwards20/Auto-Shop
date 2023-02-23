@@ -9,7 +9,7 @@ import json
 from django.contrib.auth.models import User as Person
 
 
-def getUserInfoApi(request):
+def getUserInfo(request):
     response = {}
     response = checkValidUserRequest(request, response)
     if 'error' not in response:
@@ -23,7 +23,7 @@ def getUserInfoApi(request):
     return j
 
 
-def getVehicleInfoApi(request):
+def getVehicleInfo(request):
     response = {}
     response = checkValidVehicleRequest(request, response)
     if 'error' not in response:
@@ -102,11 +102,14 @@ def authenticateUser(request):
         user = authenticate(request, username=email, password=password)
         if user is not None:
             userInfo = getUserInfoDatabase(email)
-            response = {'authenticated': True,
-                        'userInfo': userInfo}
+            response = userInfo
+            j = JsonResponse(response)
+
         else:
-            response = {'authenticated': False}
-    j = JsonResponse(response)
+            j = JsonResponse(response)
+    else:
+        j = JsonResponse(response)
+        j.status_code = 401
     if 'Origin' in request.headers:
         j['Access-Control-Allow-Origin'] = request.headers['Origin']
     else:
@@ -131,8 +134,11 @@ def createUser(request):
     response = checkValidCreateUser(request, response)
     if 'error' not in response:
         createUserDatabase(request)
-        response['userCreated'] = True
-    j = JsonResponse(response)
+        response = {'status': 'created new user'}
+        j = JsonResponse(response)
+    else:
+        j = JsonResponse(response)
+        j.status_code = 400
     if 'Origin' in request.headers:
         j['Access-Control-Allow-Origin'] = request.headers['Origin']
     else:
@@ -153,7 +159,7 @@ def checkValidCreateUser(request, response):
     if request.method == 'GET':
         response['error'] = 'You must use a post request when creating a user.'
     # check to see if the email already exists.
-    if 'email' in request.POST:
+    if 'email' in request.POST and 'error' not in response:
         email = request.POST['email']
         user = User.objects.filter(email=email)
         if user:
@@ -176,3 +182,55 @@ def createUserDatabase(request):
     newUser.needHelp = False
     newUser.ethicsViolation = 'None'
     newUser.save()
+
+
+@csrf_exempt
+def createVehicle(request):
+    response = {}
+    response = checkValidCreateVehicle(request, response)
+    if 'error' not in response:
+        createVehicleDatabase(request)
+        j = JsonResponse(response)
+    else:
+        j = JsonResponse(response)
+        j.status_code = 400
+    if 'Origin' in request.headers:
+        j['Access-Control-Allow-Origin'] = request.headers['Origin']
+    else:
+        j['Access-Control-Allow-Origin'] = '*'
+    return j
+
+
+def checkValidCreateVehicle(request, response):
+    if request.method == 'POST':
+        if 'name' not in request.POST:
+            response['error'] = 'Please enter the name of the vehicle.'
+        if 'vehicleType' not in request.POST:
+            response['error'] = 'Please enter the vehicle type.'
+        if 'image' not in request.POST:
+            response['error'] = 'Please provide an image reference.'
+        if 'vim' not in request.POST:
+            response['error'] = 'Please provide a vim '
+    if request.method == 'GET':
+        response['error'] = 'You must use a post request when creating a vehicle.'
+    # check to see if the vehicle already exists.
+    if 'vim' in request.POST and 'error' not in response:
+        vim = request.POST['vim']
+        vehicle = Vehicle.objects.filter(vim=vim)
+        if vehicle:
+            response['error'] = 'This user already exists.'
+    return response
+
+
+def createVehicleDatabase(request):
+    newVehicle = Vehicle()
+    newVehicle.name = request.POST['name']
+    newVehicle.vehicleType = request.POST['vehicleType']
+    newVehicle.image = request.POST['image']
+    newVehicle.vim = request.POST['vim']
+    newVehicle.isInsured = False
+    newVehicle.isPending = False
+    newVehicle.isLoadJacked = False
+    newVehicle.location = "lot"
+    newVehicle.isPurchased = False
+    newVehicle.save()

@@ -11,12 +11,12 @@ class Vehicle(models.Model):
     location = models.CharField(max_length=200)
     isPurchased = models.BooleanField()
     isPending = models.BooleanField()
-    reservedDays = models.JSONField()
+    reservedDays = models.JSONField(null=True)
     vehicleType = models.CharField(max_length=20)
     isInsured = models.BooleanField()
     isLoadJacked = models.BooleanField()
-    dateCheckedOut = models.DateTimeField()
-    dateCheckedIn = models.DateTimeField()
+    dateCheckedOut = models.DateTimeField(null=True)
+    dateCheckedIn = models.DateTimeField(null=True)
     image = models.TextField()  # string to the url of the image
 
     # automatically assigns an id to each instance
