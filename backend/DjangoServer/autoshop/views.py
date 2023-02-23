@@ -5,7 +5,6 @@ from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth import authenticate
 from django.views.decorators.csrf import csrf_exempt
-import json
 from django.contrib.auth.models import User as Person
 
 
@@ -218,7 +217,7 @@ def checkValidCreateVehicle(request, response):
         vim = request.POST['vim']
         vehicle = Vehicle.objects.filter(vim=vim)
         if vehicle:
-            response['error'] = 'This user already exists.'
+            response['error'] = 'This vehicle already exists.'
     return response
 
 
