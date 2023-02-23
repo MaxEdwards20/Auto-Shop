@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { Form, FormControl, Button } from "react-bootstrap";
 import { AuthContext } from "../context/AuthContext";
-import { UserType } from "../types/userTypes";
+import { UserType } from "../types/UserTypes";
 import { loginUser } from "../urls";
 import { useNavigate } from "react-router-dom";
 import { loginUserBody } from "../dto/loginuser";

@@ -1,5 +1,5 @@
 import React, { createContext, useState, ReactNode } from "react";
-import { UserType } from "../types/userTypes";
+import { UserType } from "../types/UserTypes";
 
 type AuthContextType = {
   isAuthenticated: boolean;
