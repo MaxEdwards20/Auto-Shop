@@ -8,8 +8,8 @@ import { useContext } from "react";
 function NavBar() {
   const { userType } = useContext(AuthContext);
   // Use these to test the application
-  const { login } = useContext(AuthContext);
-  login("admin");
+  // const { login } = useContext(AuthContext);
+  // login("admin");
   if (userType == "admin") {
     return (
       <Navbar bg="light" expand="lg">
