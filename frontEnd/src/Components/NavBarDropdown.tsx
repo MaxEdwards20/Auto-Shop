@@ -9,6 +9,9 @@ export default function NavBarDropdown(props: any) {
     return (
       <NavDropdown title="Account" id="basic-nav-dropdown">
         <NavDropdown.Item href="/account/login">Log In</NavDropdown.Item>
+        <NavDropdown.Item href="/account/create">
+          Create Account
+        </NavDropdown.Item>
       </NavDropdown>
     );
   } else {

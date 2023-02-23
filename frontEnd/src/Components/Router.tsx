@@ -7,6 +7,7 @@ import LoginPage from "../pages/log-in-page";
 import VehiclePage from "../pages/vehicle-page";
 import React, { useState } from "react";
 import { AuthContext } from "../context/AuthContext";
+import CreateAccount from "./CreateAccount";
 
 function Router(props: any) {
   return (
@@ -19,7 +20,8 @@ function Router(props: any) {
       <Route path="/account">
         <Route index element={<AccountInfoPage />} />
         <Route path="vehicles" element={<VehiclePage />} />
-        <Route path="login" element={<LoginPage props={props} />} />
+        <Route path="login" element={<LoginPage />} />
+        <Route path="create" element={<CreateAccount />} />
       </Route>
       <Route path="/vehicles/new"></Route>
       <Route path="*" element={<ErrorPage />}></Route>
