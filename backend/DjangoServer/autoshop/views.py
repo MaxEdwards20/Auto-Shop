@@ -9,17 +9,15 @@ from django.contrib.auth.models import User as Person
 
 def userRouter(request: HttpRequest):
     if request.method == "PUT":
-        updateUserInfo(request)
-
+        return updateUserInfo(request)
     elif request.method == "GET":
-        getUserInfo(request)
+        return getUserInfo(request)
 
 def vehicleRouter(request:HttpRequest):
     if request.method == "PUT":
-        updateVehicleInfo(request)
-
+        return updateVehicleInfo(request)
     elif request.method == "GET":
-        getVehicleInfo(request)
+        return getVehicleInfo(request)
 
 def updateVehicleInfo(request: HttpRequest):
     # TODO
