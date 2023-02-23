@@ -1,6 +1,6 @@
-import Container from "react-bootstrap/Container";
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
+import Container from "react-bootstrap/esm/Container";
+import Nav from "react-bootstrap/esm/Nav";
+import Navbar from "react-bootstrap/esm/Navbar";
 import NavBarDropdown from "./NavBarDropdown";
 import { AuthContext } from "../context/AuthContext";
 import { useContext } from "react";
