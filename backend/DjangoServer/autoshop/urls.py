@@ -17,6 +17,7 @@ urlpatterns = [
     path('user/authenticate', views.authenticateUser, name='authenticateUser'),
     path('user/all', views.getAllUsers, name="getAllUsers"), # Get all Users to show
 
+
     # vehicles
     path('vehicle/', views.createVehicle, name='createVehicle'), #POST create vehicle
     path('vehicle<int:id>/', views.vehicleRouter, name='vehicleRouter',),# endpoint for GET, PUT, and DEL requests

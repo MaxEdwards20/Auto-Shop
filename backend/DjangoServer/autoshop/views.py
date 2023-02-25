@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse, HttpRequest
+from django.http import HttpResponseBadRequest, HttpRequest
 from .models import User, Vehicle
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
@@ -7,33 +7,123 @@ from django.contrib.auth import authenticate
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User as Person
 
-def userRouter(request: HttpRequest):
+@csrf_exempt
+def userRouter(request: HttpRequest, id):
     if request.method == "PUT":
-        return updateUserInfo(request)
+        return updateUserInfo(request, id)
     elif request.method == "GET":
-        return getUserInfo(request)
+        return getUserInfo(request, id)
+    elif request.method == "DELETE":
+        return deleteUserInfo(request, id)
 
-def vehicleRouter(request:HttpRequest):
+@csrf_exempt
+def vehicleRouter(request: HttpRequest, id):
     if request.method == "PUT":
-        return updateVehicleInfo(request)
+        return updateVehicleInfo(request, id)
     elif request.method == "GET":
-        return getVehicleInfo(request)
+        return getVehicleInfo(request, id)
+    elif request.method == "DELETE":
+        return deleteVehicleInfo(request, id)
 
-def updateVehicleInfo(request: HttpRequest):
+
+def updateVehicleInfo(request: HttpRequest, id):
+    vehicle = get_object_or_404(Vehicle, pk=id)
+    response = {}
+    myData = request.PUT
+
+    if 'name' in myData:
+        vehicle.name = myData['name']
+        response['name'] = myData['name']
+    if 'vim' in myData:
+        vehicle.vim = myData['vim']
+        response['vim'] = myData['vim']
+    if 'isPurchased' in myData:
+        vehicle.isPurchased = myData['isPurchased']
+        response['isPurchased'] = myData['isPurchased']
+    if 'isPending' in myData:
+        vehicle.isPending = myData['isPending']
+        response['isPending'] = myData['isPending']
+    if 'reservedDays' in myData:
+        vehicle.reservedDays = myData['reservedDays']
+        response['reservedDays'] = myData['reservedDays']
+    if 'location' in myData:
+        vehicle.location = myData['location']
+        response['location'] = myData['location']
+    if 'vehicleType' in myData:
+        vehicle.email = myData['vehicleType']
+        response['vehicleType'] = myData['vehicleType']
+    if 'isInsured' in myData:
+        vehicle.isInsured = myData['isInsured']
+        response['isInsured'] = myData['isInsured']
+    if 'isLoadJacked' in myData:
+        vehicle.isLoadJacked = myData['isLoadJacked']
+        response['isLoadJacked'] = myData['isLoadJacked']
+    if 'dateCheckedOut' in myData:
+        vehicle.dateCheckedOut = myData['dateCheckedOut']
+        response['dateCheckedOut'] = myData['dateCheckedOut']
+    if 'dateCheckedIn' in myData:
+        vehicle.dateCheckedIn = myData['dateCheckedIn']
+        response['dateCheckedIn'] = myData['dateCheckedIn']
+    if 'image' in myData:
+        vehicle.image = myData['image']
+        response['image'] = myData['image']
+
+    vehicle.save()
+    j = JsonResponse(response)
+    if 'Origin' in request.headers:
+        j['Access-Control-Allow-Origin'] = request.headers['Origin']
+    else:
+        j['Access-Control-Allow-Origin'] = '*'
+    return j
+
+
+def updateUserInfo(request: HttpRequest, id):
+    user = get_object_or_404(User, pk=id)
+    response = {}
+    myData = request.PUT
+
+    if 'name' in myData:
+        user.name = myData['name']
+        response['name'] = myData['name']
+    if 'permission' in myData:
+        user.permission = myData['permission']
+        response['permission'] = myData['permission']
+    if 'balance' in myData:
+        user.balance = myData['balance']
+        response['balance'] = myData['balance']
+    if 'needHelp' in myData:
+        user.needHelp = myData['needHelp']
+        response['needHelp'] = myData['needHelp']
+    if 'ethicsViolation' in myData:
+        user.ethicsViolation = myData['ethicsViolation']
+        response['ethicsViolation'] = myData['ethicsViolation']
+    if 'location' in myData:
+        user.location = myData['location']
+        response['location'] = myData['location']
+    if 'email' in myData:
+        user.email = myData['email']
+        response['email'] = myData['email']
+
+    user.save()
+    j = JsonResponse(response)
+    if 'Origin' in request.headers:
+        j['Access-Control-Allow-Origin'] = request.headers['Origin']
+    else:
+        j['Access-Control-Allow-Origin'] = '*'
+    return j
+
+
+def deleteUserInfo(request, id):
     # TODO
     pass
 
-def updateUserInfo(request):
+def deleteVehicleInfo(request, id):
     # TODO
-    pass      
+    pass
 
-def getUserInfo(request: HttpRequest):
-    request.method
-    response = {}
-    response = checkValidUserRequest(request, response)
-    if 'error' not in response:
-        username = request.GET['username']
-        response = getUserInfoDatabase(username)
+
+def getUserInfo(request: HttpRequest, id):
+    response = getUserInfoDatabase(id)
     j = JsonResponse(response)
     if 'Origin' in request.headers:
         j['Access-Control-Allow-Origin'] = request.headers['Origin']
@@ -42,12 +132,8 @@ def getUserInfo(request: HttpRequest):
     return j
 
 
-def getVehicleInfo(request):
-    response = {}
-    response = checkValidVehicleRequest(request, response)
-    if 'error' not in response:
-        vim = request.GET['vim']
-        response = getVehicleInfoDatabase(vim)
+def getVehicleInfo(request: HttpRequest, id):
+    response = getVehicleInfoDatabase(id)
     j = JsonResponse(response)
     if 'Origin' in request.headers:
         j['Access-Control-Allow-Origin'] = request.headers['Origin']
@@ -56,16 +142,26 @@ def getVehicleInfo(request):
     return j
 
 
-def checkValidUserRequest(request, response):
-    if 'username' not in request.GET:
-        response['error'] = "You must enter in a valid username"
+def getAllUsers(request: HttpRequest):
+    allUsers = User.objects.all()
+    myDict = [{'id': instance.id, 'name': instance.name, 'email': instance.email} for instance in allUsers]
+    j = JsonResponse(myDict, safe=False)
+    if 'Origin' in request.headers:
+        j['Access-Control-Allow-Origin'] = request.headers['Origin']
     else:
-        username = request.GET['username']
-        try:
-            User.objects.get(username=username)
-        except User.DoesNotExist:
-            response['error'] = 'you must enter a valid username'
-    return response
+        j['Access-Control-Allow-Origin'] = '*'
+    return j
+
+
+def getAllVehicles(request: HttpRequest):
+    allVehicles = Vehicle.objects.all()
+    myDict = [{'id': instance.id, 'name': instance.name, 'vehicleType': instance.vehicleType} for instance in allVehicles]
+    j = JsonResponse(myDict, safe=False)
+    if 'Origin' in request.headers:
+        j['Access-Control-Allow-Origin'] = request.headers['Origin']
+    else:
+        j['Access-Control-Allow-Origin'] = '*'
+    return j
 
 
 def checkValidVehicleRequest(request, response):
@@ -80,10 +176,10 @@ def checkValidVehicleRequest(request, response):
     return response
 
 
-def getVehicleInfoDatabase(vim):
-    vehicleModel = get_object_or_404(Vehicle.objects.filter(vim=vim))
+def getVehicleInfoDatabase(id):
+    vehicleModel = get_object_or_404(Vehicle, pk=id)
     response = {'name': vehicleModel.name,
-                'vim': vim,
+                'vim': vehicleModel.vim,
                 'location': vehicleModel.location,
                 'isPurchased': vehicleModel.isPurchased,
                 'isPending': vehicleModel.isPending,
@@ -98,8 +194,8 @@ def getVehicleInfoDatabase(vim):
     return response
 
 
-def getUserInfoDatabase(email):
-    userModel = get_object_or_404(User.objects.filter(email=email))
+def getUserInfoDatabase(id):
+    userModel = get_object_or_404(User, pk=id)
     response = {'name': userModel.name,
                 'balance': userModel.balance,
                 'permission': userModel.permission,
@@ -107,6 +203,7 @@ def getUserInfoDatabase(email):
                 'needHelp': userModel.needHelp,
                 'ethicsViolation': userModel.ethicsViolation,
                 'location': userModel.location,
+                'id': userModel.id,
                 }
     return response
 
