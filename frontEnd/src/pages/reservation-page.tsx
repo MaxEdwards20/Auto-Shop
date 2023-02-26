@@ -5,8 +5,8 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 // import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { Rentals } from "../DummyData"
-import CarListing from '../Components/CarListing';
-import { Car } from '../DataTypes';
+import CarListing from '../Components/CarListingReservation';
+import { Car } from '../types/DataTypes';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 
 export default function BasicDateTimePicker() {
@@ -54,31 +54,6 @@ export default function BasicDateTimePicker() {
           }}
           renderInput={(params) => <TextField {...params} />}
         />
-          {/* <StaticDatePicker
-          renderInput={(props) => <TextField {...props} />}
-          disablePast={true}
-          showDaysOutsideCurrentMonth={true}
-          label="Start Date"
-          value={startDate}
-          onChange={(date) => {
-            setStartDate(date);
-            setMinEndDate(date);
-            if (endDate != null && date != null && endDate < date) {
-              setEndDate(date);
-            }
-          }}
-          />
-          <StaticDatePicker
-            renderInput={(props) => <TextField {...props} />}
-            disablePast={true}
-            showDaysOutsideCurrentMonth={true}
-            label="End Date"
-            value={endDate}
-            minDate={minEndDate}
-            onChange={(date) => {
-              setEndDate(date);
-            }}
-          /> */}
         </LocalizationProvider>
         <button
           className='dateButton'
@@ -93,7 +68,9 @@ export default function BasicDateTimePicker() {
       <div className='carList'>
         <ul>
           {carList.map((rental) => (
+            <div className='reservationContainer'>
               <CarListing car={rental} />
+            </div>
             )
           )}
         </ul>
