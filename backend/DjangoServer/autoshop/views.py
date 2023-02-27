@@ -7,6 +7,7 @@ from django.contrib.auth import authenticate
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User as Person
 
+
 @csrf_exempt
 def userRouter(request: HttpRequest, id):
     if request.method == "PUT":
@@ -15,6 +16,7 @@ def userRouter(request: HttpRequest, id):
         return getUserInfo(request, id)
     elif request.method == "DELETE":
         return deleteUserInfo(request, id)
+
 
 @csrf_exempt
 def vehicleRouter(request: HttpRequest, id):
@@ -70,6 +72,8 @@ def updateVehicleInfo(request: HttpRequest, id):
 
     vehicle.save()
     j = JsonResponse(response)
+    if not response:
+        j.status_code = 400
     if 'Origin' in request.headers:
         j['Access-Control-Allow-Origin'] = request.headers['Origin']
     else:
@@ -106,6 +110,8 @@ def updateUserInfo(request: HttpRequest, id):
 
     user.save()
     j = JsonResponse(response)
+    if not response:
+        j.status_code = 400
     if 'Origin' in request.headers:
         j['Access-Control-Allow-Origin'] = request.headers['Origin']
     else:
@@ -114,12 +120,31 @@ def updateUserInfo(request: HttpRequest, id):
 
 
 def deleteUserInfo(request, id):
-    # TODO
-    pass
+    user = get_object_or_404(User, pk=id)
+    user.delete()
+    response = {'user': f'{id} deleted'}
+    j = JsonResponse(response)
+    if not response:
+        j.status_code = 400
+    if 'Origin' in request.headers:
+        j['Access-Control-Allow-Origin'] = request.headers['Origin']
+    else:
+        j['Access-Control-Allow-Origin'] = '*'
+    return j
+
 
 def deleteVehicleInfo(request, id):
-    # TODO
-    pass
+    vehicle = get_object_or_404(Vehicle, pk=id)
+    vehicle.delete()
+    response = {'vehicle': f'{id} deleted'}
+    j = JsonResponse(response)
+    if not response:
+        j.status_code = 400
+    if 'Origin' in request.headers:
+        j['Access-Control-Allow-Origin'] = request.headers['Origin']
+    else:
+        j['Access-Control-Allow-Origin'] = '*'
+    return j
 
 
 def getUserInfo(request: HttpRequest, id):
@@ -155,7 +180,8 @@ def getAllUsers(request: HttpRequest):
 
 def getAllVehicles(request: HttpRequest):
     allVehicles = Vehicle.objects.all()
-    myDict = [{'id': instance.id, 'name': instance.name, 'vehicleType': instance.vehicleType} for instance in allVehicles]
+    myDict = [{'id': instance.id, 'name': instance.name, 'vehicleType': instance.vehicleType} for instance in
+              allVehicles]
     j = JsonResponse(myDict, safe=False)
     if 'Origin' in request.headers:
         j['Access-Control-Allow-Origin'] = request.headers['Origin']

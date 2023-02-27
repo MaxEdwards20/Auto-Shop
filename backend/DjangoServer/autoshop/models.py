@@ -5,6 +5,20 @@ from django.db import models
 from django.contrib.auth.models import User as Person
 
 
+class User(models.Model):
+    # email, phone, username, password, permissions are all accessed through this object.
+    name = models.CharField(max_length=200)
+    permission = models.CharField(max_length=20)
+    # automatically assigns an id to each instance
+    balance = models.FloatField()
+    needHelp = models.BooleanField()
+    ethicsViolation = models.TextField()
+    location = models.CharField(max_length=20)
+    email = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.name
+
 class Vehicle(models.Model):
     name = models.CharField(max_length=200)
     vim = models.IntegerField()
@@ -17,24 +31,10 @@ class Vehicle(models.Model):
     isLoadJacked = models.BooleanField()
     dateCheckedOut = models.DateTimeField(null=True)
     dateCheckedIn = models.DateTimeField(null=True)
+    user = models.ForeignKey(User, on_delete=models.PROTECT, null=True)
     image = models.TextField()  # string to the url of the image
 
     # automatically assigns an id to each instance
-
-    def __str__(self):
-        return self.name
-
-
-class User(models.Model):
-    # email, phone, username, password, permissions are all accessed through this object.
-    name = models.CharField(max_length=200)
-    permission = models.CharField(max_length=20)
-    # automatically assigns an id to each instance
-    balance = models.FloatField()
-    needHelp = models.BooleanField()
-    ethicsViolation = models.TextField()
-    location = models.CharField(max_length=20)
-    email = models.CharField(max_length=20)
 
     def __str__(self):
         return self.name
