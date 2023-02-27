@@ -376,3 +376,18 @@ def createVehicleDatabase(request):
     newVehicle.location = "lot"
     newVehicle.isPurchased = False
     newVehicle.save()
+
+def vehicleAvailability(request: HttpRequest, id):
+    vehicle = get_object_or_404(Vehicle, pk=id)
+    response = {'name': vehicle.name,
+                'reservedDays': vehicle.reservedDays,
+                'dateCheckedOut': vehicle.dateCheckedOut,
+                'dateCheckedIn': vehicle.dateCheckedIn,
+                }
+    j = JsonResponse(response)
+    if 'Origin' in request.headers:
+        j['Access-Control-Allow-Origin'] = request.headers['Origin']
+    else:
+        j['Access-Control-Allow-Origin'] = '*'
+    return j
+

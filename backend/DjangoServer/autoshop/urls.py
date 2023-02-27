@@ -21,8 +21,8 @@ urlpatterns = [
     # vehicles
     path('vehicle/', views.createVehicle, name='createVehicle'), #POST create vehicle
     path('vehicle<int:id>/', views.vehicleRouter, name='vehicleRouter',),# endpoint for GET, PUT, and DEL requests
-    path('vehicle/all', views.getAllVehicles, name="getAllVehicles") # Get all vehicles to show
-
+    path('vehicle/all', views.getAllVehicles, name="getAllVehicles"), # Get all vehicles to show
+    path('vehicle<int:id>/available', views.vehicleAvailability, name='vehicleAvailability')
     
 
     
