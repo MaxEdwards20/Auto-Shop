@@ -6,6 +6,7 @@ import AccountInfoPage from "../pages/account-info-page";
 import LoginPage from "../pages/log-in-page";
 import VehiclePage from "../pages/vehicle-page";
 import AdminPage from "../pages/admin-page";
+import CreateAccount from "./CreateAccount"
 function Router() {
   return (
     // See tutorial at https://www.youtube.com/watch?v=Ul3y1LXxzdU

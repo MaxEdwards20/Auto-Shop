@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
 import { Form, Button } from "react-bootstrap";
-import { UserType } from "../types/userTypes";
+import { UserType } from "../types/UserTypes";
 import { createAccount } from "../urls";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
