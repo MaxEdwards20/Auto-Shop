@@ -59,6 +59,7 @@ def checkValidVehicleRequest(request, response):
     return response
 
 
+
 def getVehicleInfoDatabase(vim):
     vehicleModel = get_object_or_404(Vehicle.objects.filter(vim=vim))
     response = {'name': vehicleModel.name,
@@ -91,7 +92,11 @@ def getUserInfoDatabase(username):
                 'location': userModel.location,
                 }
     return response
+def addUserBalance(name,balance):
+    return 
 
+def subUserBalance(name, balance):
+    return 
 
 def authenticateUser(username, password):
     user = authenticate(username, password)

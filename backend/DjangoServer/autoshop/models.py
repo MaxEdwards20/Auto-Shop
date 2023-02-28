@@ -6,12 +6,12 @@ from django.contrib.auth.models import User as Person
 
 class Vehicle(models.Model):
     name = models.CharField(max_length=200)
-    vim = models.IntegerField()
+    vin = models.CharField(max_length=17)
     location = models.CharField(max_length=200)
     isPurchased = models.BooleanField()
     isPending = models.BooleanField()
-    reservedDays = models.JSONField()
-    vehicleType = models.CharField(max_length=20)
+    reservedDays = models.JSONField(blank=True)
+    vehicleType = models.CharField(max_length=50)
     isInsured = models.BooleanField()
     isLoadJacked = models.BooleanField()
     dateCheckedOut = models.DateTimeField()
@@ -26,13 +26,13 @@ class Vehicle(models.Model):
 class User(models.Model):
     user = Person()  # email, phone, username, password, permissions are all accessed through this object.
     name = models.CharField(max_length=200)
-    permission = models.CharField(max_length=20)
+    permission = models.CharField(max_length=50)
     # automatically assigns an id to each instance
     balance = models.FloatField()
     needHelp = models.BooleanField()
-    ethicsViolation = models.TextField()
-    location = models.CharField(max_length=20)
-    email = models.CharField(max_length=20)
+    ethicsViolation = models.TextField(blank=True)
+    location = models.CharField(max_length=50)
+    email = models.CharField(max_length=50)
 
     def __str__(self):
         return self.name

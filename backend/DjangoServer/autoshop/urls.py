@@ -16,4 +16,7 @@ urlpatterns = [
     # http://${location.host}/autoshop/getVehicleInfo?vim=${vim}
     path('user/create', views.createUser, name='createUser')
     # http://${location.host}/autoshop/user/create?name=${name}
+    # might change how these work... leave like this for now. 
+    #path('user/addUserBalance', views.addUserBalance, name='addUserBalance')
+    # http://${location.host}/autoshop/user/create?name=${name}
 ]
