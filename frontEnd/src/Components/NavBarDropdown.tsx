@@ -1,5 +1,5 @@
 import context from "react-bootstrap/esm/AccordionContext";
-import NavDropdown from "react-bootstrap/NavDropdown";
+import NavDropdown from "react-bootstrap/esm/NavDropdown";
 import { AuthContext } from "../context/AuthContext";
 import { useContext } from "react";
 
@@ -9,6 +9,9 @@ export default function NavBarDropdown(props: any) {
     return (
       <NavDropdown title="Account" id="basic-nav-dropdown">
         <NavDropdown.Item href="/account/login">Log In</NavDropdown.Item>
+        <NavDropdown.Item href="/account/create">
+          Create Account
+        </NavDropdown.Item>
       </NavDropdown>
     );
   } else {

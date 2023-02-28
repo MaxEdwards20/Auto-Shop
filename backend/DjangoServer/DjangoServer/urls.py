@@ -17,6 +17,6 @@ from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
-    path('autoshop/', include('autoshop.urls')),
+    path('', include('autoshop.urls')),
     path('admin/', admin.site.urls),
 ]

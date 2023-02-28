@@ -9,14 +9,19 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    # Are we able to specify in the path and know whether this is a GET POST DEL or PUT request? For example: GET users/1 returns user with id 1, while PUT users/1 updates certain values for that user
-    path('getUserInfo', views.getUserInfoApi, name='getUserInfoApi'), # let's switch this to /user/ID, where ID is a numeric userID.
-    # http://${location.host}/autoshop/getUserInfo?username=${username}
-    path('getVehicleInfo', views.getVehicleInfoApi, name='getVehicleInfoApi'), # let's switch this to /vehicle/ID, where ID is a numeric vehicle ID
-    # http://${location.host}/autoshop/getVehicleInfo?vim=${vim}
-    path('user/create', views.createUser, name='createUser')
-    # http://${location.host}/autoshop/user/create?name=${name}
-    # might change how these work... leave like this for now. 
-    #path('user/addUserBalance', views.addUserBalance, name='addUserBalance')
-    # http://${location.host}/autoshop/user/create?name=${name}
+
+
+    # See documentation here https://docs.djangoproject.com/en/4.1/topics/http/urls/
+    # users
+    path('user/', views.createUser, name='createUser'), #POST create user
+    path('user/<int:id>', views.userRouter, name='getUserInfo'), # endpoint for GET, PUT, and DEL requests
+    path('user/authenticate', views.authenticateUser, name='authenticateUser'),
+    path('user/all', views.getAllUsers, name="getAllUsers"), # Get all Users to show
+
+
+    # vehicles
+    path('vehicle/', views.createVehicle, name='createVehicle'), #POST create vehicle
+    path('vehicle<int:id>/', views.vehicleRouter, name='vehicleRouter',),# endpoint for GET, PUT, and DEL requests
+    path('vehicle/all', views.getAllVehicles, name="getAllVehicles") # Get all vehicles to show
+
 ]
