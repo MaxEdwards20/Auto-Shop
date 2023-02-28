@@ -1,5 +1,5 @@
 import context from "react-bootstrap/esm/AccordionContext";
-import NavDropdown from "react-bootstrap/NavDropdown";
+import NavDropdown from "react-bootstrap/esm/NavDropdown";
 import { AuthContext } from "../context/AuthContext";
 import { useContext } from "react";
 

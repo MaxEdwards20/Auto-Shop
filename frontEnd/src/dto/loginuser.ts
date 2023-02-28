@@ -1,4 +1,4 @@
-import { UserType } from "../types/userTypes";
+import { UserType } from "../types/UserTypes";
 export type loginUserBody = {
   userType: UserType;
 };

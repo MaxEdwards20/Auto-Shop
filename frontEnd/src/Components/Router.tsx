@@ -5,16 +5,14 @@ import ReservationPage from "../pages/reservation-page";
 import AccountInfoPage from "../pages/account-info-page";
 import LoginPage from "../pages/log-in-page";
 import VehiclePage from "../pages/vehicle-page";
-import React, { useState } from "react";
-import { AuthContext } from "../context/AuthContext";
-import CreateAccount from "./CreateAccount";
-
-function Router(props: any) {
+import AdminPage from "../pages/admin-page";
+function Router() {
   return (
     // See tutorial at https://www.youtube.com/watch?v=Ul3y1LXxzdU
 
     <Routes>
       <Route path="/" element={<HomePage />} />
+      <Route path="/admin" element={<AdminPage />} />
       <Route path="/reservation" element={<ReservationPage />} />
       <Route path="/vehicles" element={<VehiclePage />} />
       <Route path="/account">
