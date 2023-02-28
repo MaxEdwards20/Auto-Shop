@@ -36,5 +36,7 @@ class User(models.Model):
     location = models.CharField(max_length=50)
     email = models.CharField(max_length=50)
 
+    ## TODO: Do we need password storage here?
+
     def __str__(self):
         return self.name

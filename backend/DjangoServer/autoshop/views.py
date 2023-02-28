@@ -29,8 +29,8 @@ def vehicleRouter(request: HttpRequest, id):
 def updateVehicleInfo(request: HttpRequest, id):
     vehicle = get_object_or_404(Vehicle, pk=id)
     response = {}
-    myData = request.PUT
-
+    myData = request.PUT # Is this necessary? Can we just do request?
+        
     if 'name' in myData:
         vehicle.name = myData['name']
         response['name'] = myData['name']
@@ -211,7 +211,7 @@ def getUserInfoDatabase(id):
 @csrf_exempt
 def authenticateUser(request):
     response = {}
-    response = checkValidAuthenticate(request, response)
+    response = checkValidMethod(request, response)
     if 'error' not in response:
         email = request.POST['email']
         password = request.POST['password']
@@ -233,7 +233,7 @@ def authenticateUser(request):
     return j
 
 
-def checkValidAuthenticate(request, response):
+def checkValidMethod(request, response):
     if request.method == 'POST':
         if 'password' not in request.POST:
             response['error'] = 'You must enter a valid password.'
@@ -249,7 +249,7 @@ def createUser(request):
     response = {}
     response = checkValidCreateUser(request, response)
     if 'error' not in response:
-        createUserDatabase(request)
+        __createUserDatabase(request)
         response = {'status': 'created new user'}
         j = JsonResponse(response)
     else:
@@ -283,7 +283,7 @@ def checkValidCreateUser(request, response):
     return response
 
 
-def createUserDatabase(request):
+def __createUserDatabase(request):
     newUser = User()
     newUserAuth = Person.objects.create_user(first_name=request.POST['name'],
                                              username=request.POST['email'],
@@ -305,7 +305,7 @@ def createVehicle(request):
     response = {}
     response = checkValidCreateVehicle(request, response)
     if 'error' not in response:
-        createVehicleDatabase(request)
+        __createVehicleDatabase(request)
         j = JsonResponse(response)
     else:
         j = JsonResponse(response)
@@ -338,7 +338,7 @@ def checkValidCreateVehicle(request, response):
     return response
 
 
-def createVehicleDatabase(request):
+def __createVehicleDatabase(request):
     newVehicle = Vehicle()
     newVehicle.name = request.POST['name']
     newVehicle.vehicleType = request.POST['vehicleType']
