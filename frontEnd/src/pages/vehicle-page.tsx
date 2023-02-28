@@ -1,5 +1,5 @@
 import { Rentals } from "../DummyData"
-import CarListing from '../Components/CarListingTile';
+import CarListing from '../components/CarListingTile';
 import { Car } from '../types/DataTypes';
 import { useState } from "react";
 

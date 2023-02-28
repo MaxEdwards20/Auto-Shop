@@ -5,7 +5,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 // import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { Rentals } from "../DummyData"
-import CarListing from '../Components/CarListingReservation';
+import CarListing from '../components/CarListingReservation';
 import { Car } from '../types/DataTypes';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 
