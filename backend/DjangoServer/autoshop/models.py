@@ -7,7 +7,7 @@ from django.contrib.auth.models import User as Person
 
 class Vehicle(models.Model):
     name = models.CharField(max_length=200)
-    vim = models.IntegerField()
+    vin = models.CharField(max_length=17)
     location = models.CharField(max_length=200)
     isPurchased = models.BooleanField()
     isPending = models.BooleanField()
@@ -32,9 +32,9 @@ class User(models.Model):
     # automatically assigns an id to each instance
     balance = models.FloatField()
     needHelp = models.BooleanField()
-    ethicsViolation = models.TextField()
-    location = models.CharField(max_length=20)
-    email = models.CharField(max_length=20)
+    ethicsViolation = models.TextField(blank=True)
+    location = models.CharField(max_length=50)
+    email = models.CharField(max_length=50)
 
     def __str__(self):
         return self.name

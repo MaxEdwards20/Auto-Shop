@@ -10,6 +10,7 @@ from . import views
 
 urlpatterns = [
 
+
     # See documentation here https://docs.djangoproject.com/en/4.1/topics/http/urls/
     # users
     path('user/', views.createUser, name='createUser'), #POST create user
@@ -23,7 +24,4 @@ urlpatterns = [
     path('vehicle<int:id>/', views.vehicleRouter, name='vehicleRouter',),# endpoint for GET, PUT, and DEL requests
     path('vehicle/all', views.getAllVehicles, name="getAllVehicles") # Get all vehicles to show
 
-    
-
-    
 ]
