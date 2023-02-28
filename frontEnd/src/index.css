@@ -1,10 +1,9 @@
 body {
   margin: 0;
-  height: 100vh;
+  background-color: lightblue;
 }
 
-#root {
-  height: 100%;
+:root {
   width: 100%;
   background-color: lightblue;
   margin: 0;
@@ -40,14 +39,14 @@ button {
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #646cff;
+  border-color: black;
 }
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-li {
+.reservationListing {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -56,6 +55,10 @@ li {
   padding: 2%;
   background-color: white;
   border-radius: 20px;
+}
+
+.reservationContainer {
+  padding: 2px;
 }
 
 ul {
@@ -80,19 +83,26 @@ ul {
   padding: 2%;
 }
 
-.liContainer {
-  padding: 2px;
-}
-
 #reserveButton {
   border-radius: 5px;
   background-color: lightblue;
   color: black;
 }
 
-.vehicleListingImage {
+.vehicleReservationImage {
   height: 15vh;
   width: 15vw;
+}
+
+.vehicleListingImage {
+  height: 25vh;
+  width: 25vw;
+}
+
+.vehicleListingImage:hover{
+  border-width: 1px;
+  border-style: solid;
+  border-color: white;
 }
 
 .root {
@@ -100,4 +110,30 @@ ul {
   flex-direction: column;
   align-items: center;
   background-color: lightblue;
+}
+
+.carListContainer {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.carListTile {
+  padding: 1%;
+  background-color: lightblue;
+  border-radius: 20px;
+}
+
+.carTile {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  width: 30vw;
+  padding: 2%;
+  background-color: white;
+  border-radius: 20px;
+  font-size: medium;
 }

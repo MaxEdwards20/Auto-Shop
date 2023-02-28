@@ -4,10 +4,10 @@ import TextField from "@mui/material/TextField";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 // import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
-import { Rentals } from "../DummyData";
-import CarListing from "../components/CarListing";
-import { Car } from "../types/CarType";
-import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+import { Rentals } from "../DummyData"
+import CarListing from '../components/CarListingReservation';
+import { Car } from '../types/DataTypes';
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 
 export default function BasicDateTimePicker() {
   const [startDate, setStartDate] = useState<Dayjs | null>(dayjs());
@@ -31,53 +31,28 @@ export default function BasicDateTimePicker() {
     <div className="root">
       <div className="container" id="dateContainer">
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DesktopDatePicker
-            label="Start Date"
-            value={startDate}
-            minDate={today}
-            onChange={(newDate) => {
-              setStartDate(newDate);
-              setMinEndDate(newDate);
-              if (endDate != null && newDate != null && endDate < newDate) {
-                setEndDate(newDate);
-              }
-            }}
-            renderInput={(params) => <TextField {...params} />}
-          />
-          <DesktopDatePicker
-            label="End Date"
-            value={endDate}
-            minDate={minEndDate}
-            onChange={(newDate) => {
-              setEndDate(newDate);
-            }}
-            renderInput={(params) => <TextField {...params} />}
-          />
-          {/* <StaticDatePicker
-          renderInput={(props) => <TextField {...props} />}
-          disablePast={true}
-          showDaysOutsideCurrentMonth={true}
+        <DesktopDatePicker
           label="Start Date"
           value={startDate}
-          onChange={(date) => {
-            setStartDate(date);
-            setMinEndDate(date);
-            if (endDate != null && date != null && endDate < date) {
-              setEndDate(date);
+          minDate={today}
+          onChange={(newDate) => {
+            setStartDate(newDate);
+            setMinEndDate(newDate);
+            if (endDate != null && newDate != null && endDate < newDate) {
+              setEndDate(newDate);
             }
           }}
-          />
-          <StaticDatePicker
-            renderInput={(props) => <TextField {...props} />}
-            disablePast={true}
-            showDaysOutsideCurrentMonth={true}
-            label="End Date"
-            value={endDate}
-            minDate={minEndDate}
-            onChange={(date) => {
-              setEndDate(date);
-            }}
-          /> */}
+          renderInput={(params) => <TextField {...params} />}
+        />
+        <DesktopDatePicker
+          label="End Date"
+          value={endDate}
+          minDate={minEndDate}
+          onChange={(newDate) => {
+            setEndDate(newDate);
+          }}
+          renderInput={(params) => <TextField {...params} />}
+        />
         </LocalizationProvider>
         <button
           className="dateButton"
@@ -94,8 +69,11 @@ export default function BasicDateTimePicker() {
       <div className="carList">
         <ul>
           {carList.map((rental) => (
-            <CarListing car={rental} />
-          ))}
+            <div className='reservationContainer'>
+              <CarListing car={rental} />
+            </div>
+            )
+          )}
         </ul>
       </div>
     </div>
