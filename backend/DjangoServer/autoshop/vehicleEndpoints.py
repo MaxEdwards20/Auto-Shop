@@ -1,11 +1,9 @@
 from django.shortcuts import render
-from django.http import HttpResponseBadRequest, HttpRequest
-from backend.DjangoServer.autoshop.models import Vehicle
+from django.http import HttpRequest
+from .models import Vehicle
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
-from django.contrib.auth import authenticate
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.models import User as Person
 def updateVehicleInfo(request: HttpRequest, id):
     vehicle = get_object_or_404(Vehicle, pk=id)
     response = {}

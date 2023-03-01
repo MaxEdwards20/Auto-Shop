@@ -1,6 +1,5 @@
-from django.shortcuts import render
 from django.http import HttpRequest
-from backend.DjangoServer.autoshop.models import User
+from .models import User
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth import authenticate
@@ -104,12 +103,15 @@ def authenticateUser(request):
         password = request.POST['password']
         user = authenticate(request, username=email, password=password)
         if user is not None:
-            userInfo = getUserInfoDatabase(email)
+            userId = User.objects.filter(email=email)
+            userId = userId.id
+            userInfo = getUserInfoDatabase(userId)
             response = userInfo
             j = JsonResponse(response)
 
         else:
             j = JsonResponse(response)
+            j.status_code = 401
     else:
         j = JsonResponse(response)
         j.status_code = 401
