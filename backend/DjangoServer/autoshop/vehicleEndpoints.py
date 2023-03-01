@@ -1,9 +1,124 @@
-from django.shortcuts import render
 from django.http import HttpRequest
 from .models import Vehicle
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from .serializers import VehicleSerializer
+
+
+def checkValidCreateVehicle(request, response):
+    if request.method == 'POST':
+        if 'name' not in request.POST:
+            response['error'] = 'Please enter the name of the vehicle.'
+        if 'vehicleType' not in request.POST:
+            response['error'] = 'Please enter the vehicle type.'
+        if 'image' not in request.POST:
+            response['error'] = 'Please provide an image reference.'
+        if 'vin' not in request.POST:
+            response['error'] = 'Please provide a vin '
+    if request.method == 'GET':
+        response['error'] = 'You must use a post request when creating a vehicle.'
+    # check to see if the vehicle already exists.
+    if 'vin' in request.POST and 'error' not in response:
+        vin = request.POST['vin']
+        vehicle = Vehicle.objects.filter(vin=vin)
+        if vehicle:
+            response['error'] = 'This vehicle already exists.'
+    return response
+
+
+def checkValidVehicleRequest(request, response):
+    if 'vin' not in request.GET:
+        response['error'] = "You must enter a valid vin"
+    else:
+        vin = request.GET['vin']
+        try:
+            Vehicle.objects.get(vin=vin)
+        except Vehicle.DoesNotExist:
+            response['error'] = 'you must enter a valid vin'
+    return response
+
+
+@csrf_exempt
+def createVehicle(request):
+    response = {}
+    response = checkValidCreateVehicle(request, response)
+    if 'error' not in response:
+        vehicle = createVehicleDatabase(request)
+        vehicleInfo = getVehicleInfoDatabase(vehicle.id)
+        response = vehicleInfo
+        j = JsonResponse(response)
+    else:
+        j = JsonResponse(response)
+        j.status_code = 400
+    if 'Origin' in request.headers:
+        j['Access-Control-Allow-Origin'] = request.headers['Origin']
+    else:
+        j['Access-Control-Allow-Origin'] = '*'
+    return j
+
+
+def createVehicleDatabase(request):
+    newVehicle = Vehicle()
+    newVehicle.name = request.POST['name']
+    newVehicle.vehicleType = request.POST['vehicleType']
+    newVehicle.image = request.POST['image']
+    newVehicle.vin = request.POST['vin']
+    newVehicle.isInsured = False
+    newVehicle.isPending = False
+    newVehicle.isLoadJacked = False
+    newVehicle.location = "lot"
+    newVehicle.isPurchased = False
+    newVehicle.save()
+    return newVehicle
+
+
+def deleteVehicleInfo(request, id):
+    vehicle = get_object_or_404(Vehicle, pk=id)
+    vehicleData = getVehicleInfoDatabase(id)
+    response = {vehicleData}
+    vehicle.delete()
+    j = JsonResponse(response)
+    if not response:
+        j.status_code = 400
+    if 'Origin' in request.headers:
+        j['Access-Control-Allow-Origin'] = request.headers['Origin']
+    else:
+        j['Access-Control-Allow-Origin'] = '*'
+    return j
+
+
+def getAllVehicles(request: HttpRequest):
+    allVehicles = Vehicle.objects.all()
+    myDict = {}
+    for vehicle in allVehicles:
+        serializer = VehicleSerializer(vehicle)
+        data = serializer.data
+        myDict[vehicle.id] = data
+    j = JsonResponse(myDict, safe=False)
+    if 'Origin' in request.headers:
+        j['Access-Control-Allow-Origin'] = request.headers['Origin']
+    else:
+        j['Access-Control-Allow-Origin'] = '*'
+    return j
+
+
+def getVehicleInfo(request: HttpRequest, id):
+    response = getVehicleInfoDatabase(id)
+    j = JsonResponse(response)
+    if 'Origin' in request.headers:
+        j['Access-Control-Allow-Origin'] = request.headers['Origin']
+    else:
+        j['Access-Control-Allow-Origin'] = '*'
+    return j
+
+
+def getVehicleInfoDatabase(id):
+    vehicleModel = get_object_or_404(Vehicle, pk=id)
+    serializer = VehicleSerializer(vehicleModel)
+    return serializer.data
+
+
 def updateVehicleInfo(request: HttpRequest, id):
     vehicle = get_object_or_404(Vehicle, pk=id)
     response = {}
@@ -12,9 +127,9 @@ def updateVehicleInfo(request: HttpRequest, id):
     if 'name' in myData:
         vehicle.name = myData['name']
         response['name'] = myData['name']
-    if 'vim' in myData:
-        vehicle.vim = myData['vim']
-        response['vim'] = myData['vim']
+    if 'vin' in myData:
+        vehicle.vin = myData['vin']
+        response['vin'] = myData['vin']
     if 'isPurchased' in myData:
         vehicle.isPurchased = myData['isPurchased']
         response['isPurchased'] = myData['isPurchased']
@@ -50,121 +165,15 @@ def updateVehicleInfo(request: HttpRequest, id):
     j = JsonResponse(response)
     if not response:
         j.status_code = 400
-    if 'Origin' in request.headers:
-        j['Access-Control-Allow-Origin'] = request.headers['Origin']
     else:
-        j['Access-Control-Allow-Origin'] = '*'
-    return j
-
-def deleteVehicleInfo(request, id):
-    vehicle = get_object_or_404(Vehicle, pk=id)
-    vehicle.delete()
-    response = {'vehicle': f'{id} deleted'}
-    j = JsonResponse(response)
-    if not response:
-        j.status_code = 400
-    if 'Origin' in request.headers:
-        j['Access-Control-Allow-Origin'] = request.headers['Origin']
-    else:
-        j['Access-Control-Allow-Origin'] = '*'
-    return j
-
-def getVehicleInfo(request: HttpRequest, id):
-    response = getVehicleInfoDatabase(id)
-    j = JsonResponse(response)
-    if 'Origin' in request.headers:
-        j['Access-Control-Allow-Origin'] = request.headers['Origin']
-    else:
-        j['Access-Control-Allow-Origin'] = '*'
-    return j
-
-def getAllVehicles(request: HttpRequest):
-    allVehicles = Vehicle.objects.all()
-    myDict = [{'id': instance.id, 'name': instance.name, 'vehicleType': instance.vehicleType} for instance in
-              allVehicles]
-    j = JsonResponse(myDict, safe=False)
-    if 'Origin' in request.headers:
-        j['Access-Control-Allow-Origin'] = request.headers['Origin']
-    else:
-        j['Access-Control-Allow-Origin'] = '*'
-    return j
-
-def checkValidVehicleRequest(request, response):
-    if 'vim' not in request.GET:
-        response['error'] = "You must enter a valid vim"
-    else:
-        vim = request.GET['vim']
-        try:
-            Vehicle.objects.get(vim=vim)
-        except Vehicle.DoesNotExist:
-            response['error'] = 'you must enter a valid vim'
-    return response
-
-def getVehicleInfoDatabase(id):
-    vehicleModel = get_object_or_404(Vehicle, pk=id)
-    response = {'name': vehicleModel.name,
-                'vim': vehicleModel.vim,
-                'location': vehicleModel.location,
-                'isPurchased': vehicleModel.isPurchased,
-                'isPending': vehicleModel.isPending,
-                'reservedDays': vehicleModel.reservedDays,
-                'vehicleType': vehicleModel.vehicleType,
-                'isInsured': vehicleModel.isInsured,
-                'isLoadJacked': vehicleModel.isLoadJacked,
-                'dateCheckedOut': vehicleModel.dateCheckedOut,
-                'dateCheckedIn': vehicleModel.dateCheckedIn,
-                'image': vehicleModel.image,
-                }
-    return response
-
-@csrf_exempt
-def createVehicle(request):
-    response = {}
-    response = checkValidCreateVehicle(request, response)
-    if 'error' not in response:
-        createVehicleDatabase(request)
+        response = getVehicleInfoDatabase(id)
         j = JsonResponse(response)
-    else:
-        j = JsonResponse(response)
-        j.status_code = 400
     if 'Origin' in request.headers:
         j['Access-Control-Allow-Origin'] = request.headers['Origin']
     else:
         j['Access-Control-Allow-Origin'] = '*'
     return j
 
-def checkValidCreateVehicle(request, response):
-    if request.method == 'POST':
-        if 'name' not in request.POST:
-            response['error'] = 'Please enter the name of the vehicle.'
-        if 'vehicleType' not in request.POST:
-            response['error'] = 'Please enter the vehicle type.'
-        if 'image' not in request.POST:
-            response['error'] = 'Please provide an image reference.'
-        if 'vim' not in request.POST:
-            response['error'] = 'Please provide a vim '
-    if request.method == 'GET':
-        response['error'] = 'You must use a post request when creating a vehicle.'
-    # check to see if the vehicle already exists.
-    if 'vim' in request.POST and 'error' not in response:
-        vim = request.POST['vim']
-        vehicle = Vehicle.objects.filter(vim=vim)
-        if vehicle:
-            response['error'] = 'This vehicle already exists.'
-    return response
-
-def createVehicleDatabase(request):
-    newVehicle = Vehicle()
-    newVehicle.name = request.POST['name']
-    newVehicle.vehicleType = request.POST['vehicleType']
-    newVehicle.image = request.POST['image']
-    newVehicle.vim = request.POST['vim']
-    newVehicle.isInsured = False
-    newVehicle.isPending = False
-    newVehicle.isLoadJacked = False
-    newVehicle.location = "lot"
-    newVehicle.isPurchased = False
-    newVehicle.save()
 
 def vehicleAvailability(request: HttpRequest, id):
     vehicle = get_object_or_404(Vehicle, pk=id)
