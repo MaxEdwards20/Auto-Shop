@@ -103,9 +103,8 @@ def authenticateUser(request):
         password = request.POST['password']
         user = authenticate(request, username=email, password=password)
         if user is not None:
-            userId = User.objects.filter(email=email)
-            userId = userId.id
-            userInfo = getUserInfoDatabase(userId)
+            user = get_object_or_404(User.objects.filter(email=email))
+            userInfo = getUserInfoDatabase(user.id)
             response = userInfo
             j = JsonResponse(response)
 
