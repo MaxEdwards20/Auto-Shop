@@ -13,7 +13,7 @@ urlpatterns = [
 
     # See documentation here https://docs.djangoproject.com/en/4.1/topics/http/urls/
     # users
-    path('user', views.createUser, name='createUser'), #POST create user
+    path('user', views.userRouter, name='createUser'), #POST create user
     path('user/<int:id>', views.userRouter, name='getUserInfo'), # endpoint for GET, PUT, and DEL requests
     path('user/login', views.authenticateUser, name='authenticateUser'),
     path('user/all', views.getAllUsers, name="getAllUsers"), # Get all Users to show

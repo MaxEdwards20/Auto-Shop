@@ -28,3 +28,4 @@ class JSONParsingMiddleware(MiddlewareMixin):
                 request.JSON = json.loads(request.body)
             except ValueError as ve:
                 return HttpResponseBadRequest("unable to parse JSON data. Error : {0}".format(ve))
+            
