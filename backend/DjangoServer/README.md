@@ -1,4 +1,7 @@
 Run the following command to start the server:
+To install dependencies:
+
+$ pip install -r requirements.txt
 
 $ python manage.py runserver
 
