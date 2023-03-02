@@ -1,7 +1,7 @@
 import { useState, useContext } from "react";
 import { Form, Button } from "react-bootstrap";
 import { UserType } from "../types/UserTypes";
-import { createAccount } from "../urls";
+import { createUser } from "../urls";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
@@ -29,7 +29,7 @@ export default function CreateAccount() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    let url = createAccount;
+    let url = createUser;
     async () => {
       const data = { email, password, balance, birthday, age, name, userType };
       let res = await fetch(url, {
