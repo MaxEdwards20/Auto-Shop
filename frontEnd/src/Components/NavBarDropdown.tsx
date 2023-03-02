@@ -17,7 +17,7 @@ export default function NavBarDropdown(props: any) {
   } else {
     return (
       <NavDropdown title="Account" id="basic-nav-dropdown">
-        <NavDropdown.Item href="/account">Account Info</NavDropdown.Item>
+        <NavDropdown.Item href="/account">Dashboard</NavDropdown.Item>
         <NavDropdown.Item href="/reservation">My Reservations</NavDropdown.Item>
         <NavDropdown.Item href="/account/balance">
           Deposit Funds
