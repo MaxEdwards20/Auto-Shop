@@ -10,7 +10,7 @@ def userRouter(request: HttpRequest, id = 0):
     elif request.method == "GET":
         return getUserInfo(request, id)
     elif request.method == "DELETE":
-        return deleteUserInfo(request, id)
+        return deleteUser(request, id)
     elif request.method == "POST":
         return createUser(request)
 

@@ -1,3 +1,5 @@
 from .endpointTests.authenticationEndpointTests import TestAuthentication
+from .endpointTests.userEndpointTests import TestUserEndpoints
 
-userEndpoints = TestAuthentication()
+userCert = TestUserEndpoints()
+authcert= TestAuthentication()

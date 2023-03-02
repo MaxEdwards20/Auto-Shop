@@ -9,7 +9,7 @@ class TestAuthentication(TestCase):
         self.client = Client()
         self.email = f'test@gmail.com{uuid.uuid4()}'
         response = self.client.post('http://localhost:8000/user', data={'name': 'test', 'email': self.email,
-                                                                        'password': 'testpass', 'phone': '2222222'})
+                                                                        'password': 'testpass', 'phoneNumber': '2222222'})
         self.assertEqual(response.status_code, 200)
 
     def testAuthentication(self):
