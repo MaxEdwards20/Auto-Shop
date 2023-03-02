@@ -48,7 +48,7 @@
 ## Build Instructions
 
 - Running the server:
-  - Navigate to the root django project [INSERT\_ROOT\_NAME] from the command line
+  - Navigate to backend/DjangoServer from the command line
   - To start the server, run the following command:
     - python manage.py runserver
   - To change the server's port (for example, to port 8800), use the following command:
@@ -59,9 +59,18 @@
 - Visiting the website:
   - Open your browser of choice
   - In the address bar, type the following address (assuming the server is hosting on port 8000)
-    - http://localhost:8000/[INSERT\_MAIN\_PAGE\_NAME]
+    - http://localhost:8000/
 
+- Running the client:
+  - cd into frontend
+  - `$ yarn` to install dependencies
+  - `$ yarn dev` to run the client 
+  - Open the corresponding link to view the page
 ## Unit Testing Instructions
+
+cd into backend/DjangoServer
+
+run `$ python3 manage.py test`
 
 - After each function is created, create a unit test in tests.py to exercise that function and ensure stability across limits of scope
 - Run all unit tests before merging back into dev or main. Ensure they all pass

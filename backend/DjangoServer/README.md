@@ -1,6 +1,8 @@
 Create a virtual environment to isolate your packages.
-`python3 -m venv .venv`
-`source .venv/bin/activate`
+
+`$ python3 -m venv .venv`
+
+`$ source .venv/bin/activate`
 
 Run the following command to start the server:
 To install dependencies:
