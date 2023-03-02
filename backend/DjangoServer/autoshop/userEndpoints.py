@@ -12,22 +12,20 @@ import json
 @csrf_exempt
 def authenticateUser(request: HttpRequest):
     parsedBody = __getReqBody(request)
+    # Check if the request has the correct formatting
     response = __checkValidAuthenticate(request, parsedBody)
-    if 'error' not in response:
-        email = parsedBody['email']
-        password = parsedBody['password']
-        user = authenticate(request, username=email, password=password)
-        if user is not None:
-            user = get_object_or_404(User.objects.filter(email=email))
-            userInfo = __getUserInfoDatabase(user.id)
-            response = userInfo
-            j = JsonResponse(response)
-        else:
-            j = JsonResponse(response)
-            j.status_code = 401
-    else:
-        j = JsonResponse(response)
-        j.status_code = 401
+    if 'error' in response:
+        return __update_cors(JsonResponse(response, status=401), request)
+    email = parsedBody['email']
+    password = parsedBody['password']
+    # Check if actually valid user
+    user = authenticate(request, username=email, password=password)
+    if not user:
+        return __update_cors(JsonResponse(response, status=401), request)
+    user = get_object_or_404(User.objects.filter(email=email))
+    userInfo = __getUserInfoDatabase(user.id)
+    response = userInfo
+    j = JsonResponse(response)
     return __update_cors(j, request)
 
 @csrf_exempt

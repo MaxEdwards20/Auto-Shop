@@ -12,7 +12,7 @@ class TestAuthentication(TestCase):
                                                                         'password': 'testpass', 'phoneNumber': '2222222'})
         self.assertEqual(response.status_code, 200)
 
-    def testAuthentication(self):
+    def testValidAuthentication(self):
         response = self.client.post('http://localhost:8000/user/login', data={'email': self.email, "password": "testpass"})
         self.assertEqual(response.status_code, 200)
 
