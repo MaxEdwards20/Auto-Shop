@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User as Person
 from .serializers import UserSerializer
+from rest_framework.renderers import JSONRenderer
 import json
 
 @csrf_exempt
@@ -33,12 +34,14 @@ def authenticateUser(request: HttpRequest):
 def createUser(request: HttpRequest):
     parsedBody = __getReqBody(request)
     response = __validateCreateUserBody(request, {}, parsedBody)
+    # https://www.django-rest-framework.org/tutorial/1-serialization/
     if 'error' in response:
         j = JsonResponse(response)
         j.status_code = 400
     else:
         user = __createUserDatabase(parsedBody)
-        j = JsonResponse(response)
+        j = JsonResponse(UserSerializer(user).data)
+        print(j)
         # TODO: Return the serialized user here
     return __update_cors(j, request)
 
@@ -55,13 +58,13 @@ def deleteUser(request, id):
     return __update_cors(j, request)
 
 @csrf_exempt
-def getUserInfo(request: HttpRequest, id):
+def getUser(request: HttpRequest, id):
     response = __getUserInfoDatabase(id)
     j = JsonResponse(response, safe=False)
     return __update_cors(j, request)
 
 @csrf_exempt
-def getAllUsers(request: HttpRequest):
+def getUsers(request: HttpRequest):
     # TODO: Add some validation that id of user requesting this is an admin or manager
     allUsers = User.objects.all()
     myDict = {}
@@ -73,21 +76,17 @@ def getAllUsers(request: HttpRequest):
     return __update_cors(j, request)
 
 @csrf_exempt
-def updateUserInfo(request: HttpRequest, id):
+def updateUser(request: HttpRequest, id):
     user = get_object_or_404(User, pk=id)
+    parsedBody = __getReqBody(request)
     response = {}
-    myData = request.PUT
+    # Actually update the user
     for key in ['name', 'permission', 'balance', 'needHelp', 'ethicsViolation', 'location', 'email']:
-        if key in myData:
-            user[key] = myData[key]
-            response[key]= myData[key]
+        if key in parsedBody:
+            setattr(user, key, parsedBody[key])
+            response[key]= parsedBody[key]
     user.save()
-    j = JsonResponse(response)
-    if not response:
-        j.status_code = 400
-    else:
-        response = __getUserInfoDatabase(id)
-        j = JsonResponse(response)
+    j = JsonResponse(UserSerializer(user).data) # return the newly saved user
     return __update_cors(j, request)
 
 def __checkValidAuthenticate(request, parsedBody):
@@ -100,24 +99,6 @@ def __checkValidAuthenticate(request, parsedBody):
     if request.method == 'GET':
         response['error'] = 'You must use a post request when authenticating a user.'
     return response
-
-def __validateCreateUserBody(request: HttpRequest, response: HttpResponse, parsedBody: dict) -> HttpResponse:
-    NEEDED_PARAMS = {'password', 'name', 'email', 'phoneNumber'}
-    if request.method == 'POST':
-        # These all overwrite eachother
-        for item in NEEDED_PARAMS:
-            if item not in parsedBody:
-                response['error'] = "Need an email, password, name and phoneNumber"
-    if request.method == 'GET':
-        response['error'] = 'You must use a post request when creating a user.'
-    # check to see if the email already exists.
-    if 'email' in parsedBody and 'error' not in response:
-        email = parsedBody['email']
-        user = User.objects.filter(email=email)
-        if user:
-            response['error'] = 'This user already exists.'
-    return response
-
 
 def __createUserDatabase(parsedBody) -> User:
     newUser = User()
@@ -137,12 +118,27 @@ def __createUserDatabase(parsedBody) -> User:
     newUser.save()
     return newUser
 
-
 def __getUserInfoDatabase(id):
     userModel = get_object_or_404(User, pk=id)
     serializer = UserSerializer(userModel)
     return serializer.data
 
+def __validateCreateUserBody(request: HttpRequest, response: HttpResponse, parsedBody: dict) -> HttpResponse:
+    NEEDED_PARAMS = {'password', 'name', 'email', 'phoneNumber'}
+    if request.method == 'POST':
+        # These all overwrite eachother
+        for item in NEEDED_PARAMS:
+            if item not in parsedBody:
+                response['error'] = "Need an email, password, name and phoneNumber"
+    if request.method == 'GET':
+        response['error'] = 'You must use a post request when creating a user.'
+    # check to see if the email already exists.
+    if 'email' in parsedBody and 'error' not in response:
+        email = parsedBody['email']
+        user = User.objects.filter(email=email)
+        if user:
+            response['error'] = 'This user already exists.'
+    return response
 
 def __update_cors(j, request):
     if 'Origin' in request.headers:
@@ -152,8 +148,10 @@ def __update_cors(j, request):
     return j
 
 def __getReqBody(request: HttpRequest) -> dict:
-    if not request.POST:
-        parsedBody = json.loads(request.body)
-    else:
+    if request.POST:
         parsedBody = request.POST
+    elif 'PUT' in request:
+        parsedBody = request.PUT
+    else:
+        parsedBody = json.loads(request.body)
     return parsedBody

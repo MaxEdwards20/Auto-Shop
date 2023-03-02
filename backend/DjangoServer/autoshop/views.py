@@ -6,9 +6,9 @@ from .vehicleEndpoints import *
 @csrf_exempt
 def userRouter(request: HttpRequest, id = 0):
     if request.method == "PUT":
-        return updateUserInfo(request, id)
+        return updateUser(request, id)
     elif request.method == "GET":
-        return getUserInfo(request, id)
+        return getUser(request, id)
     elif request.method == "DELETE":
         return deleteUser(request, id)
     elif request.method == "POST":
