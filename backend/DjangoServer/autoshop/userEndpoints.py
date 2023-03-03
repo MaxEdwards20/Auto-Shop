@@ -13,7 +13,7 @@ import json
 def authenticateUser(request: HttpRequest):
     parsedBody = __getReqBody(request)
     # Check if the request has the correct formatting
-    response = __checkValidAuthenticate(request, parsedBody)
+    response = __validateAuthenticationBody(request, parsedBody)
     if 'error' in response:
         return __update_cors(JsonResponse(response, status=401), request)
     email = parsedBody['email']
@@ -30,8 +30,9 @@ def authenticateUser(request: HttpRequest):
 
 @csrf_exempt
 def createUser(request: HttpRequest):
+    print(request)
     parsedBody = __getReqBody(request)
-    response = __validateCreateUserBody(request, {}, parsedBody)
+    response = __validateCreateUserBody(request, parsedBody)
     # https://www.django-rest-framework.org/tutorial/1-serialization/
     if 'error' in response:
         j = JsonResponse(response)
@@ -39,7 +40,6 @@ def createUser(request: HttpRequest):
     else:
         user = __createUserDatabase(parsedBody)
         j = JsonResponse(UserSerializer(user).data)
-        print(j)
         # TODO: Return the serialized user here
     return __update_cors(j, request)
 
@@ -87,16 +87,6 @@ def updateUser(request: HttpRequest, id):
     j = JsonResponse(UserSerializer(user).data) # return the newly saved user
     return __update_cors(j, request)
 
-def __checkValidAuthenticate(request, parsedBody):
-    response = {}
-    if request.method == 'POST':
-        if 'password' not in parsedBody:
-            response['error'] = 'You must enter a valid password.'
-        if 'email' not in parsedBody:
-            response['error'] = 'Please enter your email.'
-    if request.method == 'GET':
-        response['error'] = 'You must use a post request when authenticating a user.'
-    return response
 
 def __createUserDatabase(parsedBody) -> User:
     newUser = User()
@@ -120,8 +110,18 @@ def __getUserInfoDatabase(id):
     userModel = get_object_or_404(User, pk=id)
     serializer = UserSerializer(userModel)
     return serializer.data
-
-def __validateCreateUserBody(request: HttpRequest, response: HttpResponse, parsedBody: dict) -> HttpResponse:
+def __validateAuthenticationBody(request, parsedBody: dict) -> dict:
+    response = {}
+    if request.method == 'POST':
+        if 'password' not in parsedBody:
+            response['error'] = 'You must enter a valid password.'
+        if 'email' not in parsedBody:
+            response['error'] = 'Please enter your email.'
+    if request.method == 'GET':
+        response['error'] = 'You must use a post request when authenticating a user.'
+    return response
+def __validateCreateUserBody(request: HttpRequest, parsedBody: dict) -> dict:
+    response = {}
     NEEDED_PARAMS = {'password', 'name', 'email', 'phoneNumber'}
     if request.method == 'POST':
         # These all overwrite eachother
@@ -148,8 +148,6 @@ def __update_cors(j, request):
 def __getReqBody(request: HttpRequest) -> dict:
     if request.POST:
         parsedBody = request.POST
-    elif 'PUT' in request:
-        parsedBody = request.PUT
     else:
         parsedBody = json.loads(request.body)
     return parsedBody

@@ -23,7 +23,7 @@ function LoginPage(props: any) {
     console.log("Handling submit");
     let url = loginUser;
     const grabData = async () => {
-      const data = { username: email, password };
+      const data = { email, password };
       let res = await fetch(url, {
         method: "POST",
         body: JSON.stringify(data),
