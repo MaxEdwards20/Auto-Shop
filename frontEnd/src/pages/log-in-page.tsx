@@ -7,11 +7,11 @@ import {
   CardGroup,
   FloatingLabel,
 } from "react-bootstrap";
-import { AuthContext } from "../context/AuthContext";
-import { UserType } from "../types/UserTypes";
+import { AuthContext } from "../contexts/AuthContext";
+import { UserPermission } from "../types/UserType";
 import { loginUser } from "../urls";
 import { useNavigate } from "react-router-dom";
-import { loginUserBody } from "../dto/loginuser";
+import { LoginUserBody } from "../dto/apiTypes";
 
 function LoginPage(props: any) {
   const [email, setEmail] = useState("");
@@ -28,11 +28,11 @@ function LoginPage(props: any) {
         method: "POST",
         body: JSON.stringify(data),
       });
-      let json: loginUserBody = await res.json();
+      let json: LoginUserBody = await res.json();
       console.log(json);
       if (res.status == 200) {
         // return 200 if logged in, return 401 if unauthorized
-        const userType: UserType = json.userType;
+        const userType: UserPermission = json.userType;
         login(userType);
         // Redirect to home page after signing in
         const navigate = useNavigate();

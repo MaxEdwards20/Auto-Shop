@@ -6,13 +6,13 @@ import AccountInfoPage from "../pages/account-info-page";
 import LoginPage from "../pages/log-in-page";
 import VehiclePage from "../pages/vehicle-page";
 import AdminPage from "../pages/admin-page";
-import CreateAccount from "./CreateAccount"
+import CreateAccount from "./CreateAccount";
+import NavBar from "./Navbar";
 function Router() {
   return (
     // See tutorial at https://www.youtube.com/watch?v=Ul3y1LXxzdU
-
     <Routes>
-      <Route path="/" element={<HomePage />} />
+      <Route path="/" element={<HomePage></HomePage>} />
       <Route path="/admin" element={<AdminPage />} />
       <Route path="/reservation" element={<ReservationPage />} />
       <Route path="/vehicles" element={<VehiclePage />} />

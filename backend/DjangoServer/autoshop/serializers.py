@@ -6,7 +6,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('name', 'id', 'permission', 'balance', 'needHelp', 'ethicsViolation',
-                  'location', 'email')
+                  'location', 'email', 'phoneNumber')
 
 class VehicleSerializer(serializers.ModelSerializer):
     class Meta:

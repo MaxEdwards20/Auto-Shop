@@ -2,11 +2,11 @@ import Container from "react-bootstrap/esm/Container";
 import Nav from "react-bootstrap/esm/Nav";
 import Navbar from "react-bootstrap/esm/Navbar";
 import NavBarDropdown from "./NavBarDropdown";
-import { AuthContext } from "../context/AuthContext";
+import { AuthContext } from "../contexts/AuthContext";
 import { useContext } from "react";
 
 function NavBar() {
-  const { userType } = useContext(AuthContext);
+  const { userPermission: userType } = useContext(AuthContext);
   // Use these to test the application
   // const { login } = useContext(AuthContext);
   // login("admin");

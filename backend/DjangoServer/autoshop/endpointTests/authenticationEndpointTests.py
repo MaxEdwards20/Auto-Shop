@@ -15,7 +15,7 @@ class TestAuthentication(TestCase):
         self.assertEqual(response.status_code, 200)
         responseBody = json.loads(response.content)
         for key in self.data:
-            if key == 'password' or key == "phoneNumber": # We don't want the password back
+            if key == 'password': # We don't want the password back
                 self.assertIsNone(responseBody.get(key))
             else:
                 self.assertEqual(responseBody.get(key), self.data.get(key))

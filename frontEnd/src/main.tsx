@@ -6,6 +6,7 @@ import App from "./App";
 import "./index.css";
 import "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.css";
+import { BrowserRouter } from "react-router-dom";
 
 // See tutorial at https://reactrouter.com/en/main/start/tutorial
 

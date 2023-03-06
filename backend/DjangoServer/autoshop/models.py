@@ -2,9 +2,13 @@ from django.db import models
 
 # Create your models here.
 from django.db import models
-from django.contrib.auth.models import User as Person
+from django.contrib.auth.models import AbstractUser
 
-
+# class Reservation(models.Model):
+#     vehicleReserved = models.ForeignKey('Vehicle', on_delete=models.CASCADE, related_name=Vehicle.reservations)
+#     userReserved = models.ForeignKey('User', on_delete=models.CASCADE)
+#     startDate = models.DateTimeField()
+#     endData = models.DateTimeField()
 class Vehicle(models.Model):
     name = models.CharField(max_length=200)
     vin = models.CharField(max_length=17)
@@ -17,12 +21,13 @@ class Vehicle(models.Model):
     isLoadJacked = models.BooleanField()
     dateCheckedOut = models.DateTimeField(null=True)
     dateCheckedIn = models.DateTimeField(null=True)
-    image = models.TextField()  # string to the url of the image
-
+    image = models.TextField()
+    # string to the url of the image
     # automatically assigns an id to each instance
 
     def __str__(self):
         return self.name
+
 
 
 class User(models.Model):
@@ -35,8 +40,10 @@ class User(models.Model):
     ethicsViolation = models.TextField(blank=True)
     location = models.CharField(max_length=50)
     email = models.CharField(max_length=50)
-
+    phoneNumber = models.CharField(max_length=50)
     ## TODO: Do we need password storage here?
+
+
 
     def __str__(self):
         return self.name

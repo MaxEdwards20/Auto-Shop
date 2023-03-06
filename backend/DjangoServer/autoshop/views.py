@@ -5,6 +5,7 @@ from .vehicleEndpoints import *
 
 @csrf_exempt
 def userRouter(request: HttpRequest, id = 0):
+    print("Request method was: " + request.method)
     if request.method == "PUT":
         return updateUser(request, id)
     elif request.method == "GET":

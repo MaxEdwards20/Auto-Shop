@@ -1,6 +1,6 @@
 import context from "react-bootstrap/esm/AccordionContext";
 import NavDropdown from "react-bootstrap/esm/NavDropdown";
-import { AuthContext } from "../context/AuthContext";
+import { AuthContext } from "../contexts/AuthContext";
 import { useContext } from "react";
 
 export default function NavBarDropdown(props: any) {

@@ -6,7 +6,6 @@ from django.contrib.auth import authenticate
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User as Person
 from .serializers import UserSerializer
-from rest_framework.renderers import JSONRenderer
 import json
 
 @csrf_exempt
@@ -78,13 +77,12 @@ def updateUser(request: HttpRequest, id):
 
 
 def __createUserDatabase(parsedBody) -> User:
-    newUser = User()
     newUserAuth = Person.objects.create_user(first_name=parsedBody['name'],
                                              username=parsedBody['email'],
                                              password=parsedBody['password'],
                                              )
     newUserAuth.save()
-    # newUserAuth should have the id correct?
+    newUser = User()
     newUser.email = parsedBody['email']
     newUser.permission = 'user'
     newUser.name = parsedBody['name']
@@ -92,6 +90,7 @@ def __createUserDatabase(parsedBody) -> User:
     newUser.balance = 0
     newUser.needHelp = False
     newUser.ethicsViolation = 'None'
+    newUser.phoneNumber = parsedBody['phoneNumber']
     newUser.save()
     return newUser
 
