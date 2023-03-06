@@ -1,7 +1,6 @@
 import Container from "react-bootstrap/esm/Container";
 import Nav from "react-bootstrap/esm/Nav";
 import Navbar from "react-bootstrap/esm/Navbar";
-import NavBarDropdown from "./NavBarDropdown";
 import { NavLink } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
 import { useContext } from "react";
@@ -51,7 +50,6 @@ function NavBar() {
               <StyledLink to="/vehicles">View Our Vehicles </StyledLink>
               <StyledLink to="/reservation">Make a Reservation</StyledLink>
               <StyledLink to="/employee/loghours">Log Hours</StyledLink>
-              <NavBarDropdown />
             </Nav>
           </Navbar.Collapse>
         </Container>

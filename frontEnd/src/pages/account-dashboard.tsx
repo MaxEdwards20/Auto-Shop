@@ -66,7 +66,7 @@ const Dashboard = () => {
           color="secondary"
           className={classes.button}
           component={Link}
-          to="/account/createaccount"
+          to="/account/create"
         >
           Create Account
         </Button>
