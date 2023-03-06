@@ -30,7 +30,6 @@ def authenticateUser(request: HttpRequest):
 
 @csrf_exempt
 def createUser(request: HttpRequest):
-    print(request)
     parsedBody = __getReqBody(request)
     response = __validateCreateUserBody(request, parsedBody)
     # https://www.django-rest-framework.org/tutorial/1-serialization/
@@ -43,17 +42,12 @@ def createUser(request: HttpRequest):
         # TODO: Return the serialized user here
     return __update_cors(j, request)
 
-
 @csrf_exempt
 def deleteUser(request, id):
     user = get_object_or_404(User, pk=id)
-    userData = __getUserInfoDatabase(id)
-    response = {userData}
+    response = JsonResponse(UserSerializer(user).data)
     user.delete()
-    j = JsonResponse(response)
-    if not response:
-        j.status_code = 400
-    return __update_cors(j, request)
+    return __update_cors(response, request)
 
 @csrf_exempt
 def getUser(request: HttpRequest, id):
