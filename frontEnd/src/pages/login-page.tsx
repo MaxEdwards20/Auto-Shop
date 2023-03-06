@@ -8,42 +8,27 @@ import {
   FloatingLabel,
 } from "react-bootstrap";
 import { AuthContext } from "../contexts/AuthContext";
-import { UserPermission } from "../types/UserType";
-import { loginUser } from "../urls";
 import { useNavigate } from "react-router-dom";
-import { LoginUserBody } from "../dto/apiTypes";
 
-function LoginPage(props: any) {
+function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { isAuthenticated, login } = useContext(AuthContext);
+  const { isAuthenticated, setNewUser, api } = useContext(AuthContext);
   const [signInFailed, setSignInFailed] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = () => {
     console.log("Handling submit");
-    let url = loginUser;
-    const grabData = async () => {
-      const data = { email, password };
-      let res = await fetch(url, {
-        method: "POST",
-        body: JSON.stringify(data),
-      });
-      let json: LoginUserBody = await res.json();
-      console.log(json);
-      if (res.status == 200) {
-        // return 200 if logged in, return 401 if unauthorized
-        const userType: UserPermission = json.userType;
-        login(userType);
-        // Redirect to home page after signing in
-        const navigate = useNavigate();
-        navigate("/");
-      } else {
-        console.error(res);
+    api.loginUser({ email, password }).then((user) => {
+      if (!user) {
         setSignInFailed(true);
-        setPassword("");
+        return;
       }
-    };
-    grabData();
+      setNewUser(user);
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
+    });
   };
 
   return (

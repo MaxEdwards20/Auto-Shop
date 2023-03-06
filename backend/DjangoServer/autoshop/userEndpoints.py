@@ -22,7 +22,7 @@ def authenticateUser(request: HttpRequest):
     if not user:
         return __update_cors(JsonResponse(response, status=401), request)
     user = get_object_or_404(User.objects.filter(email=email))
-    j = JsonResponse(UserSerializer(user).data)
+    j = JsonResponse({"user": UserSerializer(user).data})
     return __update_cors(j, request)
 
 @csrf_exempt
@@ -35,13 +35,13 @@ def createUser(request: HttpRequest):
         j.status_code = 400
     else:
         user = __createUserDatabase(parsedBody)
-        j = JsonResponse(UserSerializer(user).data)
+        j = JsonResponse({"user": UserSerializer(user).data})
     return __update_cors(j, request)
 
 @csrf_exempt
 def deleteUser(request, id):
     user = get_object_or_404(User, pk=id)
-    response = JsonResponse(UserSerializer(user).data)
+    response = JsonResponse({"user": UserSerializer(user).data})
     user.delete()
     return __update_cors(response, request)
 
@@ -72,7 +72,7 @@ def updateUser(request: HttpRequest, id):
         if key in parsedBody:
             setattr(user, key, parsedBody[key])
     user.save()
-    j = JsonResponse(UserSerializer(user).data) # return the newly saved user
+    j = JsonResponse({"user": UserSerializer(user).data}) # return the newly saved user
     return __update_cors(j, request)
 
 

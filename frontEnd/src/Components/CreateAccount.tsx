@@ -22,21 +22,26 @@ export default function CreateAccount() {
   const [name, setName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const { login, isAuthenticated, api } = useContext(AuthContext);
+  const { isAuthenticated, api, setNewUser } = useContext(AuthContext);
+  const navigator = useNavigate();
 
   const handleSubmit = () => {
+    setErrorMessage("");
     if (!(email && password && name && phoneNumber)) {
       setErrorMessage("Please enter all fields");
       return;
     }
     const data = { email, password, name, phoneNumber };
-    console.log(`Data is ${JSON.stringify(data)}`);
     api.createUser(data).then((user) => {
-      console.log(user);
       if (!user) {
         setErrorMessage("Invalid email or password.");
         return;
       }
+      setNewUser(user);
+      setTimeout(() => {
+        setErrorMessage("Redirecting to home page...");
+        navigator("/home");
+      }, 1000);
     });
   };
 

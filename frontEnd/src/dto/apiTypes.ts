@@ -1,6 +1,8 @@
 import { UserPermission } from "../types/DataTypes";
+
 export type LoginUserBody = {
-  userType: UserPermission;
+  email: string;
+  password: string;
 };
 
 export type CreateUserBody = {

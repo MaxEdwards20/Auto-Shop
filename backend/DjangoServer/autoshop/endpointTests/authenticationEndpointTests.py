@@ -13,7 +13,7 @@ class TestAuthentication(TestCase):
     def testValidAuthentication(self):
         response = self.client.post('http://localhost:8000/user/login', data={'email': self.data['email'], 'password': self.data['password']})
         self.assertEqual(response.status_code, 200)
-        responseBody = json.loads(response.content)
+        responseBody = json.loads(response.content)['user']
         for key in self.data:
             if key == 'password': # We don't want the password back
                 self.assertIsNone(responseBody.get(key))

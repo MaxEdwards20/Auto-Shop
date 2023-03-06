@@ -26,7 +26,7 @@ class TestUserEndpoints(TestCase):
         }
         response = self.client.put("http://localhost:8000/user/"+ str(id), data=updatedData, content_type='application/json')
         self.assertEqual(response.status_code, 200)
-        updatedUser = json.loads(response.content)
+        updatedUser = json.loads(response.content)['user']
         for key in updatedData:
             self.assertEqual(updatedUser[key], updatedData[key])
 
@@ -58,7 +58,7 @@ class TestUserEndpoints(TestCase):
     def __createUser(self):
         response = self.client.post("http://localhost:8000/user", data=self.userData)
         self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content)
+        data = json.loads(response.content)['user']
         self.assertIn('id', data)
         return data
 

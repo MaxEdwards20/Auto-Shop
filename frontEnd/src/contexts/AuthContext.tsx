@@ -15,7 +15,7 @@ export const AuthContext = createContext({
   user: {} as User | undefined,
   isAuthenticated: false,
   userPermission: "guest",
-  login: (body: LoginUserBody) => {},
+  setNewUser: (user: User) => {},
   logout: () => {},
   api: {} as Api,
 });
