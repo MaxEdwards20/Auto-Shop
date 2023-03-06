@@ -24,6 +24,7 @@ class Vehicle(models.Model):
     def __str__(self):
         return self.name
 
+
 class User(models.Model):
     # email, phone, username, password, permissions are all accessed through this object.
     name = models.CharField(max_length=200)

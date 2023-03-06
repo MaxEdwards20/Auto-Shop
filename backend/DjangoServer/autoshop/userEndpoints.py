@@ -23,23 +23,20 @@ def authenticateUser(request: HttpRequest):
     if not user:
         return __update_cors(JsonResponse(response, status=401), request)
     user = get_object_or_404(User.objects.filter(email=email))
-    userInfo = __getUserInfoDatabase(user.id)
-    response = userInfo
-    j = JsonResponse(response)
+    j = JsonResponse(UserSerializer(user).data)
     return __update_cors(j, request)
 
 @csrf_exempt
 def createUser(request: HttpRequest):
+    # https://www.django-rest-framework.org/tutorial/1-serialization/
     parsedBody = __getReqBody(request)
     response = __validateCreateUserBody(request, parsedBody)
-    # https://www.django-rest-framework.org/tutorial/1-serialization/
     if 'error' in response:
         j = JsonResponse(response)
         j.status_code = 400
     else:
         user = __createUserDatabase(parsedBody)
         j = JsonResponse(UserSerializer(user).data)
-        # TODO: Return the serialized user here
     return __update_cors(j, request)
 
 @csrf_exempt
@@ -51,7 +48,7 @@ def deleteUser(request, id):
 
 @csrf_exempt
 def getUser(request: HttpRequest, id):
-    response = __getUserInfoDatabase(id)
+    response = __getSerializedUserInfo(id)
     j = JsonResponse(response, safe=False)
     return __update_cors(j, request)
 
@@ -71,12 +68,10 @@ def getUsers(request: HttpRequest):
 def updateUser(request: HttpRequest, id):
     user = get_object_or_404(User, pk=id)
     parsedBody = __getReqBody(request)
-    response = {}
     # Actually update the user
     for key in ['name', 'permission', 'balance', 'needHelp', 'ethicsViolation', 'location', 'email']:
         if key in parsedBody:
             setattr(user, key, parsedBody[key])
-            response[key]= parsedBody[key]
     user.save()
     j = JsonResponse(UserSerializer(user).data) # return the newly saved user
     return __update_cors(j, request)
@@ -100,7 +95,7 @@ def __createUserDatabase(parsedBody) -> User:
     newUser.save()
     return newUser
 
-def __getUserInfoDatabase(id):
+def __getSerializedUserInfo(id):
     userModel = get_object_or_404(User, pk=id)
     serializer = UserSerializer(userModel)
     return serializer.data
