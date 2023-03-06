@@ -74,26 +74,6 @@ def updateUser(request: HttpRequest, id):
     user.save()
     j = JsonResponse({"user": UserSerializer(user).data}) # return the newly saved user
     return __update_cors(j, request)
-
-
-def __createUserDatabase(parsedBody) -> User:
-    newUserAuth = Person.objects.create_user(first_name=parsedBody['name'],
-                                             username=parsedBody['email'],
-                                             password=parsedBody['password'],
-                                             )
-    newUserAuth.save()
-    newUser = User()
-    newUser.email = parsedBody['email']
-    newUser.permission = 'user'
-    newUser.name = parsedBody['name']
-    newUser.location = 'unknown'
-    newUser.balance = 0
-    newUser.needHelp = False
-    newUser.ethicsViolation = 'None'
-    newUser.phoneNumber = parsedBody['phoneNumber']
-    newUser.save()
-    return newUser
-
 @csrf_exempt
 def userAddMoney(request: HttpRequest, id):
     user = get_object_or_404(User, pk=id)
@@ -113,6 +93,26 @@ def userRemoveMoney(request: HttpRequest, id):
     user.save()
     j = JsonResponse({"user": UserSerializer(user).data})  # return the newly saved user
     return __update_cors(j, request)
+
+def __createUserDatabase(parsedBody) -> User:
+    newUserAuth = Person.objects.create_user(first_name=parsedBody['name'],
+                                             username=parsedBody['email'],
+                                             password=parsedBody['password'],
+                                             )
+    newUserAuth.save()
+    newUser = User()
+    newUser.email = parsedBody['email']
+    newUser.permission = 'user'
+    newUser.name = parsedBody['name']
+    newUser.location = 'unknown'
+    newUser.balance = 0
+    newUser.needHelp = False
+    newUser.ethicsViolation = 'None'
+    newUser.phoneNumber = parsedBody['phoneNumber']
+    newUser.save()
+    return newUser
+
+
 
 
 def __getSerializedUserInfo(id):

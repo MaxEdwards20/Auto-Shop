@@ -75,7 +75,8 @@ const Dashboard = () => {
   }
 
   const [amount, setAmount] = useState<number>(user.balance);
-  const { name, balance, reservations } = user;
+  const [balance, setBalance] = useState<number>(user.balance);
+  const { name, reservations } = user;
   const navigate = useNavigate();
   const { api } = useContext(AuthContext);
 
@@ -87,11 +88,12 @@ const Dashboard = () => {
   };
 
   const handleAddMoney = () => {
+    console.log("Adding money to account");
     api.addMoneyToUser(user.id, amount).then((user) => {
       if (!user) {
         return;
       }
-      setAmount(user.balance);
+      setBalance(user.balance);
     });
   };
 

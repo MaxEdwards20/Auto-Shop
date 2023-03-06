@@ -24,9 +24,9 @@ def vehicleRouter(request: HttpRequest, id):
     elif request.method == "DELETE":
         return deleteVehicleInfo(request, id)
 
-
+@csrf_exempt
 def addMoney(request: HttpRequest, id):
     return userAddMoney(request, id)
-
+@csrf_exempt
 def removeMoney(request: HttpRequest, id):
     return userRemoveMoney(request, id)
