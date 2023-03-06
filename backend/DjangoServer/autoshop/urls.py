@@ -15,6 +15,8 @@ urlpatterns = [
     # users
     path('user', views.userRouter, name='createUser'), #POST create user
     path('user/<int:id>', views.userRouter, name='updateUser'), # endpoint for GET, PUT, and DEL requests
+    path('user/<int:id>/addMoney', views.addMoney, name="addMoney"),
+    path('user/<int:id>/removeMoney', views.removeMoney, name="removeMoney"),
     path('user/login', views.authenticateUser, name='authenticateUser'),
     path('user/all', views.getUsers, name="getAllUsers"), # Get all Users to show
 

@@ -29,10 +29,12 @@ export type UserPermission = "admin" | "user" | "employee" | "guest";
 export type User = {
   name: string;
   permission: UserPermission;
-  balance: Number;
+  balance: number;
   needHelp: boolean;
   location: string;
   email: string;
   ethicsViolation: string;
   phoneNumber: string;
+  reservations: ReservationInfo[];
+  id: number; // only get id after creating the user
 };

@@ -25,3 +25,8 @@ def vehicleRouter(request: HttpRequest, id):
         return deleteVehicleInfo(request, id)
 
 
+def addMoney(request: HttpRequest, id):
+    return userAddMoney(request, id)
+
+def removeMoney(request: HttpRequest, id):
+    return userRemoveMoney(request, id)

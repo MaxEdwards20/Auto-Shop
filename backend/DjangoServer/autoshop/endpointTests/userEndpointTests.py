@@ -54,6 +54,29 @@ class TestUserEndpoints(TestCase):
         self.assertEqual(response.status_code, 404)
 
 
+    def testAddMoneyUser(self):
+        user = self.__createUser()
+        response = self.client.get(f"http://localhost:8000/user/{user['id']}")
+        self.assertEqual(response.status_code, 200)
+        response = self.client.post(f"http://localhost:8000/user/{user['id']}/addMoney", data={'amount': 100})
+        self.assertEqual(response.status_code, 200)
+        response =  self.client.get(f"http://localhost:8000/user/{user['id']}")
+        updatedUser = json.loads(response.content)['user']
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(updatedUser['balance'], user['balance'] + 100)
+
+
+    def testRemoveMoneyUser(self):
+        user = self.__createUser()
+        response = self.client.get(f"http://localhost:8000/user/{user['id']}")
+        self.assertEqual(response.status_code, 200)
+        response = self.client.post(f"http://localhost:8000/user/{user['id']}/removeMoney", data={'amount': 100})
+        self.assertEqual(response.status_code, 200)
+        response =  self.client.get(f"http://localhost:8000/user/{user['id']}")
+        updatedUser = json.loads(response.content)['user']
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(updatedUser['balance'], user['balance'] - 100)
+
 
     def __createUser(self):
         response = self.client.post("http://localhost:8000/user", data=self.userData)

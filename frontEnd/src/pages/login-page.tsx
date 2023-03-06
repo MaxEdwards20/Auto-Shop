@@ -18,7 +18,6 @@ function LoginPage() {
   const navigate = useNavigate();
 
   const handleSubmit = () => {
-    console.log("Handling submit");
     api.loginUser({ email, password }).then((user) => {
       if (!user) {
         setSignInFailed(true);
@@ -26,7 +25,7 @@ function LoginPage() {
       }
       setNewUser(user);
       setTimeout(() => {
-        navigate("/");
+        navigate("/account/dashboard");
       }, 1000);
     });
   };

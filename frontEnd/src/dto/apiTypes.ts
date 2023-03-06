@@ -12,7 +12,11 @@ export type CreateUserBody = {
   phoneNumber: string;
 };
 
-export type UpdateUserBody = {};
+export type UpdateUserBody = {
+  balance?: number;
+  needHelp?: boolean;
+  location?: string;
+};
 
 export type CreateVehicleBody = {};
 

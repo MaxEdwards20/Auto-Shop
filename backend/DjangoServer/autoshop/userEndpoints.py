@@ -48,7 +48,7 @@ def deleteUser(request, id):
 @csrf_exempt
 def getUser(request: HttpRequest, id):
     response = __getSerializedUserInfo(id)
-    j = JsonResponse(response, safe=False)
+    j = JsonResponse({"user": response}, safe=False)
     return __update_cors(j, request)
 
 @csrf_exempt
@@ -93,6 +93,27 @@ def __createUserDatabase(parsedBody) -> User:
     newUser.phoneNumber = parsedBody['phoneNumber']
     newUser.save()
     return newUser
+
+@csrf_exempt
+def userAddMoney(request: HttpRequest, id):
+    user = get_object_or_404(User, pk=id)
+    parsedBody = __getReqBody(request)
+    newBalance = user.balance + abs(int(parsedBody.get('amount')))
+    user.balance = newBalance
+    user.save()
+    j = JsonResponse({"user": UserSerializer(user).data})  # return the newly saved user
+    return __update_cors(j, request)
+
+@csrf_exempt
+def userRemoveMoney(request: HttpRequest, id):
+    user = get_object_or_404(User, pk=id)
+    parsedBody = __getReqBody(request)
+    newBalance = user.balance - abs(int(parsedBody.get('amount')))
+    user.balance = newBalance
+    user.save()
+    j = JsonResponse({"user": UserSerializer(user).data})  # return the newly saved user
+    return __update_cors(j, request)
+
 
 def __getSerializedUserInfo(id):
     userModel = get_object_or_404(User, pk=id)
@@ -139,3 +160,6 @@ def __getReqBody(request: HttpRequest) -> dict:
     else:
         parsedBody = json.loads(request.body)
     return parsedBody
+
+def __getCurrentMoney():
+    pass
