@@ -10,7 +10,6 @@ from .helperTestFunctions import createUser, createVehicle, createReservation, B
 from ..helperFunctions import parseDates
 import json
 
-
 class TestReservationEndpoints(TestCase):
     def setUp(self):
         self.client = Client()
@@ -34,21 +33,21 @@ class TestReservationEndpoints(TestCase):
         self.assertEqual(reservationObject.startDate, self.startDate)
         self.assertEqual(reservationObject.endDate, self.endDate)
 
-    def test_create_reservation_with_invalid_vehicle_id(self):
+    def testCreateReservationInvalidVehicleId(self):
         url = reverse('createReservation')
         data = {'startDate': str(self.startDate), 'endDate': str(self.endDate), 'vehicleID': 100,
                 "userID": self.user['id']}
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    def test_create_reservation_with_invalid_user_id(self):
+    def testCreateReservationInvalidUserId(self):
         url = reverse('createReservation')
         data = {'startDate': str(self.startDate), 'endDate': str(self.endDate), 'vehicleID': self.vehicle['id'],
                 "userID": 199}
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    def test_create_reservation_with_unavailable_vehicle(self):
+    def testCreateReservationUnavailableVehicle(self):
         # Reserve the vehicle for the given dates
         startDate = datetime.today()
         endDate = startDate + timedelta(days=5)

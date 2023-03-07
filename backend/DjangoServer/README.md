@@ -1,18 +1,30 @@
-Create a virtual environment to isolate your packages.
+# Getting Started
+
+Create a virtual environment to isolate your packages:
 
 `$ python3 -m venv .venv`
 
+Activate it:
+
 `$ source .venv/bin/activate`
 
-Run the following command to start the server:
-To install dependencies:
+Download dependencies
 
 `$ pip install -r requirements.txt`
 
+Create and populate the database
+
+`$ python3 manage.py makemigrations $ python manage.py migrate`
+
+Run the following command to start the server:
+
 `$ python manage.py runserver`
 
-Once you have confirmed that the server is running, use the url in a browser to serve the
-site locally. Use the url http://localhost:8000/
+This will start the server at: http://localhost:8000/
+
+The frontend instructions are found in the frontend folder of this repository. Just be sure to run this in a separate terminal than the frontend.
+
+### Admin abilities
 
 To create an Admin account and add dummy data:
 
