@@ -23,6 +23,8 @@ def populate_db(apps, schema_editor):
             endDate = startDate + timedelta(days=random.randint(0, 5))
             reservation = Reservation(autoUser=user, vehicle=vehicle, startDate=startDate, endDate=endDate)
             reservation.save()
+        vehicle = Vehicle(name=f"Free Vehicle {i}", location="1234 Main St", image="https://www.google.com", vin=str(uuid4()), vehicleType="Chevrolet", isPurchased=True)
+        vehicle.save()
     
     # Create Admin
     user = AutoUser(name=f"Admin", permission="admin", balance=1000,  location="1234 Main St", email=f"{uuid4()}@gmail.com")
@@ -34,6 +36,9 @@ def populate_db(apps, schema_editor):
     user = AutoUser(name=f"Employee", permission="employee", balance=500, email=f"{uuid4()}@gmail.com")
     user.save()
 
+    # Create basic user
+    user = AutoUser(name=f"User {i}", permission="user", email=f"abc")
+    user.save()
 
 
 

@@ -1,24 +1,24 @@
+import { useContext } from "react";
 import { Vehicle } from "../types/DataTypes";
+import { AuthContext } from "../contexts/AuthContext";
 
-interface CarListingProps {
-  car: Vehicle;
-}
-
-export default function CarListing(props: CarListingProps) {
+export default function CarListing(props: Vehicle) {
+  const { api, user } = useContext(AuthContext);
   const handleClick = () => {
-    console.log(
-      `You reserved the ${props.car.year} ${props.car.make} ${props.car.model}`
-    );
-    //TODO: Add reservation to database, create modal to confirm reservation
+    console.log(`You reserved the ${props.year} ${props.make} ${props.model}`);
+    // Create pop up modal here?
+
+    //TODO: Add reservation to database
+    // api.createReservation();
   };
   return (
-    <li key={props.car.vin} className="reservationListing">
+    <li key={props.vin} className="reservationListing">
       <img
-        src={props.car.imageSrc}
+        src={props.imageSrc}
         alt="Sick superhero vehicle"
         className="vehicleReservationImage"
       ></img>
-      {`${props.car.year} ${props.car.make} ${props.car.model} ${props.car.edition} ${props.car.color} ${props.car.mileage}`}
+      {`${props.year} ${props.make} ${props.model} ${props.edition} ${props.color} ${props.mileage}`}
       <span className="outerButtonContainer">
         <span className="buttonContainer">
           <button id="reserveButton" onClick={() => handleClick()}>
