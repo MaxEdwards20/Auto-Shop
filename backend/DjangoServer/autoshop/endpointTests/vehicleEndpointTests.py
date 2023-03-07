@@ -9,6 +9,7 @@ from .helperTestFunctions import createUser, createVehicle
 class TestVehicleEndpoints(TestCase):
     def setUp(self):
         self.client = Client()
+        self.baseURL = "http://localhost:8000/"
         self.today = datetime.now().date()
         self.start_date = self.today + timedelta(days=1)
         self.end_date = self.today + timedelta(days=5)
@@ -30,15 +31,6 @@ class TestVehicleEndpoints(TestCase):
         # Reservation.objects.create(vehicle=self.vehicle1, autoUser=self.user1 , startDate=self.start_date, endDate=self.end_date)
         # Reservation.objects.create(vehicle=self.vehicle2, autoUser=self.user2, startDate=self.start_date, endDate=self.end_date)
 
-    def test_get_available_vehicles(self):
-        url = reverse('getAllAvailableVehicles')
-        data = {'startDate': self.start_date, 'endDate': self.end_date}
-        response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
-        self.assertEqual(response.data[0]['id'], self.vehicle3['id'])
-        self.assertEqual(response.data[0]['vehicleType'], self.vehicle3['vehicleType'])
-
 
     def testCreateVehicle(self):
         vehicleData = {'vehicleType': "Chevrolet", 'name': "Cruze", 'vin': str(uuid4()), "image": ""}
@@ -57,3 +49,42 @@ class TestVehicleEndpoints(TestCase):
         updatedVehicle = json.loads(response.content)['vehicle']
         for key in updatedData:
             self.assertEqual(updatedVehicle[key], updatedData[key])
+
+
+    def testDeleteVehicle(self):
+        vehicle = createVehicle(self.client)
+        response = self.client.delete(f"{self.baseURL}vehicle/{vehicle['id']}")
+        self.assertEqual(response.status_code, 200)
+        # ensure we can't access that vehicle anymore
+        response = self.client.get(f"{self.baseURL}vehicle/{vehicle['id']}")
+        self.assertEqual(response.status_code, 404)
+        # can't delete a vehicle that doesn't exist
+        response = self.client.delete(f"{self.baseURL}vehicle/123")
+        self.assertEqual(response.status_code, 404)
+
+    def testGetVehicle(self):
+        vehicle = createVehicle(self.client)
+        response = self.client.get((f"{self.baseURL}vehicle/{vehicle['id']}"))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'vehicle')
+        # Make sure we don't get a vehicle that doesn't exist
+        response = self.client.get((f"{self.baseURL}vehicle/99999"))
+        self.assertEqual(response.status_code, 404)
+        response = self.client.get((f"{self.baseURL}vehicle/INVALID"))
+        self.assertEqual(response.status_code, 404)
+
+
+    def test_get_available_vehicles(self):
+        url = reverse('getAllAvailableVehicles')
+        data = {'startDate': self.start_date, 'endDate': self.end_date}
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['id'], self.vehicle3['id'])
+        self.assertEqual(response.data[0]['vehicleType'], self.vehicle3['vehicleType'])
+
+
+
+
+
+

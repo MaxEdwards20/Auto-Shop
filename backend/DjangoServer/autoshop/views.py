@@ -1,7 +1,7 @@
 from .serializers import UserSerializer, VehicleSerializer
 from .userEndpoints import *
 from .vehicleEndpoints import *
-
+from rest_framework.decorators import api_view
 
 @csrf_exempt
 def userRouter(request: HttpRequest, id = 0):
@@ -16,13 +16,15 @@ def userRouter(request: HttpRequest, id = 0):
 
 
 @csrf_exempt
-def vehicleRouter(request: HttpRequest, id):
+def vehicleRouter(request: HttpRequest, id = 0):
     if request.method == "PUT":
         return updateVehicle(request, id)
     elif request.method == "GET":
         return getVehicle(request, id)
     elif request.method == "DELETE":
         return deleteVehicle(request, id)
+    elif request.method == "POST":
+        return createVehicle(request)
 
 @csrf_exempt
 def addMoney(request: HttpRequest, id):

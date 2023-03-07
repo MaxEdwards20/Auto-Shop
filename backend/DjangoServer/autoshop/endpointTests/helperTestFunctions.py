@@ -3,7 +3,6 @@ import json
 from django.urls import reverse
 from uuid import uuid4
 
-
 def createUser(client, userData=None):
     if not userData:
         userData ={'email': str(uuid4()), 'password': '123', 'name': 'test', 'phoneNumber': '1'}
