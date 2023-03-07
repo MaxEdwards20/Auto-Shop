@@ -5,12 +5,11 @@ from datetime import datetime, timedelta
 from uuid import uuid4
 from ..models import Vehicle, Reservation, AutoUser
 import json
-from .helperTestFunctions import createUser, createVehicle
+from .helperTestFunctions import createUser, createVehicle, BASE_URL
+
 class TestVehicleEndpoints(TestCase):
     def setUp(self):
         self.client = Client()
-        self.baseURL = "http://localhost:8000/"
-
 
     def testCreateVehicle(self):
         vehicleData = {'vehicleType': "Chevrolet", 'name': "Cruze", 'vin': str(uuid4()), "image": ""}
@@ -33,24 +32,24 @@ class TestVehicleEndpoints(TestCase):
 
     def testDeleteVehicle(self):
         vehicle = createVehicle(self.client)
-        response = self.client.delete(f"{self.baseURL}vehicle/{vehicle['id']}")
+        response = self.client.delete(f"{BASE_URL}vehicle/{vehicle['id']}")
         self.assertEqual(response.status_code, 200)
         # ensure we can't access that vehicle anymore
-        response = self.client.get(f"{self.baseURL}vehicle/{vehicle['id']}")
+        response = self.client.get(f"{BASE_URL}vehicle/{vehicle['id']}")
         self.assertEqual(response.status_code, 404)
         # can't delete a vehicle that doesn't exist
-        response = self.client.delete(f"{self.baseURL}vehicle/123")
+        response = self.client.delete(f"{BASE_URL}vehicle/123")
         self.assertEqual(response.status_code, 404)
 
     def testGetVehicle(self):
         vehicle = createVehicle(self.client)
-        response = self.client.get((f"{self.baseURL}vehicle/{vehicle['id']}"))
+        response = self.client.get((f"{BASE_URL}vehicle/{vehicle['id']}"))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'vehicle')
         # Make sure we don't get a vehicle that doesn't exist
-        response = self.client.get((f"{self.baseURL}vehicle/99999"))
+        response = self.client.get((f"{BASE_URL}vehicle/99999"))
         self.assertEqual(response.status_code, 404)
-        response = self.client.get((f"{self.baseURL}vehicle/INVALID"))
+        response = self.client.get((f"{BASE_URL}vehicle/INVALID"))
         self.assertEqual(response.status_code, 404)
 
 

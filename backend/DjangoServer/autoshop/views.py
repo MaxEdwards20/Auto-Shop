@@ -1,8 +1,8 @@
-from .serializers import UserSerializer, VehicleSerializer
-from .userEndpoints import *
-from .vehicleEndpoints import *
-from .reservationEndpoints import *
-
+from django.views.decorators.csrf import csrf_exempt
+from .userEndpoints import authenticateUser, createUser, deleteUser, getUser, getUsers, updateUser, userAddMoney, userRemoveMoney
+from .vehicleEndpoints import createVehicle, deleteVehicle, getVehicle, getAllAvailableVehicles, getAllVehicles, updateVehicle, vehicleAvailability
+from .reservationEndpoints import createReservation, deleteReservation, getReservation
+from django.http import HttpRequest
 @csrf_exempt
 def userRouter(request: HttpRequest, id = 0):
     if request.method == "PUT":
@@ -28,3 +28,11 @@ def vehicleRouter(request: HttpRequest, id = 0):
 
 
 
+@csrf_exempt
+def reservationRouter(request: HttpRequest, id=0):
+    if request.method == "GET":
+        return getReservation(request, id)
+    elif request.method == "DELETE":
+        return deleteReservation(request, id)
+    elif request.method == "POST":
+        return createReservation(request)

@@ -2,14 +2,16 @@
 import json
 from django.urls import reverse
 from uuid import uuid4
+from ..models import AutoUser, Reservation, Vehicle
+from datetime import datetime, timedelta
 
+BASE_URL = "http://localhost:8000/"
 def createUser(client, userData=None):
     if not userData:
-        userData ={'email': str(uuid4()), 'password': '123', 'name': 'test', 'phoneNumber': '1'}
+        userData = {'email': str(uuid4()), 'password': '123', 'name': 'test', 'phoneNumber': '1'}
     response = client.post(reverse('createUser'), data=userData)
     assert (response.status_code == 200)
-    data = json.loads(response.content)['user']
-    return data
+    return json.loads(response.content)['user']
 
 
 def createVehicle(client, vehicleData=None):
@@ -19,5 +21,19 @@ def createVehicle(client, vehicleData=None):
     if not response.status_code == 200:
         print(f"ERROR: {response.content}")
     assert (response.status_code == 200)
-    data = json.loads(response.content)['vehicle']
-    return data
+    return json.loads(response.content)['vehicle']
+
+
+
+def createReservation(client, vehicle: dict, user: dict, startDate= None, endDate = None):
+    url = reverse('createReservation')
+    if not startDate:
+        startDate = datetime.today().date() + timedelta(days=2)
+    if not endDate:
+        endDate = startDate + timedelta(days=5)
+    data = {'startDate': str(startDate), 'endDate': str(endDate), 'vehicleID': vehicle['id'], 'userID': user['id']}
+    response = client.post(url, data, format='json')
+    assert(response.status_code == 200)
+    return json.loads(response.content)['reservation']
+
+
