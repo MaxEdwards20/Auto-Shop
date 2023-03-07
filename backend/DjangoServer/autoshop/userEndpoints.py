@@ -32,11 +32,9 @@ def createUser(request: HttpRequest):
     parsedBody = __getReqBody(request)
     response = __validateCreateUserBody(request, parsedBody)
     if 'error' in response:
-        j = JsonResponse(response)
-        j.status_code = 400
-    else:
-        user = __createUserDatabase(parsedBody)
-        j = JsonResponse({"user": UserSerializer(user).data})
+        return __update_cors(JsonResponse(response, status=400), request)
+    user = __createUserDatabase(parsedBody)
+    j = JsonResponse({"user": UserSerializer(user).data})
     return __update_cors(j, request)
 
 @csrf_exempt

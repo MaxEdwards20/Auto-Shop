@@ -2,6 +2,7 @@ from django.test import TestCase, Client
 from django.urls import reverse
 import json
 from uuid import uuid4
+from .helperTestFunctions import createUser
 class TestUserEndpoints(TestCase):
     def setUp(self):
         self.client = Client()
@@ -9,12 +10,12 @@ class TestUserEndpoints(TestCase):
         self.userData = {'email': str(uuid4()), 'password': '123', 'name': 'test', 'phoneNumber': '1'}
 
     def testCreateUser(self):
-        response = self.client.post(self.baseURL + "user", data=self.userData)
+        response = self.client.post(reverse("createUser"), data=self.userData)
         self.assertEqual(response.status_code, 200)
 
     def testUpdateUser(self):
         # Create a new user to be able to update
-        data = self.__createUser()
+        data = createUser(self.client)
         # Make sure we are getting back the entire object with its id value
         id = data['id']
         updatedData = {
@@ -33,7 +34,7 @@ class TestUserEndpoints(TestCase):
 
 
     def testDeleteUser(self):
-        user = self.__createUser()
+        user = createUser(self.client)
         response = self.client.delete(self.baseURL + f"user/{user['id']}")
         self.assertEqual(response.status_code, 200)
         # make sure we can't get that user anymore
@@ -45,7 +46,7 @@ class TestUserEndpoints(TestCase):
 
 
     def testGetuser(self):
-        user = self.__createUser()
+        user = createUser(self.client)
         response = self.client.get(self.baseURL + f"user/{user['id']}")
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'user')
@@ -57,7 +58,7 @@ class TestUserEndpoints(TestCase):
 
 
     def testAddMoneyUser(self):
-        user = self.__createUser()
+        user = createUser(self.client)
         response = self.client.get(self.baseURL + f"user/{user['id']}")
         self.assertEqual(response.status_code, 200)
         response = self.client.post(self.baseURL + f"user/{user['id']}/addMoney", data={'amount': 100})
@@ -69,7 +70,7 @@ class TestUserEndpoints(TestCase):
 
 
     def testRemoveMoneyUser(self):
-        user = self.__createUser()
+        user = createUser(self.client)
         response = self.client.get(self.baseURL + f"user/{user['id']}")
         self.assertEqual(response.status_code, 200)
         response = self.client.post(self.baseURL + f"user/{user['id']}/removeMoney", data={'amount': 100})
@@ -79,12 +80,5 @@ class TestUserEndpoints(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(updatedUser['balance'], user['balance'] - 100)
 
-
-    def __createUser(self):
-        response = self.client.post(self.baseURL + f"user", data=self.userData)
-        self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content)['user']
-        self.assertIn('id', data)
-        return data
 
 

@@ -4,16 +4,13 @@ from django.db import models
 class Vehicle(models.Model):
     name = models.CharField(max_length=200)
     vin = models.CharField(max_length=17)
-    location = models.CharField(max_length=200)
-    isPurchased = models.BooleanField()
-    isPending = models.BooleanField()
-    reservedDays = models.JSONField(null=True)
     vehicleType = models.CharField(max_length=20)
-    isInsured = models.BooleanField()
-    isLoadJacked = models.BooleanField()
-    dateCheckedOut = models.DateTimeField(null=True)
-    dateCheckedIn = models.DateTimeField(null=True)
-    image = models.TextField()
+    location = models.CharField(max_length=200, default="Logan")
+    isPurchased = models.BooleanField(default=False)
+    isPending = models.BooleanField(default=False)
+    isInsured = models.BooleanField(default=False)
+    isLoadJacked = models.BooleanField(default=False)
+    image = models.ImageField(default=None)
     # string to the url of the image
     # automatically assigns an id to each instance
     def __str__(self):
@@ -32,10 +29,10 @@ class AutoUser(models.Model):
     location = models.CharField(max_length=50, default="unknown")
 
 class Reservation(models.Model):
-    vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE )
+    vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE)
     autoUser = models.ForeignKey(AutoUser, on_delete=models.CASCADE)
-    startDate = models.DateTimeField()
-    endDate = models.DateTimeField()
+    startDate = models.DateField()
+    endDate = models.DateField()
     amountDue = models.FloatField(default=100)
 
     def __str__(self):

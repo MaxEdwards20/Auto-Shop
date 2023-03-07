@@ -18,11 +18,11 @@ def userRouter(request: HttpRequest, id = 0):
 @csrf_exempt
 def vehicleRouter(request: HttpRequest, id):
     if request.method == "PUT":
-        return updateVehicleInfo(request, id)
+        return updateVehicle(request, id)
     elif request.method == "GET":
-        return getVehicleInfo(request, id)
+        return getVehicle(request, id)
     elif request.method == "DELETE":
-        return deleteVehicleInfo(request, id)
+        return deleteVehicle(request, id)
 
 @csrf_exempt
 def addMoney(request: HttpRequest, id):
@@ -31,11 +31,7 @@ def addMoney(request: HttpRequest, id):
 def removeMoney(request: HttpRequest, id):
     return userRemoveMoney(request, id)
 
-
+@csrf_exempt
 def createReservation():
     return None
 
-
-def getAllAvailableVehicles(request: HttpRequest):
-
-    return None
