@@ -1,6 +1,6 @@
 # Create your models here.
 from django.db import models
-
+from django.contrib.auth.models import User
 class Vehicle(models.Model):
     name = models.CharField(max_length=200)
     vin = models.CharField(max_length=17)
@@ -18,6 +18,7 @@ class Vehicle(models.Model):
 
 
 class AutoUser(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     PERMISSION_CHOICES = (("user", "user"), ("admin", "admin"), ("employee", "employee"))
     name = models.CharField(max_length=200)
     email = models.CharField(max_length=50)
