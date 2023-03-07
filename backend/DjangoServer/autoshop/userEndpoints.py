@@ -95,6 +95,7 @@ def __createUserDatabase(parsedBody) -> AutoUser:
                                              )
     newUserAuth.save()
     newUser = AutoUser()
+    newUser.user = newUserAuth
     newUser.email = parsedBody['email']
     newUser.permission = 'user'
     newUser.name = parsedBody['name']

@@ -65,7 +65,9 @@ class TestReservationEndpoints(TestCase):
         createReservation(self.client, vehicle2, user)
 
     def testDeleteReservation(self):
-        reservation = createReservation(self.client, self.user, self.vehicle)
+        user = createUser(self.client)
+        vehicle = createVehicle(self.client)
+        reservation = createReservation(self.client, user=user, vehicle=vehicle)
         url = f"{BASE_URL}reservation/{reservation['id']}"
         response = self.client.delete(url)
         self.assertEqual(response.status_code, 200)
