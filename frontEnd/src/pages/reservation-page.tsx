@@ -65,10 +65,10 @@ export default function BasicDateTimePicker() {
           className="dateButton"
           onClick={() => {
             //Make a POST request to reserve a vehicle for these days
-            api.createReservation(user.id, startDate, endDate);
-            console.log(startDate);
-            console.log(endDate);
-            setCarList(Rentals);
+            api.getAllVehicles(startDate, endDate).then((cars) => {
+              setCarList(cars);
+            });
+            // setCarList(Rentals); // Dummy data
           }}
         >
           Submit
