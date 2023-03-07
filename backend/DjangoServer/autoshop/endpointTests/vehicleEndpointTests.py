@@ -10,26 +10,6 @@ class TestVehicleEndpoints(TestCase):
     def setUp(self):
         self.client = Client()
         self.baseURL = "http://localhost:8000/"
-        self.today = datetime.now().date()
-        self.start_date = self.today + timedelta(days=1)
-        self.end_date = self.today + timedelta(days=5)
-
-        # Create vehicles
-        v1 = {"vehicleType": "Chevrolet", "name":"Cruze", "vin": 202004, "image": "imageurl"}
-        v2 = {"vehicleType": "Honda", "name":"Civic", "vin": 202205, "image": "imageurl"}
-        v3 = {"vehicleType": "Ford", "name":"F150", "vin": 202103, "image": "imageurl"}
-        self.vehicle1 = createVehicle(self.client, v1)
-        self.vehicle2 = createVehicle(self.client, v2)
-        self.vehicle3 = createVehicle(self.client, v3)
-
-        # Create User
-        self.user1 = createUser(self.client)
-        self.user2 = createUser(self.client)
-        self.user3 = createUser(self.client)
-
-        # # Create reservations
-        # Reservation.objects.create(vehicle=self.vehicle1, autoUser=self.user1 , startDate=self.start_date, endDate=self.end_date)
-        # Reservation.objects.create(vehicle=self.vehicle2, autoUser=self.user2, startDate=self.start_date, endDate=self.end_date)
 
 
     def testCreateVehicle(self):
@@ -74,15 +54,35 @@ class TestVehicleEndpoints(TestCase):
         self.assertEqual(response.status_code, 404)
 
 
-    def test_get_available_vehicles(self):
-        url = reverse('getAllAvailableVehicles')
-        data = {'startDate': self.start_date, 'endDate': self.end_date}
-        response = self.client.post(url, data, format='json')
+    def testGetAvailableVehicles(self):
+        today = datetime.now().date()
+        start_date = today + timedelta(days=1)
+        end_date = today + timedelta(days=5)
+        data = {'startDate': start_date, 'endDate': end_date}
+        for _ in range(3): createVehicle(self.client)
+        response = self.client.post(reverse('getAllAvailableVehicles'), data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
-        self.assertEqual(response.data[0]['id'], self.vehicle3['id'])
-        self.assertEqual(response.data[0]['vehicleType'], self.vehicle3['vehicleType'])
+        vehicles = json.loads(response.content)['vehicles']
+        self.assertEqual(len(vehicles), 3)
 
+
+    def testGetAvailableVehiclesWithReservations(self):
+        # Create vehicles
+        v1 = {"vehicleType": "Chevrolet", "name":"Cruze", "vin": 202004, "image": "imageurl"}
+        v2 = {"vehicleType": "Honda", "name":"Civic", "vin": 202205, "image": "imageurl"}
+        v3 = {"vehicleType": "Ford", "name":"F150", "vin": 202103, "image": "imageurl"}
+        vehicle1 = createVehicle(self.client, v1)
+        vehicle2 = createVehicle(self.client, v2)
+        vehicle3 = createVehicle(self.client, v3)
+
+        # Create User
+        user1 = createUser(self.client)
+        user2 = createUser(self.client)
+        user3 = createUser(self.client)
+
+        # # Create reservations
+        # Reservation.objects.create(vehicle=self.vehicle1, autoUser=self.user1 , startDate=self.start_date, endDate=self.end_date)
+        # Reservation.objects.create(vehicle=self.vehicle2, autoUser=self.user2, startDate=self.start_date, endDate=self.end_date)
 
 
 

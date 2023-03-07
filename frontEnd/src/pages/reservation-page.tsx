@@ -6,7 +6,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 // import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { Rentals } from "../DummyData";
 import CarListing from "../components/CarListingReservation";
-import { Car } from "../types/DataTypes";
+import { Vehicle } from "../types/DataTypes";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { Typography } from "@mui/material";
 import { AuthContext } from "../contexts/AuthContext";
@@ -16,7 +16,8 @@ export default function BasicDateTimePicker() {
   const [startDate, setStartDate] = useState<Dayjs | null>(dayjs());
   const [endDate, setEndDate] = useState<Dayjs | null>(dayjs());
   const [minEndDate, setMinEndDate] = useState<Dayjs | null>(dayjs());
-  const [carList, setCarList] = useState<Car[]>([]);
+  const [carList, setCarList] = useState<Vehicle[]>([]);
+  const [userMessage, setUserMessage] = useState("");
   const { user, api } = useContext(AuthContext);
 
   let currentDate = new Date();
@@ -65,13 +66,19 @@ export default function BasicDateTimePicker() {
           className="dateButton"
           onClick={() => {
             //Make a POST request to reserve a vehicle for these days
-            api.getAllVehicles(startDate, endDate).then((cars) => {
+            const start = startDate?.toDate();
+            const end = endDate?.toDate();
+            api.getAvailableVehicles(start, end).then((cars) => {
+              if (!cars) {
+                setUserMessage("No cars available for those dates");
+                return;
+              }
               setCarList(cars);
             });
             // setCarList(Rentals); // Dummy data
           }}
         >
-          Submit
+          Show Me The Vehicles!
         </button>
       </div>
       <div className="carList">
@@ -83,6 +90,7 @@ export default function BasicDateTimePicker() {
           ))}
         </ul>
       </div>
+      {userMessage && <p>{userMessage}</p>}
     </div>
   );
 }

@@ -1,7 +1,7 @@
-import { Car } from "../types/DataTypes";
+import { Vehicle } from "../types/DataTypes";
 
 interface CarListingProps {
-  car: Car;
+  car: Vehicle;
 }
 
 export default function CarListing(props: CarListingProps) {

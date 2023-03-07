@@ -1,5 +1,5 @@
 from django.http import HttpRequest, HttpResponse
-from .models import Vehicle
+from .models import Vehicle, Reservation
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -32,18 +32,39 @@ def getVehicle(request: HttpRequest, id):
 
 @csrf_exempt
 def getAllVehicles(request: HttpRequest):
-    allVehicles = Vehicle.objects.all()
     vehicles = [VehicleSerializer(vehicle).data for vehicle in Vehicle.objects.all()]
     j = JsonResponse({"vehicles": vehicles}, safe=False)
     return __update_cors(j, request)
 
 @csrf_exempt
 def getAllAvailableVehicles(request: HttpRequest):
-    # TODO:
+    startDate, endDate = __parseDates(request)
+    availableVehicles = []
+    unavailableVehicles = set()
+    # Note all unavailable vehicles
+    for reservation in Reservation.objects.all():
+        if not __vehicleIsAvailable(startDate, endDate, reservation):
+            unavailableVehicles.add(reservation.vehicle.pk)
+
+    # Get all vehicles that are not unavailable
+    for vehicle in Vehicle.objects.all():
+        if vehicle.pk not in unavailableVehicles:
+            availableVehicles.append(VehicleSerializer(vehicle).data)
+
+    j = JsonResponse({"vehicles": availableVehicles})
+    return __update_cors(j, request)
+
+
+def __parseDates(request: HttpRequest) -> tuple:
     parsedBody = __getReqBody(request)
-    vehicles = [vehicle for vehicle in Vehicle.objects.all()]
-    startDate = parsedBody['startDate']
-    endDate = parsedBody['endDate']
+    startDate = parsedBody['startDate'][:10]
+    endDate = parsedBody['endDate'][:10]
+    startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d").date()
+    endDate = datetime.datetime.strptime(endDate, "%Y-%m-%d").date()
+    return startDate, endDate
+
+def __vehicleIsAvailable(startDate, endDate, reservation: Reservation) -> bool:
+    return reservation.startDate > endDate or reservation.endDate < startDate
 
 @csrf_exempt
 def updateVehicle(request: HttpRequest, id):

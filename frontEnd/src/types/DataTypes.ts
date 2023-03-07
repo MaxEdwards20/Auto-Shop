@@ -1,4 +1,4 @@
-export type Car = {
+export type Vehicle = {
   vin: string;
   make: string;
   model: string;

@@ -29,10 +29,9 @@ function NavBar() {
             <Nav className="me-auto">
               <StyledLink to="/">Home</StyledLink>
               <StyledLink to="/vehicles">View Our Vehicles </StyledLink>
-              <StyledLink to="/reservation">Make a Reservation</StyledLink>
+              <StyledLink to="/reservations">Make a Reservation</StyledLink>
               <StyledLink to="/admin/payemployees">Pay Employees</StyledLink>
               <StyledLink to="/admin/">Admin</StyledLink>
-              <NavBarDropdown />
             </Nav>
           </Navbar.Collapse>
         </Container>
@@ -48,7 +47,7 @@ function NavBar() {
             <Nav className="me-auto">
               <StyledLink to="/">Home</StyledLink>
               <StyledLink to="/vehicles">View Our Vehicles </StyledLink>
-              <StyledLink to="/reservation">Make a Reservation</StyledLink>
+              <StyledLink to="/reservations">Make a Reservation</StyledLink>
               <StyledLink to="/employee/loghours">Log Hours</StyledLink>
             </Nav>
           </Navbar.Collapse>
@@ -65,7 +64,7 @@ function NavBar() {
             <Nav className="me-auto">
               <StyledLink to="/">Home</StyledLink>
               <StyledLink to="/vehicles">View Our Vehicles </StyledLink>
-              <StyledLink to="/reservation">Make a Reservation</StyledLink>
+              <StyledLink to="/reservations">Make a Reservation</StyledLink>
               <StyledLink to="/account/dashboard">Account</StyledLink>
             </Nav>
           </Navbar.Collapse>
