@@ -21,11 +21,4 @@ class PutParsingMiddleware(MiddlewareMixin):
 
             request.PUT = request.POST
 
-class JSONParsingMiddleware(MiddlewareMixin):
-    def process_request(self, request):
-        if (request.method == "PUT" or request.method == "POST") and request.content_type == "application/json":
-            try:
-                request.JSON = json.loads(request.body)
-            except ValueError as ve:
-                return HttpResponseBadRequest("unable to parse JSON data. Error : {0}".format(ve))
             

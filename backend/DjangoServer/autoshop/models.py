@@ -1,14 +1,6 @@
-from django.db import models
-
 # Create your models here.
 from django.db import models
-from django.contrib.auth.models import AbstractUser
 
-# class Reservation(models.Model):
-#     vehicleReserved = models.ForeignKey('Vehicle', on_delete=models.CASCADE, related_name=Vehicle.reservations)
-#     userReserved = models.ForeignKey('User', on_delete=models.CASCADE)
-#     startDate = models.DateTimeField()
-#     endData = models.DateTimeField()
 class Vehicle(models.Model):
     name = models.CharField(max_length=200)
     vin = models.CharField(max_length=17)
@@ -24,26 +16,27 @@ class Vehicle(models.Model):
     image = models.TextField()
     # string to the url of the image
     # automatically assigns an id to each instance
-
     def __str__(self):
         return self.name
 
 
-
-class User(models.Model):
-    # email, phone, username, password, permissions are all accessed through this object.
+class AutoUser(models.Model):
+    PERMISSION_CHOICES = (("user", "user"), ("admin", "admin"), ("employee", "employee"))
     name = models.CharField(max_length=200)
-    permission = models.CharField(max_length=20)
-    # automatically assigns an id to each instance
-    balance = models.FloatField()
-    needHelp = models.BooleanField()
-    ethicsViolation = models.TextField(blank=True)
-    location = models.CharField(max_length=50)
     email = models.CharField(max_length=50)
     phoneNumber = models.CharField(max_length=50)
-    ## TODO: Do we need password storage here?
+    permission = models.CharField(max_length=20, choices=PERMISSION_CHOICES, default="user")
+    balance = models.FloatField(default=0)
+    needHelp = models.BooleanField(default=False)
+    ethicsViolation = models.TextField(default="None")
+    location = models.CharField(max_length=50, default="unknown")
 
-
+class Reservation(models.Model):
+    vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE )
+    autoUser = models.ForeignKey(AutoUser, on_delete=models.CASCADE)
+    startDate = models.DateTimeField()
+    endDate = models.DateTimeField()
+    amountDue = models.FloatField(default=100)
 
     def __str__(self):
-        return self.name
+        return self.vehicle.name + " from " + self.startDate + " to " + self.endDate
