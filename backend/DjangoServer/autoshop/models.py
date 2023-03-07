@@ -1,41 +1,39 @@
-from django.db import models
-
 # Create your models here.
 from django.db import models
-from django.contrib.auth.models import User as Person
-
 
 class Vehicle(models.Model):
     name = models.CharField(max_length=200)
     vin = models.CharField(max_length=17)
-    location = models.CharField(max_length=200)
-    isPurchased = models.BooleanField()
-    isPending = models.BooleanField()
-    reservedDays = models.JSONField(null=True)
     vehicleType = models.CharField(max_length=20)
-    isInsured = models.BooleanField()
-    isLoadJacked = models.BooleanField()
-    dateCheckedOut = models.DateTimeField(null=True)
-    dateCheckedIn = models.DateTimeField(null=True)
-    image = models.TextField()  # string to the url of the image
-
+    location = models.CharField(max_length=200, default="Logan")
+    isPurchased = models.BooleanField(default=False)
+    isPending = models.BooleanField(default=False)
+    isInsured = models.BooleanField(default=False)
+    isLoadJacked = models.BooleanField(default=False)
+    image = models.ImageField(default=None)
+    # string to the url of the image
     # automatically assigns an id to each instance
-
     def __str__(self):
         return self.name
 
-class User(models.Model):
-    # email, phone, username, password, permissions are all accessed through this object.
+
+class AutoUser(models.Model):
+    PERMISSION_CHOICES = (("user", "user"), ("admin", "admin"), ("employee", "employee"))
     name = models.CharField(max_length=200)
-    permission = models.CharField(max_length=20)
-    # automatically assigns an id to each instance
-    balance = models.FloatField()
-    needHelp = models.BooleanField()
-    ethicsViolation = models.TextField(blank=True)
-    location = models.CharField(max_length=50)
     email = models.CharField(max_length=50)
+    phoneNumber = models.CharField(max_length=50)
+    permission = models.CharField(max_length=20, choices=PERMISSION_CHOICES, default="user")
+    balance = models.FloatField(default=0)
+    needHelp = models.BooleanField(default=False)
+    ethicsViolation = models.TextField(default="None")
+    location = models.CharField(max_length=50, default="unknown")
 
-    ## TODO: Do we need password storage here?
+class Reservation(models.Model):
+    vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE)
+    autoUser = models.ForeignKey(AutoUser, on_delete=models.CASCADE)
+    startDate = models.DateField()
+    endDate = models.DateField()
+    amountDue = models.FloatField(default=100)
 
     def __str__(self):
-        return self.name
+        return self.vehicle.name + " from " + self.startDate + " to " + self.endDate

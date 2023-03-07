@@ -4,22 +4,34 @@ from .vehicleEndpoints import *
 
 
 @csrf_exempt
-def userRouter(request: HttpRequest, id):
+def userRouter(request: HttpRequest, id = 0):
     if request.method == "PUT":
-        return updateUserInfo(request, id)
+        return updateUser(request, id)
     elif request.method == "GET":
-        return getUserInfo(request, id)
+        return getUser(request, id)
     elif request.method == "DELETE":
-        return deleteUserInfo(request, id)
+        return deleteUser(request, id)
+    elif request.method == "POST":
+        return createUser(request)
 
 
 @csrf_exempt
 def vehicleRouter(request: HttpRequest, id):
     if request.method == "PUT":
-        return updateVehicleInfo(request, id)
+        return updateVehicle(request, id)
     elif request.method == "GET":
-        return getVehicleInfo(request, id)
+        return getVehicle(request, id)
     elif request.method == "DELETE":
-        return deleteVehicleInfo(request, id)
+        return deleteVehicle(request, id)
 
+@csrf_exempt
+def addMoney(request: HttpRequest, id):
+    return userAddMoney(request, id)
+@csrf_exempt
+def removeMoney(request: HttpRequest, id):
+    return userRemoveMoney(request, id)
+
+@csrf_exempt
+def createReservation():
+    return None
 

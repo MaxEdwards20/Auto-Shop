@@ -1,8 +1,8 @@
 import { useState, useContext } from "react";
-import { Form, Button } from "react-bootstrap";
-import { UserType } from "../types/UserTypes";
+import { Form, Button, Card } from "react-bootstrap";
+import { UserPermission } from "../types/DataTypes";
 import { createUser } from "../urls";
-import { AuthContext } from "../context/AuthContext";
+import { AuthContext } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 interface Props {
@@ -19,40 +19,45 @@ interface Props {
 export default function CreateAccount() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [balance, setBalance] = useState(0);
-  const [birthday, setBirthday] = useState("");
-  const [age, setAge] = useState(0);
   const [name, setName] = useState("");
-  const [userType, setuserType] = useState("user");
-  const { isAuthenticated, login } = useContext(AuthContext);
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const { isAuthenticated, api, setNewUser } = useContext(AuthContext);
+  const navigator = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    let url = createUser;
-    async () => {
-      const data = { email, password, balance, birthday, age, name, userType };
-      let res = await fetch(url, {
-        method: "POST",
-        body: JSON.stringify(data),
-      });
-      let json = await res.json();
-      if (res.status == 200) {
-        // return 200 if logged in, return 401 if unauthorized
-        const userType: UserType = json.userType;
-        login(userType);
-        // Redirect to home page after signing in
-        const navigate = useNavigate();
-        navigate("/");
-      } else {
-        setErrorMessage(json.result);
+  const handleSubmit = () => {
+    setErrorMessage("");
+    if (!(email && password && name && phoneNumber)) {
+      setErrorMessage("Please enter all fields");
+      return;
+    }
+    const data = { email, password, name, phoneNumber };
+    api.createUser(data).then((user) => {
+      if (!user) {
+        setErrorMessage("Invalid email or password.");
+        return;
       }
-    };
+      setNewUser(user);
+      setTimeout(() => {
+        setErrorMessage("Redirecting to home page...");
+        navigator("/home");
+      }, 1000);
+    });
   };
 
   return (
-    <Form onSubmit={handleSubmit} className="m-2">
+    <Card className="m-2">
       <Form.Label> Sign Up Here!</Form.Label>
+
+      <Form.Group controlId="formBasicName">
+        <Form.Label>Name</Form.Label>
+        <Form.Control
+          type="text"
+          placeholder="Enter name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+      </Form.Group>
       <Form.Group controlId="formBasicEmail">
         <Form.Label>Email address</Form.Label>
         <Form.Control
@@ -73,48 +78,25 @@ export default function CreateAccount() {
         />
       </Form.Group>
 
-      <Form.Group controlId="formBasicBalance">
-        <Form.Label>Initial balance</Form.Label>
-        <Form.Control
-          type="number"
-          placeholder="0"
-          value={balance}
-          onChange={(e) => setBalance(Number(e.target.value))}
-        />
-      </Form.Group>
-
-      <Form.Group controlId="formBasicBirthday">
-        <Form.Label>Birthday</Form.Label>
-        <Form.Control
-          type="date"
-          value={birthday}
-          onChange={(e) => setBirthday(e.target.value)}
-        />
-      </Form.Group>
-
-      <Form.Group controlId="formBasicAge">
-        <Form.Label>Age</Form.Label>
-        <Form.Control
-          type="number"
-          placeholder="0"
-          value={age}
-          onChange={(e) => setAge(Number(e.target.value))}
-        />
-      </Form.Group>
-
-      <Form.Group controlId="formBasicName">
-        <Form.Label>Name</Form.Label>
+      <Form.Group controlId="formBasicNumber">
+        <Form.Label>Phone Number</Form.Label>
         <Form.Control
           type="text"
-          placeholder="Enter name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          value={phoneNumber}
+          onChange={(e) => setPhoneNumber(e.target.value)}
         />
       </Form.Group>
 
-      <Button variant="primary" type="submit" className="m-2">
+      <Button
+        variant="primary"
+        type="submit"
+        className="m-2"
+        onClick={() => handleSubmit()}
+      >
         Submit
       </Button>
-    </Form>
+
+      {errorMessage && <div>{errorMessage}</div>}
+    </Card>
   );
 }

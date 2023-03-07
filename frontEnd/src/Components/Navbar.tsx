@@ -1,15 +1,24 @@
 import Container from "react-bootstrap/esm/Container";
 import Nav from "react-bootstrap/esm/Nav";
 import Navbar from "react-bootstrap/esm/Navbar";
-import NavBarDropdown from "./NavBarDropdown";
-import { AuthContext } from "../context/AuthContext";
+import { NavLink } from "react-router-dom";
+import { AuthContext } from "../contexts/AuthContext";
 import { useContext } from "react";
+import { Link } from "react-router-dom";
+import styled from "styled-components";
+
+const StyledLink = styled(Link)`
+  color: #000;
+  margin-right: 10px;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
 
 function NavBar() {
-  const { userType } = useContext(AuthContext);
-  // Use these to test the application
-  // const { login } = useContext(AuthContext);
-  // login("admin");
+  const { userPermission: userType } = useContext(AuthContext);
   if (userType == "admin") {
     return (
       <Navbar bg="light" expand="lg">
@@ -18,11 +27,11 @@ function NavBar() {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              <Nav.Link href="/">Home</Nav.Link>
-              <Nav.Link href="/vehicles">View Our Vehicles </Nav.Link>
-              <Nav.Link href="/reservation">Make a Reservation</Nav.Link>
-              <Nav.Link href="/admin/payemployees">Pay Employees</Nav.Link>
-              <Nav.Link href="/admin/">Admin</Nav.Link>
+              <StyledLink to="/">Home</StyledLink>
+              <StyledLink to="/vehicles">View Our Vehicles </StyledLink>
+              <StyledLink to="/reservation">Make a Reservation</StyledLink>
+              <StyledLink to="/admin/payemployees">Pay Employees</StyledLink>
+              <StyledLink to="/admin/">Admin</StyledLink>
               <NavBarDropdown />
             </Nav>
           </Navbar.Collapse>
@@ -37,11 +46,10 @@ function NavBar() {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              <Nav.Link href="/">Home</Nav.Link>
-              <Nav.Link href="/vehicles">View Our Vehicles </Nav.Link>
-              <Nav.Link href="/reservation">Make a Reservation</Nav.Link>
-              <Nav.Link href="/employee/loghours">Log Hours</Nav.Link>
-              <NavBarDropdown />
+              <StyledLink to="/">Home</StyledLink>
+              <StyledLink to="/vehicles">View Our Vehicles </StyledLink>
+              <StyledLink to="/reservation">Make a Reservation</StyledLink>
+              <StyledLink to="/employee/loghours">Log Hours</StyledLink>
             </Nav>
           </Navbar.Collapse>
         </Container>
@@ -55,10 +63,10 @@ function NavBar() {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              <Nav.Link href="/">Home</Nav.Link>
-              <Nav.Link href="/vehicles">View Our Vehicles </Nav.Link>
-              <Nav.Link href="/reservation">Make a Reservation</Nav.Link>
-              <NavBarDropdown />
+              <StyledLink to="/">Home</StyledLink>
+              <StyledLink to="/vehicles">View Our Vehicles </StyledLink>
+              <StyledLink to="/reservation">Make a Reservation</StyledLink>
+              <StyledLink to="/account/dashboard">Account</StyledLink>
             </Nav>
           </Navbar.Collapse>
         </Container>

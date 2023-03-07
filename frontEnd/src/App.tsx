@@ -1,19 +1,21 @@
 import { BrowserRouter } from "react-router-dom";
 import Router from "./components/Router";
 import NavBar from "./components/Navbar";
-import { useState } from "react";
-import { useContext } from "react";
-import { AuthContext } from "./context/AuthContext";
-import { AuthProvider } from "./context/AuthContext";
+import { AuthContext } from "./contexts/AuthContext";
+import { useUserInfo } from "./hooks/useApi";
+
 function App() {
-  useContext(AuthContext);
+  const { user, setNewUser, logout, api, isAuthenticated, userPermission } =
+    useUserInfo();
   return (
-    <AuthProvider>
+    <AuthContext.Provider
+      value={{ user, setNewUser, logout, api, isAuthenticated, userPermission }}
+    >
       <BrowserRouter>
-        <NavBar />
+        <NavBar></NavBar>
         <Router></Router>
       </BrowserRouter>
-    </AuthProvider>
+    </AuthContext.Provider>
   );
 }
 
