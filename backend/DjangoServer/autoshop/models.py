@@ -1,10 +1,5 @@
-from django.db import models
-
 # Create your models here.
 from django.db import models
-from django.contrib.auth.models import User
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 
 class Vehicle(models.Model):
     name = models.CharField(max_length=200)
@@ -26,33 +21,22 @@ class Vehicle(models.Model):
 
 
 class AutoUser(models.Model):
-    PERMISSION_CHOICES = ("user", "admin", "employee")
-    # email, phone, password, permissions are all accessed through this object.
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    PERMISSION_CHOICES = (("user", "user"), ("admin", "admin"), ("employee", "employee"))
     name = models.CharField(max_length=200)
     email = models.CharField(max_length=50)
     phoneNumber = models.CharField(max_length=50)
     permission = models.CharField(max_length=20, choices=PERMISSION_CHOICES, default="user")
-    # automatically assigns an id to each instance
     balance = models.FloatField(default=0)
     needHelp = models.BooleanField(default=False)
-    ethicsViolation = models.TextField(blank=True)
-    location = models.CharField(max_length=50)
-
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        AutoUser.objects.create(user=instance)
-@receiver(post_save, sender=User)
-def save_auto_user(sender, instance, **kwargs):
-    instance.autoUser.save()
+    ethicsViolation = models.TextField(default="None")
+    location = models.CharField(max_length=50, default="unknown")
 
 class Reservation(models.Model):
     vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE )
-    user = models.ForeignKey(AutoUser, on_delete=models.CASCADE)
+    autoUser = models.ForeignKey(AutoUser, on_delete=models.CASCADE)
     startDate = models.DateTimeField()
     endDate = models.DateTimeField()
-    amountDue = models.FloatField()
+    amountDue = models.FloatField(default=100)
 
     def __str__(self):
         return self.vehicle.name + " from " + self.startDate + " to " + self.endDate

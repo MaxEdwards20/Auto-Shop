@@ -50,7 +50,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'autoshop.middleware.PutParsingMiddleware',
-    'autoshop.middleware.JSONParsingMiddleware',
 ]
 
 ROOT_URLCONF = 'DjangoServer.urls'
@@ -85,8 +84,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
-
 
 
 # Password validation
