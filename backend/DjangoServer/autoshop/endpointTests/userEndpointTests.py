@@ -12,6 +12,11 @@ class TestUserEndpoints(TestCase):
     def testCreateUser(self):
         response = self.client.post(reverse("createUser"), data=self.userData)
         self.assertEqual(response.status_code, 200)
+        # Make sure it is there
+        user = json.loads(response.content)['user']
+        res = self.client.get(f"{BASE_URL}user/{user['id']}")
+        self.assertEqual(res.status_code, 200)
+
 
     def testUpdateUser(self):
         # Create a new user to be able to update

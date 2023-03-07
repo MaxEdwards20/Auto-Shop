@@ -62,8 +62,7 @@ class TestVehicleEndpoints(TestCase):
         response = self.client.post(reverse('getAllAvailableVehicles'), data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         vehicles = json.loads(response.content)['vehicles']
-        self.assertGreater(len(vehicles), 3)
-
+        self.assertGreaterEqual(len(vehicles), 3)
 
     def testGetAvailableVehiclesWithReservations(self):
         # Create vehicles

@@ -6,11 +6,11 @@ class Vehicle(models.Model):
     vin = models.CharField(max_length=17)
     vehicleType = models.CharField(max_length=20)
     location = models.CharField(max_length=200, default="Logan")
+    image = models.ImageField(default=None)
     isPurchased = models.BooleanField(default=False)
     isPending = models.BooleanField(default=False)
     isInsured = models.BooleanField(default=False)
     isLoadJacked = models.BooleanField(default=False)
-    image = models.ImageField(default=None)
     # string to the url of the image
     # automatically assigns an id to each instance
     def __str__(self):

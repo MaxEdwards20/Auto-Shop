@@ -1,7 +1,7 @@
 # Maxwell Edwards
 from .models import Reservation, Vehicle, AutoUser
 from django.http import HttpRequest, JsonResponse
-from .serializers import UserSerializer, VehicleSerializer, ReservationSerializer
+from .serializers import AutoUserSerializer, VehicleSerializer, ReservationSerializer
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
 from .helperFunctions import __getReqBody, __update_cors, parseDates, vehicleIsAvailable

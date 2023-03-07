@@ -43,8 +43,11 @@ Delete the db.sqlite3 file
 
 Make desired adjustments to the `populate` migration
 
-Create and populate the database
+Create and populate the database:
+* `$ python3 manage.py makemigrations `
+* `$ python manage.py migrate`
 
-`$ python3 manage.py makemigrations $ python manage.py migrate`
+To Create a new Migration Script:
+* `$ python manage.py makemigrations --empty autoshop --name populate`
 
 
