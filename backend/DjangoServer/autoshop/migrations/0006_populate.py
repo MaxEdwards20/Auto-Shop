@@ -3,6 +3,7 @@
 from django.db import migrations
 from uuid import uuid4
 from datetime import datetime, timedelta
+import random
 
 def populate_db(apps, schema_editor):
     AutoUser = apps.get_model('autoshop', 'AutoUser')
@@ -14,9 +15,12 @@ def populate_db(apps, schema_editor):
         user.save()
         vehicle = Vehicle(name=f"Vehicle {i}", location="1234 Main St", image="https://www.google.com", vin=str(uuid4()))
         vehicle.save()
-        for i in range(3):
-            startDate = datetime.today() + timedelta(days=i)
-            endDate = startDate + timedelta(days=2)
+        for i in range(10):
+            if random.randint(0, 10) % 2 == 0:
+                startDate = datetime.today() + timedelta(days=i)
+            else:
+                startDate = datetime.today() - timedelta(days=i)
+            endDate = startDate + timedelta(days=random.randint(0, 5))
             reservation = Reservation(autoUser=user, vehicle=vehicle, startDate=startDate, endDate=endDate)
             reservation.save()
     

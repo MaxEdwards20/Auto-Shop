@@ -37,3 +37,14 @@ Start the server and add in data
 admin
 admin@email.com
 admin123
+
+### To Adjust Filler Data:
+Delete the db.sqlite3 file
+
+Make desired adjustments to the `populate` migration
+
+Create and populate the database
+
+`$ python3 manage.py makemigrations $ python manage.py migrate`
+
+
