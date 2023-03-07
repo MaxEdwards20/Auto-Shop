@@ -5,10 +5,11 @@ from uuid import uuid4
 class TestUserEndpoints(TestCase):
     def setUp(self):
         self.client = Client()
+        self.baseURL = "http://localhost:8000/"
         self.userData = {'email': str(uuid4()), 'password': '123', 'name': 'test', 'phoneNumber': '1'}
 
     def testCreateUser(self):
-        response = self.client.post("http://localhost:8000/user", data=self.userData)
+        response = self.client.post(self.baseURL + "user", data=self.userData)
         self.assertEqual(response.status_code, 200)
 
     def testUpdateUser(self):
@@ -24,7 +25,7 @@ class TestUserEndpoints(TestCase):
             'location': 'Los Angeles',
             'email': self.userData['email']
         }
-        response = self.client.put("http://localhost:8000/user/"+ str(id), data=updatedData, content_type='application/json')
+        response = self.client.put(self.baseURL + f"user/{str(id)}", data=updatedData, content_type='application/json')
         self.assertEqual(response.status_code, 200)
         updatedUser = json.loads(response.content)['user']
         for key in updatedData:
@@ -33,34 +34,35 @@ class TestUserEndpoints(TestCase):
 
     def testDeleteUser(self):
         user = self.__createUser()
-        response = self.client.delete(f"http://localhost:8000/user/{user['id']}")
+        response = self.client.delete(self.baseURL + f"user/{user['id']}")
         self.assertEqual(response.status_code, 200)
         # make sure we can't get that user anymore
-        response = self.client.get(f"http://localhost:8000/user/{user['id']}")
+        response = self.client.get(self.baseURL + f"user/{user['id']}")
         self.assertEqual(response.status_code, 404)
         # make sure we can't delete a user that doesn't exist
-        response = self.client.delete(f"http://localhost:8000/user/{user['id']}")
+        response = self.client.delete(self.baseURL + f"user/{user['id']}")
         self.assertEqual(response.status_code, 404)
 
 
     def testGetuser(self):
         user = self.__createUser()
-        response = self.client.get(f"http://localhost:8000/user/{user['id']}")
+        response = self.client.get(self.baseURL + f"user/{user['id']}")
         self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'user')
         # Make sure we can't get a user that doesn't exist
-        response = self.client.get(f"http://localhost:8000/user/99999")
+        response = self.client.get(self.baseURL + f"user/99999")
         self.assertEqual(response.status_code, 404)
-        response = self.client.get(f"http://localhost:8000/user/INVALID")
+        response = self.client.get(self.baseURL + f"user/INVALID")
         self.assertEqual(response.status_code, 404)
 
 
     def testAddMoneyUser(self):
         user = self.__createUser()
-        response = self.client.get(f"http://localhost:8000/user/{user['id']}")
+        response = self.client.get(self.baseURL + f"user/{user['id']}")
         self.assertEqual(response.status_code, 200)
-        response = self.client.post(f"http://localhost:8000/user/{user['id']}/addMoney", data={'amount': 100})
+        response = self.client.post(self.baseURL + f"user/{user['id']}/addMoney", data={'amount': 100})
         self.assertEqual(response.status_code, 200)
-        response =  self.client.get(f"http://localhost:8000/user/{user['id']}")
+        response =  self.client.get(self.baseURL + f"user/{user['id']}")
         updatedUser = json.loads(response.content)['user']
         self.assertEqual(response.status_code, 200)
         self.assertEqual(updatedUser['balance'], user['balance'] + 100)
@@ -68,18 +70,18 @@ class TestUserEndpoints(TestCase):
 
     def testRemoveMoneyUser(self):
         user = self.__createUser()
-        response = self.client.get(f"http://localhost:8000/user/{user['id']}")
+        response = self.client.get(self.baseURL + f"user/{user['id']}")
         self.assertEqual(response.status_code, 200)
-        response = self.client.post(f"http://localhost:8000/user/{user['id']}/removeMoney", data={'amount': 100})
+        response = self.client.post(self.baseURL + f"user/{user['id']}/removeMoney", data={'amount': 100})
         self.assertEqual(response.status_code, 200)
-        response =  self.client.get(f"http://localhost:8000/user/{user['id']}")
+        response =  self.client.get(self.baseURL + f"user/{user['id']}")
         updatedUser = json.loads(response.content)['user']
         self.assertEqual(response.status_code, 200)
         self.assertEqual(updatedUser['balance'], user['balance'] - 100)
 
 
     def __createUser(self):
-        response = self.client.post("http://localhost:8000/user", data=self.userData)
+        response = self.client.post(self.baseURL + f"user", data=self.userData)
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content)['user']
         self.assertIn('id', data)

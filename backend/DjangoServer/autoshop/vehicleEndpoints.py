@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .serializers import VehicleSerializer
+from .helperFunctions import __getReqBody, __update_cors
 
 
 def checkValidCreateVehicle(request, response):
@@ -51,19 +52,16 @@ def createVehicle(request):
     else:
         j = JsonResponse(response)
         j.status_code = 400
-    if 'Origin' in request.headers:
-        j['Access-Control-Allow-Origin'] = request.headers['Origin']
-    else:
-        j['Access-Control-Allow-Origin'] = '*'
-    return j
+    return __update_cors(j, request)
 
 
-def createVehicleDatabase(request):
+def createVehicleDatabase(request: HttpRequest):
     newVehicle = Vehicle()
-    newVehicle.name = request.POST['name']
-    newVehicle.vehicleType = request.POST['vehicleType']
-    newVehicle.image = request.POST['image']
-    newVehicle.vin = request.POST['vin']
+    parsedBody = __getReqBody(request)
+    newVehicle.name = parsedBody['name']
+    newVehicle.vehicleType = parsedBody['vehicleType']
+    newVehicle.image = parsedBody['image']
+    newVehicle.vin = parsedBody['vin']
     newVehicle.isInsured = False
     newVehicle.isPending = False
     newVehicle.isLoadJacked = False
@@ -81,11 +79,7 @@ def deleteVehicleInfo(request, id):
     j = JsonResponse(response)
     if not response:
         j.status_code = 400
-    if 'Origin' in request.headers:
-        j['Access-Control-Allow-Origin'] = request.headers['Origin']
-    else:
-        j['Access-Control-Allow-Origin'] = '*'
-    return j
+    return __update_cors(j, request)
 
 
 def getAllVehicles(request: HttpRequest):
@@ -96,21 +90,13 @@ def getAllVehicles(request: HttpRequest):
         data = serializer.data
         myDict[vehicle.id] = data
     j = JsonResponse(myDict, safe=False)
-    if 'Origin' in request.headers:
-        j['Access-Control-Allow-Origin'] = request.headers['Origin']
-    else:
-        j['Access-Control-Allow-Origin'] = '*'
-    return j
+    return __update_cors(j, request)
 
 
 def getVehicleInfo(request: HttpRequest, id):
     response = getVehicleInfoDatabase(id)
     j = JsonResponse(response)
-    if 'Origin' in request.headers:
-        j['Access-Control-Allow-Origin'] = request.headers['Origin']
-    else:
-        j['Access-Control-Allow-Origin'] = '*'
-    return j
+    return __update_cors(j, request)
 
 
 def getVehicleInfoDatabase(id):
@@ -168,11 +154,7 @@ def updateVehicleInfo(request: HttpRequest, id):
     else:
         response = getVehicleInfoDatabase(id)
         j = JsonResponse(response)
-    if 'Origin' in request.headers:
-        j['Access-Control-Allow-Origin'] = request.headers['Origin']
-    else:
-        j['Access-Control-Allow-Origin'] = '*'
-    return j
+    return __update_cors(j, request)
 
 
 def vehicleAvailability(request: HttpRequest, id):
@@ -183,8 +165,6 @@ def vehicleAvailability(request: HttpRequest, id):
                 'dateCheckedIn': vehicle.dateCheckedIn,
                 }
     j = JsonResponse(response)
-    if 'Origin' in request.headers:
-        j['Access-Control-Allow-Origin'] = request.headers['Origin']
-    else:
-        j['Access-Control-Allow-Origin'] = '*'
-    return j
+    return __update_cors(j, request)
+
+

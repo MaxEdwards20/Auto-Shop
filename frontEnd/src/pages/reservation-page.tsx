@@ -4,16 +4,20 @@ import TextField from "@mui/material/TextField";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 // import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
-import { Rentals } from "../DummyData"
-import CarListing from '../components/CarListingReservation';
-import { Car } from '../types/DataTypes';
-import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import { Rentals } from "../DummyData";
+import CarListing from "../components/CarListingReservation";
+import { Car } from "../types/DataTypes";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+import { Typography } from "@mui/material";
+import { AuthContext } from "../contexts/AuthContext";
+import { useContext } from "react";
 
 export default function BasicDateTimePicker() {
   const [startDate, setStartDate] = useState<Dayjs | null>(dayjs());
   const [endDate, setEndDate] = useState<Dayjs | null>(dayjs());
   const [minEndDate, setMinEndDate] = useState<Dayjs | null>(dayjs());
   const [carList, setCarList] = useState<Car[]>([]);
+  const { user, api } = useContext(AuthContext);
 
   let currentDate = new Date();
   let cDay = currentDate.getDate();
@@ -29,35 +33,39 @@ export default function BasicDateTimePicker() {
 
   return (
     <div className="root">
+      <Typography variant="h5" className="title p-3">
+        Select your available dates
+      </Typography>
       <div className="container" id="dateContainer">
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DesktopDatePicker
-          label="Start Date"
-          value={startDate}
-          minDate={today}
-          onChange={(newDate) => {
-            setStartDate(newDate);
-            setMinEndDate(newDate);
-            if (endDate != null && newDate != null && endDate < newDate) {
+          <DesktopDatePicker
+            label="Start Date"
+            value={startDate}
+            minDate={today}
+            onChange={(newDate) => {
+              setStartDate(newDate);
+              setMinEndDate(newDate);
+              if (endDate != null && newDate != null && endDate < newDate) {
+                setEndDate(newDate);
+              }
+            }}
+            renderInput={(params) => <TextField {...params} />}
+          />
+          <DesktopDatePicker
+            label="End Date"
+            value={endDate}
+            minDate={minEndDate}
+            onChange={(newDate) => {
               setEndDate(newDate);
-            }
-          }}
-          renderInput={(params) => <TextField {...params} />}
-        />
-        <DesktopDatePicker
-          label="End Date"
-          value={endDate}
-          minDate={minEndDate}
-          onChange={(newDate) => {
-            setEndDate(newDate);
-          }}
-          renderInput={(params) => <TextField {...params} />}
-        />
+            }}
+            renderInput={(params) => <TextField {...params} />}
+          />
         </LocalizationProvider>
         <button
           className="dateButton"
           onClick={() => {
             //Make a POST request to reserve a vehicle for these days
+            api.createReservation(user.id, startDate, endDate);
             console.log(startDate);
             console.log(endDate);
             setCarList(Rentals);
@@ -69,11 +77,10 @@ export default function BasicDateTimePicker() {
       <div className="carList">
         <ul>
           {carList.map((rental) => (
-            <div className='reservationContainer'>
+            <div className="reservationContainer">
               <CarListing car={rental} />
             </div>
-            )
-          )}
+          ))}
         </ul>
       </div>
     </div>

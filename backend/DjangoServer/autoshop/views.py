@@ -30,3 +30,12 @@ def addMoney(request: HttpRequest, id):
 @csrf_exempt
 def removeMoney(request: HttpRequest, id):
     return userRemoveMoney(request, id)
+
+
+def createReservation():
+    return None
+
+
+def getAllAvailableVehicles(request: HttpRequest):
+
+    return None

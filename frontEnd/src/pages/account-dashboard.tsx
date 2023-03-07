@@ -12,6 +12,7 @@ import {
   ListItem,
   ListItemText,
 } from "@material-ui/core";
+import Divider from "@mui/material/Divider";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -46,6 +47,11 @@ const useStyles = makeStyles((theme) => ({
 const Dashboard = () => {
   const classes = useStyles();
   const { user } = useContext(AuthContext);
+  const [amountToAdd, adjustedAmount] = useState<number>(0);
+
+  const navigate = useNavigate();
+  const { api } = useContext(AuthContext);
+
   if (!user) {
     return (
       <div className={classes.root}>
@@ -73,23 +79,18 @@ const Dashboard = () => {
       </div>
     );
   }
-
-  const [amount, setAmount] = useState<number>(user.balance);
   const [balance, setBalance] = useState<number>(user.balance);
   const { name, reservations } = user;
-  const navigate = useNavigate();
-  const { api } = useContext(AuthContext);
 
   const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(event.target.value);
     if (value >= 0) {
-      setAmount(value);
+      adjustedAmount(value);
     }
   };
 
   const handleAddMoney = () => {
-    console.log("Adding money to account");
-    api.addMoneyToUser(user.id, amount).then((user) => {
+    api.addMoneyToUser(user.id, amountToAdd).then((user) => {
       if (!user) {
         return;
       }
@@ -115,7 +116,7 @@ const Dashboard = () => {
           }}
           variant="outlined"
           className={classes.textField}
-          value={amount}
+          value={amountToAdd}
           onChange={handleAmountChange}
         />
         <Button
@@ -127,17 +128,33 @@ const Dashboard = () => {
           Add
         </Button>
       </form>
-      <Typography variant="h6">Upcoming Reservations</Typography>
-      {/* <List className={classes.list}>
-        {reservations.map((reservation, index) => (
-          <ListItem key={index}>
-            <ListItemText
-              primary={`${reservation.startDate} to ${reservation.endDate}`}
-              secondary={reservation.amountDue}
-            />
-          </ListItem>
-        ))}
-      </List> */}
+      <Divider>
+        <Typography variant="h6">Upcoming Reservations</Typography>
+      </Divider>
+      <List className={classes.list}>
+        {reservations ? (
+          reservations.map((reservation, index) => (
+            <ListItem key={index}>
+              <ListItemText
+                primary={`${reservation.startDate} to ${reservation.endDate}`}
+                secondary={reservation.amountDue}
+              />
+            </ListItem>
+          ))
+        ) : (
+          <>
+            <Typography align="center">No upcoming reservations</Typography>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              onClick={() => navigate("/reservations")}
+            >
+              Create Reservation
+            </Button>
+          </>
+        )}
+      </List>
     </div>
   );
 };
