@@ -20,6 +20,7 @@ urlpatterns = [
     path('vehicle/all', views.getAllVehicles, name="getAllVehicles"), # Get all vehicles to show
     path('vehicle/available', views.getAllAvailableVehicles, name="getAllAvailableVehicles"),
     path('vehicle/<int:id>/available', views.vehicleAvailability, name='vehicleAvailability'),
+    path('vehicle/<int:id>/purchase', views.purchaseVehicle, name='purchaseVehicle'),
     path('vehicle/all', views.getAllVehicles, name="getAllVehicles"), # Get all vehicles to show
 
     # reservations

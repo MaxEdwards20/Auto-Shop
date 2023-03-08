@@ -1,6 +1,6 @@
 from django.views.decorators.csrf import csrf_exempt
 from .userEndpoints import authenticateUser, createUser, deleteUser, getUser, getUsers, updateUser, userAddMoney, userRemoveMoney
-from .vehicleEndpoints import createVehicle, deleteVehicle, getVehicle, getAllAvailableVehicles, getAllVehicles, updateVehicle, vehicleAvailability
+from .vehicleEndpoints import createVehicle, deleteVehicle, getVehicle, getAllAvailableVehicles, getAllVehicles, updateVehicle, vehicleAvailability, purchaseVehicle
 from .reservationEndpoints import createReservation, deleteReservation, getReservation
 from django.http import HttpRequest
 @csrf_exempt

@@ -92,7 +92,9 @@ def __createUserDatabase(parsedBody) -> AutoUser:
                                              username=parsedBody['email'],
                                              password=parsedBody['password'],
                                              )
-    newUser = AutoUser.objects.create(email=parsedBody['email'], name=parsedBody['name'], phoneNumber = parsedBody['phoneNumber'], user=newUserAuth,)
+
+
+    newUser = AutoUser.objects.create(email=parsedBody['email'], name=parsedBody['name'], phoneNumber = parsedBody['phoneNumber'], user=newUserAuth, permission=(parsedBody.get('permission') or "user"))
     return newUser
 
 def __makeJSONResponse(userID: int) -> JsonResponse:

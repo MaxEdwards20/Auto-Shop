@@ -15,9 +15,6 @@ class TestVehicleEndpoints(TestCase):
         vehicleData = {'vehicleType': "Chevrolet", 'name': "Cruze", 'vin': str(uuid4()), "image": ""}
         response = self.client.post(reverse('createVehicle'), data=vehicleData)
         self.assertEqual(response.status_code, 200)
-        # Ensure we can't make vehicle again
-        response = self.client.post(reverse('createVehicle'), data=vehicleData)
-        self.assertEqual(response.status_code, 400)
 
 
     def testUpdateVehicle(self):
@@ -63,8 +60,6 @@ class TestVehicleEndpoints(TestCase):
         self.assertTrue('imageURL' in vehicle)
 
 
-
-
     def testGetAvailableVehicles(self):
         today = datetime.now().date()
         start_date = today + timedelta(days=1)
@@ -94,6 +89,34 @@ class TestVehicleEndpoints(TestCase):
         # Reservation.objects.create(vehicle=self.vehicle1, autoUser=self.user1 , startDate=self.start_date, endDate=self.end_date)
         # Reservation.objects.create(vehicle=self.vehicle2, autoUser=self.user2, startDate=self.start_date, endDate=self.end_date)
 
+
+    def testPurchaseVehicle(self):
+        v1 = createVehicle(self.client)
+        response = self.client.get((f"{BASE_URL}vehicle/{v1['id']}"))
+        self.assertEqual(response.status_code, 200)
+        testVehicle = json.loads(response.content)['vehicle']
+        self.assertFalse(testVehicle['isPurchased'])
+        user = createUser(self.client, permission="admin")
+        response = self.client.post(f"{BASE_URL}vehicle/{v1['id']}/purchase", data={"userID": user['id']})
+        self.assertEqual(response.status_code, 200)
+        response = self.client.get((f"{BASE_URL}vehicle/{v1['id']}"))
+        self.assertEqual(response.status_code, 200)
+        resVehicle = json.loads(response.content)['vehicle']
+        self.assertTrue(resVehicle['isPurchased'])
+
+    def testPurchaseVehicleInvalidPermissions(self):
+        v1 = createVehicle(self.client)
+        response = self.client.get((f"{BASE_URL}vehicle/{v1['id']}"))
+        self.assertEqual(response.status_code, 200)
+        testVehicle = json.loads(response.content)['vehicle']
+        self.assertFalse(testVehicle['isPurchased'])
+        user = createUser(self.client)
+        response = self.client.post(f"{BASE_URL}vehicle/{v1['id']}/purchase", data={"userID": user['id']})
+        self.assertEqual(response.status_code, 400)
+        response = self.client.get((f"{BASE_URL}vehicle/{v1['id']}"))
+        self.assertEqual(response.status_code, 200)
+        resVehicle = json.loads(response.content)['vehicle']
+        self.assertFalse(resVehicle['isPurchased'])
 
 
 

@@ -1,5 +1,5 @@
 from django.http import HttpRequest, HttpResponse, JsonResponse
-from .models import Vehicle, Reservation
+from .models import Vehicle, Reservation, AutoUser
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from .serializers import VehicleSerializer
@@ -9,29 +9,28 @@ import datetime
 @csrf_exempt
 def createVehicle(request: HttpRequest):
     parsedBody = __getReqBody(request)
-    response = __validateCreateVehicleBody(request, parsedBody)
-    if 'error' in response:
-        return __update_cors(JsonResponse(response, status=400), request)
+    if not __validateCreateVehicleBody(request, parsedBody):
+        return __update_cors(JsonResponse("Error in body", status=400), request)
     vehicle = __createVehicleDatabase(parsedBody)
-    j = JsonResponse({"vehicle": VehicleSerializer(vehicle).data})
+    j = JsonResponse({"vehicle": VehicleSerializer(vehicle).data}, safe=False)
     return __update_cors(j, request)
 
 @csrf_exempt
 def deleteVehicle(request, id):
     vehicle = get_object_or_404(Vehicle, pk=id)
-    j = JsonResponse({"vehicle": VehicleSerializer(vehicle).data})
+    j = JsonResponse({"vehicle": VehicleSerializer(vehicle).data}, safe=False)
     vehicle.delete()
     return __update_cors(j, request)
 
 @csrf_exempt
 def getVehicle(request: HttpRequest, id):
-    response = __getSerializedVehicleInfo(id)
+    response = VehicleSerializer(get_object_or_404(Vehicle, pk=id)).data
     j = JsonResponse({"vehicle": response}, safe=False)
     return __update_cors(j, request)
 
 @csrf_exempt
 def getAllVehicles(request: HttpRequest):
-    vehicles = [VehicleSerializer(vehicle).data for vehicle in Vehicle.objects.all()]
+    vehicles = [VehicleSerializer(vehicle).data for vehicle in Vehicle.objects.all() if vehicle.isPurchased]
     j = JsonResponse({"vehicles": vehicles}, safe=False)
     return __update_cors(j, request)
 
@@ -45,15 +44,13 @@ def getAllAvailableVehicles(request: HttpRequest):
         if not vehicleIsAvailable(startDate, endDate, reservation):
             alreadyReserved.add(reservation.vehicle.pk)
 
-    #TODO: Add filter to make sure vehicle isPurchased
-
     # Get all vehicles that are not unavailable
     for vehicle in Vehicle.objects.all():
-        if vehicle.pk not in alreadyReserved:
+        if vehicle.pk not in alreadyReserved and vehicle.isPurchased:
             availableVehicles.append(VehicleSerializer(vehicle).data)
 
     vehicles = sorted(availableVehicles, key=lambda vehicle: int(vehicle['pricePerDay']))
-    j = JsonResponse({"vehicles": vehicles})
+    j = JsonResponse({"vehicles": vehicles}, safe=False)
     return __update_cors(j, request)
 
 
@@ -65,66 +62,49 @@ def updateVehicle(request: HttpRequest, id):
         if key in parsedBody:
             setattr(vehicle, key, parsedBody[key])
     vehicle.save()
-    j = JsonResponse({"vehicle": VehicleSerializer(vehicle).data})
+    j = JsonResponse({"vehicle": VehicleSerializer(vehicle).data}, safe=False)
     return __update_cors(j, request)
 
 @csrf_exempt
 def vehicleAvailability(request: HttpRequest, id):
     vehicle = get_object_or_404(Vehicle, pk=id)
-    response = {'name': vehicle.name,
-                'reservedDays': vehicle.reservedDays,
-                'dateCheckedOut': vehicle.dateCheckedOut,
-                'dateCheckedIn': vehicle.dateCheckedIn,
-                }
-    j = JsonResponse(response)
+    j = JsonResponse({"vehicle": VehicleSerializer(vehicle).data}, safe=False)
     return __update_cors(j, request)
 
 
-def __validateCreateVehicleBody(request: HttpRequest, parsedBody: dict):
-    NEEDED_PARAMS = {'name', 'vehicleType', 'image', 'vin'}
-    res = {}
-    if request.method == 'POST':
-        for item in NEEDED_PARAMS:
-            if item not in parsedBody:
-               res['error'] = "Need all " + str(NEEDED_PARAMS)
-    else:
-        res['error'] = 'You must use a post request when creating a vehicle.'
-    # check to see if the vehicle already exists.
-    if 'vin' in parsedBody and 'error' not in parsedBody:
-        vin = parsedBody['vin']
-        vehicle = Vehicle.objects.filter(vin=vin)
-        if vehicle:
-            res['error'] = 'This vehicle already exists.'
-    return res
+@csrf_exempt
+def purchaseVehicle(request: HttpRequest, id: int):
+    parsedBody = __getReqBody(request)
+    vehicle = get_object_or_404(Vehicle, pk=id)
+    # verify we have userID
+    if 'userID' not in parsedBody:
+        return __errorMessage(request)
+    user: AutoUser = get_object_or_404(AutoUser, pk=int(parsedBody['userID']))
+    # verify the user has proper permissions
+    if user.permission != "admin":
+        return __errorMessage(request)
+    vehicle.isPurchased = True
+    vehicle.save()
+    j = JsonResponse({"vehicle": VehicleSerializer(vehicle).data}, safe=False)
+    return __update_cors(j, request)
+
+def __errorMessage(request):
+    return __update_cors(JsonResponse("error", status=400, safe=False), request)
 
 
-def __checkValidGetVehicle(request, response):
-    if 'vin' not in request.GET:
-        response['error'] = "You must enter a valid vin"
-    else:
-        vin = request.GET['vin']
-        try:
-            Vehicle.objects.get(vin=vin)
-        except Vehicle.DoesNotExist:
-            response['error'] = 'you must enter a valid vin'
-    return response
-
+def __validateCreateVehicleBody(request: HttpRequest, parsedBody: dict) -> bool:
+    NEEDED_PARAMS = {'name', 'image'}
+    if request.method != "POST": return False
+    for item in NEEDED_PARAMS:
+        if item not in parsedBody:
+            return False
+    return True
 
 def __createVehicleDatabase(parsedBody: dict):
     newVehicle = Vehicle()
     newVehicle.name = parsedBody['name']
     newVehicle.vehicleType = parsedBody['vehicleType']
     newVehicle.imageURL = parsedBody['image']
-    newVehicle.vin = parsedBody['vin']
-    newVehicle.isInsured = False
-    newVehicle.isPending = False
-    newVehicle.isLoadJacked = False
-    newVehicle.location = "lot"
-    newVehicle.isPurchased = False
     newVehicle.save()
     return newVehicle
 
-def __getSerializedVehicleInfo(id):
-    vehicleModel = get_object_or_404(Vehicle, pk=id)
-    serializer = VehicleSerializer(vehicleModel)
-    return serializer.data

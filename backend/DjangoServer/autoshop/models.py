@@ -2,9 +2,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 class Vehicle(models.Model):
+    vehicleType = models.CharField(max_length=20, default="car")
     name = models.CharField(max_length=200)
-    vin = models.CharField(max_length=17)
-    vehicleType = models.CharField(max_length=20)
+    vin = models.CharField(max_length=17, default="vehicle") # I am not sure we need this -max
     location = models.CharField(max_length=200, default="Logan")
     imageURL = models.URLField(default=None)
     imageFile = models.ImageField(default=None)
