@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { Api } from "../lib/api";
-import { User, UserPermission } from "../types/DataTypes";
+import { User, UserPermission, Vehicle } from "../types/DataTypes";
 import { useState } from "react";
 import { getToken } from "./miscFunctions";
 import { removeToken } from "./miscFunctions";
@@ -12,6 +12,8 @@ type UserInfo = () => {
   userPermission: UserPermission;
   isAuthenticated: boolean;
   api: Api;
+  vehicles: Vehicle[];
+  setNewVehicles: (vehicles: Vehicle[]) => void;
 };
 
 export const useUserInfo: UserInfo = () => {
@@ -19,6 +21,7 @@ export const useUserInfo: UserInfo = () => {
   const [userPermission, setUserPermission] = useState<UserPermission>("guest");
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [api] = useState(new Api());
+  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
 
   const setNewUser = (newUser: User) => {
     // if (!getToken()) return; // add this if we start using tokens
@@ -28,6 +31,11 @@ export const useUserInfo: UserInfo = () => {
     setIsAuthenticated(true);
   };
 
+  const setNewVehicles = (newVehicles: Vehicle[]) => {
+    if (!newVehicles) return;
+    setVehicles(newVehicles);
+  };
+
   const logout = () => {
     removeToken();
     setUser(undefined);
@@ -35,5 +43,14 @@ export const useUserInfo: UserInfo = () => {
     setIsAuthenticated(false);
   };
 
-  return { user, setNewUser, logout, api, userPermission, isAuthenticated };
+  return {
+    user,
+    setNewUser,
+    logout,
+    api,
+    userPermission,
+    isAuthenticated,
+    vehicles,
+    setNewVehicles,
+  };
 };

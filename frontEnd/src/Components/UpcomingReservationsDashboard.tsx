@@ -4,12 +4,16 @@ import {
   ListItem,
   ListItemText,
   Button,
+  Box,
+  ImageListItem,
+  ImageList,
+  ImageListItemBar,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { ReservationInfo } from "../types/DataTypes";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import { ClassNameMap } from "@material-ui/core/styles/withStyles";
+import { Vehicle, ReservationInfo } from "../types/DataTypes";
 
 type UpcomingReservationsDashboardProps = {
   reservations: ReservationInfo[];
@@ -20,36 +24,62 @@ export const UpcomingReservationsDashboard = ({
   reservations,
   classes,
 }: UpcomingReservationsDashboardProps) => {
-  console.log(reservations);
+  console.log("Received reservations: ", reservations);
+  const { vehicles } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  const makeReservationInfo = (reservation: ReservationInfo, index: number) => {
+    //https://mui.com/system/display/
+    const vehicle = vehicles.find(
+      (vehicle) => vehicle.id === reservation.vehicle
+    );
+    if (!vehicle) {
+      console.log(`Reservation ID: ${reservation.id}}`);
+      console.log("Could not find vehicle for reservation: ", reservation);
+      return null;
+    }
+    return (
+      <ImageListItem key={index}>
+        <img
+          src={vehicle.imageURL}
+          alt="Sick superhero vehicle"
+          className="vehicleListingImage"
+        ></img>
+        <ImageListItemBar
+          title={vehicle.name}
+          subtitle={`${reservation.startDate} to ${reservation.endDate} `}
+        ></ImageListItemBar>
+      </ImageListItem>
+    );
+  };
+
+  const noReservations = () => {
+    return (
+      <>
+        <Typography align="center">No upcoming reservations</Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.button}
+          size="small"
+          onClick={() => navigate("/reservations")}
+        >
+          Create Reservation
+        </Button>
+      </>
+    );
+  };
+
+  if (!reservations || reservations.length === 0) return noReservations();
+
   return (
     <>
       <Typography variant="h6">Upcoming Reservations</Typography>
-      <List className={classes.list}>
-        {reservations ? (
-          reservations.map((reservation, index) => (
-            <ListItem key={index}>
-              <ListItemText
-                primary={`${reservation.startDate} to ${reservation.endDate}`}
-                secondary={reservation.amountDue}
-              />
-            </ListItem>
-          ))
-        ) : (
-          <>
-            <Typography align="center">No upcoming reservations</Typography>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              size="small"
-              onClick={() => navigate("/reservations")}
-            >
-              Create Reservation
-            </Button>
-          </>
+      <ImageList>
+        {reservations.map((reservation) =>
+          makeReservationInfo(reservation, reservation.id)
         )}
-      </List>
+      </ImageList>
     </>
   );
 };

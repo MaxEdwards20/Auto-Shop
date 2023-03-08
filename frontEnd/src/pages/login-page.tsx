@@ -14,13 +14,15 @@ function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { isAuthenticated, setNewUser, api } = useContext(AuthContext);
-  const [signInFailed, setSignInFailed] = useState(false);
+  const [userMessage, setUserMessage] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = () => {
+    setUserMessage("");
     api.loginUser({ email, password }).then((user) => {
+      setUserMessage("Logging in...");
       if (!user) {
-        setSignInFailed(true);
+        setUserMessage("Error, wrong email and password. Please try again.");
         return;
       }
       setNewUser(user);
@@ -31,46 +33,28 @@ function LoginPage() {
   };
 
   return (
-    <div>
-      <Card>
-        <div className="m-4">
-          <h3>Email:</h3>
-          <input
-            type="text"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-          />
-        </div>
-        <div className="m-4">
-          <h3>Password:</h3>
-          <input
-            type="password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-          />
-        </div>
-        <Button type="submit" className="m-4" onClick={() => handleSubmit()}>
-          Login
-        </Button>
-      </Card>
-      <div>
-        {isAuthenticated ? (
-          <div>Welcome!</div>
-        ) : (
-          !signInFailed && <p className="m-2"> Please log in to proceed </p>
-        )}
+    <Card>
+      <div className="m-4">
+        <h3>Email:</h3>
+        <input
+          type="text"
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
+        />
       </div>
-      <div>
-        {signInFailed ? (
-          <div className="m-2">
-            {" "}
-            Error, wrong email and password. Please try again.{" "}
-          </div>
-        ) : (
-          <p></p>
-        )}
+      <div className="m-4">
+        <h3>Password:</h3>
+        <input
+          type="password"
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
+        />
       </div>
-    </div>
+      <Button type="submit" className="m-4" onClick={() => handleSubmit()}>
+        Login
+      </Button>
+      {userMessage && <div className="m-2">{userMessage}</div>}
+    </Card>
   );
 }
 export default LoginPage;

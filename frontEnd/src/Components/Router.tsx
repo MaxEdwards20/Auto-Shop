@@ -7,7 +7,20 @@ import LoginPage from "../pages/login-page";
 import VehiclePage from "../pages/vehicle-page";
 import AdminPage from "../pages/admin-page";
 import CreateAccount from "./CreateAccount";
+import { useEffect, useContext } from "react";
+import { AuthContext } from "../contexts/AuthContext";
 function Router() {
+  const { vehicles, setNewVehicles, api } = useContext(AuthContext);
+  // Load all the vehicles into the context
+  useEffect(() => {
+    api.getAllVehicles().then((cars) => {
+      if (!cars) {
+        return;
+      }
+      setNewVehicles(cars);
+    });
+  }, []);
+
   return (
     // See tutorial at https://www.youtube.com/watch?v=Ul3y1LXxzdU
     <Routes>

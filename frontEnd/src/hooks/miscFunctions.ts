@@ -9,3 +9,10 @@ export function getToken(): string | null {
 export function removeToken() {
   localStorage.removeItem("token");
 }
+
+export function formatCurrency(num: number): string {
+  return `$${num.toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`;
+}

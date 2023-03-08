@@ -51,6 +51,7 @@ class TestUserEndpoints(TestCase):
 
 
     def testGetuser(self):
+        # TODO: Create some reservations and make sure they are returned better
         user = createUser(self.client)
         response = self.client.get(BASE_URL + f"user/{user['id']}")
         self.assertEqual(response.status_code, 200)

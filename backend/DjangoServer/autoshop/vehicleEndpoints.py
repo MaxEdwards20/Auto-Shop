@@ -39,14 +39,17 @@ def getAllVehicles(request: HttpRequest):
 def getAllAvailableVehicles(request: HttpRequest):
     startDate, endDate = parseDates(request)
     availableVehicles = []
-    unavailableVehicles = set()
+    alreadyReserved = set()
     # Note all unavailable vehicles
     for reservation in Reservation.objects.all():
         if not vehicleIsAvailable(startDate, endDate, reservation):
-            unavailableVehicles.add(reservation.vehicle.pk)
+            alreadyReserved.add(reservation.vehicle.pk)
+
+    #TODO: Add filter to make sure vehicle isPurchased
+
     # Get all vehicles that are not unavailable
     for vehicle in Vehicle.objects.all():
-        if vehicle.pk not in unavailableVehicles:
+        if vehicle.pk not in alreadyReserved:
             availableVehicles.append(VehicleSerializer(vehicle).data)
     j = JsonResponse({"vehicles": availableVehicles})
     return __update_cors(j, request)

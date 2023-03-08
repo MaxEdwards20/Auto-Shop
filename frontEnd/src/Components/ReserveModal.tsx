@@ -14,6 +14,7 @@ import { AuthContext } from "../contexts/AuthContext";
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { UnAuthResponse } from "./UnAuthResponse";
+import { formatCurrency } from "../hooks/miscFunctions";
 
 type ReserveModalProps = {
   vehicle: Vehicle;
@@ -63,7 +64,13 @@ export const ReserveModal = ({
         if (!reservation) {
           setUserMessage("Error creating reservation. Please try again.");
         } else {
-          user.reservations = [...user.reservations, reservation]; // update the user's reservations
+          console.log(user.reservations);
+          if (user.reservations.length > 0) {
+            user.reservations = [...user.reservations, reservation];
+          } else {
+            user.reservations = [reservation];
+          }
+          // update the user's reservations
           removeFunds(); // Reservation is made so update the funds available for the user
         }
       });
@@ -77,7 +84,7 @@ export const ReserveModal = ({
           Price per day: ${vehicle.pricePerDay}
         </DialogContentText>
         <DialogContentText>
-          Price for the entire reservation: ${totalCost}
+          Price for the entire reservation: {formatCurrency(totalCost)}
         </DialogContentText>
         <DialogContentText>
           Your account balance: ${user.balance}

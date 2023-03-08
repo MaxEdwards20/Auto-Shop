@@ -24,7 +24,7 @@ export default function ReservationPage() {
   const [startDate, setStartDate] = useState<Dayjs>(today);
   const [endDate, setEndDate] = useState<Dayjs>(today);
   const [minEndDate, setMinEndDate] = useState<Dayjs | null>(dayjs());
-  const [carList, setCarList] = useState<Vehicle[]>([]);
+  const [availableVehicles, setAvailableVehicles] = useState<Vehicle[]>([]);
   const [userMessage, setUserMessage] = useState("");
   const { user, api } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -39,7 +39,7 @@ export default function ReservationPage() {
     return <UnAuthResponse></UnAuthResponse>;
   }
 
-  const updateVehicleList = () => {
+  const updateAvailableVehicles = () => {
     setUserMessage("");
     const start = startDate?.toDate();
     const end = endDate?.toDate();
@@ -48,7 +48,7 @@ export default function ReservationPage() {
         setUserMessage("No cars available for those dates");
         return;
       }
-      setCarList(cars);
+      setAvailableVehicles(cars);
     });
   };
 
@@ -84,16 +84,19 @@ export default function ReservationPage() {
             renderInput={(params) => <TextField {...params} />}
           />
         </LocalizationProvider>
-        <button className="dateButton" onClick={() => updateVehicleList()}>
+        <button
+          className="dateButton"
+          onClick={() => updateAvailableVehicles()}
+        >
           Show Me The Vehicles!
         </button>
       </div>
       <div className="carList">
         <ul>
-          {carList.map((rental) => (
+          {availableVehicles.map((rental) => (
             <div className="reservationContainer" key={rental.id}>
               <CarListing
-                updateVehicleList={updateVehicleList}
+                updateVehicleList={updateAvailableVehicles}
                 vehicle={rental}
                 startDate={startDate.toDate()}
                 endDate={endDate.toDate()}

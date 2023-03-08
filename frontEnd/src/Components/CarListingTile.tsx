@@ -1,7 +1,7 @@
 import { Typography } from "@mui/material";
 import { Vehicle } from "../types/DataTypes";
 
-export default function CarListing(vehicle: Vehicle) {
+export default function CarListingTile(vehicle: Vehicle) {
   return (
     <div className="carTile">
       <img

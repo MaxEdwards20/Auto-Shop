@@ -1,19 +1,20 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import { Typography, TextField, Button } from "@material-ui/core";
 import Stack from "@mui/material/Stack";
-
+import { Vehicle } from "../types/DataTypes";
 import { UnAuthDashboard } from "../components/UnAuthDashboard";
 import { UpcomingReservationsDashboard } from "../components/UpcomingReservationsDashboard";
-
+import { formatCurrency } from "../hooks/miscFunctions";
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     paddingTop: theme.spacing(4),
+    width: "100%",
   },
   title: {
     marginBottom: theme.spacing(2),
@@ -40,7 +41,8 @@ const useStyles = makeStyles((theme) => ({
 
 const Dashboard = () => {
   const classes = useStyles();
-  const { user, api, logout } = useContext(AuthContext);
+  const { user, api, logout, vehicles, setNewVehicles } =
+    useContext(AuthContext);
   const [amountToAdd, adjustedAmount] = useState<number>(0);
   const navigate = useNavigate();
   // If user not signed in
@@ -49,7 +51,18 @@ const Dashboard = () => {
   }
   // User is signed in
   const [balance, setBalance] = useState<number>(user.balance);
-  const { name } = user;
+
+  useEffect(() => {
+    if (vehicles.length < 1) {
+      console.log("Updating vehicles from dashboard");
+      api.getAllVehicles().then((vehicles) => {
+        if (!vehicles) {
+          return;
+        }
+        setNewVehicles(vehicles);
+      });
+    }
+  }, []);
 
   const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(event.target.value);
@@ -64,6 +77,9 @@ const Dashboard = () => {
   };
 
   const handleAddMoney = () => {
+    if (amountToAdd <= 0) {
+      return;
+    }
     api.addMoneyToUser(user.id, amountToAdd).then((updateUser) => {
       if (!updateUser) {
         return;
@@ -72,12 +88,11 @@ const Dashboard = () => {
       setBalance(updateUser.balance);
     });
   };
-
   return (
     <div className={classes.root}>
       <Stack direction="row" spacing={50}>
         <Typography variant="h5" className={classes.title}>
-          Welcome, {name}!
+          Welcome, {user.name}!
         </Typography>
         <Button
           variant="contained"
@@ -90,7 +105,7 @@ const Dashboard = () => {
         </Button>
       </Stack>
       <Typography variant="subtitle1" className="m-2 p-3">
-        Your current balance is: ${balance.toFixed(2)}
+        Your current balance is: {formatCurrency(balance)}
       </Typography>
       <form className={classes.form} noValidate autoComplete="off">
         <TextField
@@ -111,7 +126,7 @@ const Dashboard = () => {
           className={classes.button}
           onClick={handleAddMoney}
         >
-          Add
+          Add Funds
         </Button>
       </form>
       <UpcomingReservationsDashboard

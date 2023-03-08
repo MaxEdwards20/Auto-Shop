@@ -5,17 +5,6 @@ import { AuthContext } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Typography } from "@mui/material";
 
-interface Props {
-  onSubmit: (userData: {
-    email: string;
-    password: string;
-    balance: number;
-    birthday: string;
-    age: number;
-    name: string;
-  }) => void;
-}
-
 export default function CreateAccount() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -33,6 +22,7 @@ export default function CreateAccount() {
     }
     const data = { email, password, name, phoneNumber };
     api.createUser(data).then((user) => {
+      setErrorMessage("Creating account...");
       if (!user) {
         setErrorMessage("Invalid email or password.");
         return;
@@ -96,7 +86,7 @@ export default function CreateAccount() {
         Submit
       </Button>
 
-      {errorMessage && <div>{errorMessage}</div>}
+      {errorMessage && <Typography variant="h3">{errorMessage}</Typography>}
     </Card>
   );
 }
