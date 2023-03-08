@@ -11,8 +11,7 @@ class Vehicle(models.Model):
     isPending = models.BooleanField(default=False)
     isInsured = models.BooleanField(default=False)
     isLoadJacked = models.BooleanField(default=False)
-    # string to the url of the image
-    # automatically assigns an id to each instance
+    pricePerDay = models.IntegerField(default=100)
     def __str__(self):
         return self.name
 
