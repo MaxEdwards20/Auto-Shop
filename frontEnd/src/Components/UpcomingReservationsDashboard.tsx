@@ -24,7 +24,6 @@ export const UpcomingReservationsDashboard = ({
   reservations,
   classes,
 }: UpcomingReservationsDashboardProps) => {
-  console.log("Received reservations: ", reservations);
   const { vehicles } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -34,8 +33,6 @@ export const UpcomingReservationsDashboard = ({
       (vehicle) => vehicle.id === reservation.vehicle
     );
     if (!vehicle) {
-      console.log(`Reservation ID: ${reservation.id}}`);
-      console.log("Could not find vehicle for reservation: ", reservation);
       return null;
     }
     return (
