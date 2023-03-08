@@ -25,6 +25,10 @@ class TestReservationEndpoints(TestCase):
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, 200)
         reservation = json.loads(response.content)['reservation']
+        clientNeeds = ['startDate', 'endDate', 'vehicle', 'amountDue']
+        for item in clientNeeds: self.assertTrue(item in reservation)
+
+
         reservationObject = Reservation.objects.filter(vehicle=self.vehicle['id'], autoUser=self.user['id'],
                                                        startDate=self.startDate, endDate=self.endDate).first()
         self.assertIsNotNone(reservationObject)
@@ -52,6 +56,7 @@ class TestReservationEndpoints(TestCase):
         startDate = datetime.today()
         endDate = startDate + timedelta(days=5)
         response = createReservation(self.client, self.vehicle, createUser(self.client), startDate=startDate, endDate=endDate)
+
         data = {'startDate': str(self.startDate), 'endDate': str(self.endDate), 'vehicleID': self.vehicle['id'],
                 "userID": self.user['id']}
         response = self.client.post(reverse('createReservation'), data, format='json')

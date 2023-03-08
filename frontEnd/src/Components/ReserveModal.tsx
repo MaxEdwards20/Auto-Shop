@@ -13,11 +13,11 @@ import { differenceInDays } from "date-fns";
 import { AuthContext } from "../contexts/AuthContext";
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { UnAuthResponse } from "./UnAuthResponse";
 
 type ReserveModalProps = {
   vehicle: Vehicle;
   handleCloseModal: () => void;
-  user: User;
   showModal: boolean;
   startDate: Date;
   endDate: Date;
@@ -26,15 +26,32 @@ type ReserveModalProps = {
 export const ReserveModal = ({
   vehicle,
   handleCloseModal,
-  user,
   showModal,
   startDate,
   endDate,
 }: ReserveModalProps) => {
-  const totalCost = differenceInDays(endDate, startDate) * vehicle.pricePerDay;
-  const { api } = useContext(AuthContext);
+  const totalCost =
+    (differenceInDays(endDate, startDate) + 1) * vehicle.pricePerDay;
+  const { api, user } = useContext(AuthContext);
+  if (!user) {
+    return <UnAuthResponse />;
+  }
   const [userMessage, setUserMessage] = useState("");
+  const [disabled, setDisabled] = useState(user.balance < totalCost);
   const navigate = useNavigate();
+
+  const removeFunds = () => {
+    api.removeMoneyFromUser(user.id, totalCost).then((user) => {
+      if (!user) {
+        setUserMessage("Error updating user balance. Please try again.");
+      } else {
+        user.balance = user.balance - totalCost;
+        setUserMessage("Reservation created successfully");
+        setDisabled(true);
+      }
+    });
+  };
+
   const handleReserveClick = () => {
     if (user.balance < totalCost) {
       setUserMessage("Insufficent Funds");
@@ -42,15 +59,16 @@ export const ReserveModal = ({
     }
     api
       .createReservation(user.id, vehicle.id, startDate, endDate)
-      .then((response) => {
-        if (response) {
-          user.balance -= totalCost;
-          handleCloseModal();
+      .then((reservation) => {
+        if (!reservation) {
+          setUserMessage("Error creating reservation. Please try again.");
         } else {
-          console.log("Error creating reservation");
+          user.reservations = [...user.reservations, reservation]; // update the user's reservations
+          removeFunds(); // Reservation is made so update the funds available for the user
         }
       });
   };
+
   return (
     <Dialog open={showModal} onClose={handleCloseModal}>
       <DialogTitle>{vehicle.name}</DialogTitle>
@@ -64,29 +82,35 @@ export const ReserveModal = ({
         <DialogContentText>
           Your account balance: ${user.balance}
         </DialogContentText>
+        {userMessage && (
+          <DialogContentText color="secondary">{userMessage}</DialogContentText>
+        )}
         <DialogActions>
-          <Button type="submit" variant="contained" color="primary">
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            onClick={handleReserveClick}
+            disabled={disabled}
+          >
             Reserve
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              navigate("/account/dashboard");
+            }}
+          >
+            Add Funds
           </Button>
           <Button
             onClick={handleCloseModal}
             variant="contained"
             color="secondary"
           >
-            Cancel
+            Close
           </Button>
-          {userMessage && (
-            <DialogContentText>
-              {userMessage}{" "}
-              <Button
-                onClick={() => {
-                  navigate("/account/dashboard");
-                }}
-              >
-                Add Funds
-              </Button>
-            </DialogContentText>
-          )}
         </DialogActions>
       </DialogContent>
     </Dialog>

@@ -3,7 +3,6 @@ import dayjs, { Dayjs } from "dayjs";
 import TextField from "@mui/material/TextField";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-// import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import CarListing from "../components/CarListingReservation";
 import { Vehicle } from "../types/DataTypes";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
@@ -13,19 +12,21 @@ import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { UnAuthResponse } from "../components/UnAuthResponse";
 
-export default function BasicDateTimePicker() {
-  const [startDate, setStartDate] = useState<Dayjs | null>(dayjs());
-  const [endDate, setEndDate] = useState<Dayjs | null>(dayjs());
-  const [minEndDate, setMinEndDate] = useState<Dayjs | null>(dayjs());
-  const [carList, setCarList] = useState<Vehicle[]>([]);
-  const [userMessage, setUserMessage] = useState("");
-  const { user, api } = useContext(AuthContext);
-
+export default function ReservationPage() {
+  // Initialize today's date
   let currentDate = new Date();
   let cDay = currentDate.getDate();
   let cMonth = currentDate.getMonth() + 1;
   let cYear = currentDate.getFullYear();
   const today = dayjs(`${cYear}-${cMonth}-${cDay}`);
+
+  // state values
+  const [startDate, setStartDate] = useState<Dayjs>(today);
+  const [endDate, setEndDate] = useState<Dayjs>(today);
+  const [minEndDate, setMinEndDate] = useState<Dayjs | null>(dayjs());
+  const [carList, setCarList] = useState<Vehicle[]>([]);
+  const [userMessage, setUserMessage] = useState("");
+  const { user, api } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -37,6 +38,19 @@ export default function BasicDateTimePicker() {
   if (!user) {
     return <UnAuthResponse></UnAuthResponse>;
   }
+
+  const updateVehicleList = () => {
+    setUserMessage("");
+    const start = startDate?.toDate();
+    const end = endDate?.toDate();
+    api.getAvailableVehicles(start, end).then((cars) => {
+      if (!cars || cars.length < 1) {
+        setUserMessage("No cars available for those dates");
+        return;
+      }
+      setCarList(cars);
+    });
+  };
 
   return (
     <div className="root">
@@ -50,6 +64,7 @@ export default function BasicDateTimePicker() {
             value={startDate}
             minDate={today}
             onChange={(newDate) => {
+              if (newDate == null) return;
               setStartDate(newDate);
               setMinEndDate(newDate);
               if (endDate != null && newDate != null && endDate < newDate) {
@@ -63,26 +78,13 @@ export default function BasicDateTimePicker() {
             value={endDate}
             minDate={minEndDate}
             onChange={(newDate) => {
+              if (newDate == null) return;
               setEndDate(newDate);
             }}
             renderInput={(params) => <TextField {...params} />}
           />
         </LocalizationProvider>
-        <button
-          className="dateButton"
-          onClick={() => {
-            //Make a POST request to reserve a vehicle for these days
-            const start = startDate?.toDate();
-            const end = endDate?.toDate();
-            api.getAvailableVehicles(start, end).then((cars) => {
-              if (!cars) {
-                setUserMessage("No cars available for those dates");
-                return;
-              }
-              setCarList(cars);
-            });
-          }}
-        >
+        <button className="dateButton" onClick={() => updateVehicleList()}>
           Show Me The Vehicles!
         </button>
       </div>
@@ -90,7 +92,12 @@ export default function BasicDateTimePicker() {
         <ul>
           {carList.map((rental) => (
             <div className="reservationContainer" key={rental.id}>
-              <CarListing vehicle={rental} />
+              <CarListing
+                updateVehicleList={updateVehicleList}
+                vehicle={rental}
+                startDate={startDate.toDate()}
+                endDate={endDate.toDate()}
+              />
             </div>
           ))}
         </ul>
@@ -99,8 +106,3 @@ export default function BasicDateTimePicker() {
     </div>
   );
 }
-
-export function ReservationPage() {
-  return <h1>Welcome to the Reservation Page</h1>;
-}
-// export default ReservationPage;

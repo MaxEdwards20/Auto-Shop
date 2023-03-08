@@ -9,12 +9,14 @@ type CarListingProps = {
   vehicle: Vehicle;
   startDate?: Date;
   endDate?: Date;
+  updateVehicleList: () => void;
 };
 
 export default function CarListing({
   vehicle,
   startDate,
   endDate,
+  updateVehicleList,
 }: CarListingProps) {
   const [showModal, setShowModal] = useState(false);
   const { api, user } = useContext(AuthContext);
@@ -28,6 +30,7 @@ export default function CarListing({
 
   const handleCloseModal = () => {
     setShowModal(false);
+    updateVehicleList();
   };
 
   return (
@@ -41,7 +44,7 @@ export default function CarListing({
       <span className="outerButtonContainer">
         <span className="buttonContainer">
           <button id="reserveButton" onClick={() => handleClick()}>
-            Reserve for {vehicle.pricePerDay}
+            ${vehicle.pricePerDay}/day
           </button>
         </span>
       </span>
@@ -49,7 +52,6 @@ export default function CarListing({
         <ReserveModal
           vehicle={vehicle}
           handleCloseModal={handleCloseModal}
-          user={user}
           showModal={showModal}
           startDate={startDate}
           endDate={endDate}

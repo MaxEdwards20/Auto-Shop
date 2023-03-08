@@ -12,6 +12,7 @@ urlpatterns = [
     path('user/<int:id>/removeMoney', views.userRemoveMoney, name="removeMoney"),
     path('user/login', views.authenticateUser, name='authenticateUser'),
     path('user/all', views.getUsers, name="getAllUsers"), # Get all Users to show
+    path('user/<int:id>/reservations', views.getUser, name='getUserReservations'),
 
     # vehicles
     path('vehicle', views.vehicleRouter, name='createVehicle'),  # POST

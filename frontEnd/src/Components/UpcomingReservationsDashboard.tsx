@@ -20,6 +20,7 @@ export const UpcomingReservationsDashboard = ({
   reservations,
   classes,
 }: UpcomingReservationsDashboardProps) => {
+  console.log(reservations);
   const navigate = useNavigate();
   return (
     <>

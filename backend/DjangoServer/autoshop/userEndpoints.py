@@ -1,11 +1,11 @@
 from django.http import HttpRequest, HttpResponse
-from .models import AutoUser
+from .models import AutoUser, Reservation
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth import authenticate
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
-from .serializers import AutoUserSerializer
+from .serializers import AutoUserSerializer, ReservationSerializer
 from .helperFunctions import __update_cors, __getReqBody
 import json
 
@@ -22,7 +22,7 @@ def authenticateUser(request: HttpRequest):
     user = authenticate(request, username=email, password=password)
     if not user:
         return __update_cors(JsonResponse(response, status=401), request)
-    j = JsonResponse({"user": AutoUserSerializer(user.autouser).data})
+    j = __makeJSONResponse(user.pk)
     return __update_cors(j, request)
 
 @csrf_exempt
@@ -33,7 +33,7 @@ def createUser(request: HttpRequest):
     if 'error' in response:
         return __update_cors(JsonResponse(response, status=400), request)
     user = __createUserDatabase(parsedBody)
-    j = JsonResponse({"user": AutoUserSerializer(user).data})
+    j = __makeJSONResponse(user.pk)
     return __update_cors(j, request)
 
 @csrf_exempt
@@ -45,16 +45,16 @@ def deleteUser(request, id):
 
 @csrf_exempt
 def getUser(request: HttpRequest, id):
-    response = __getSerializedUserInfo(id)
-    j = JsonResponse({"user": response}, safe=False)
+    j = __makeJSONResponse(id)
     return __update_cors(j, request)
 
 @csrf_exempt
 def getUsers(request: HttpRequest):
     # TODO: Add some validation that id of user requesting this is an admin or manager
-    allUsersList = [AutoUserSerializer(user).data for user in AutoUser.objects.all()]
-    j = JsonResponse({"users": allUsersList}, safe=False)
+    allUsersList = [__getUserInfo(user.pk) for user in AutoUser.objects.all()]
+    j = JsonResponse({"users": allUsersList})
     return __update_cors(j, request)
+
 
 @csrf_exempt
 def updateUser(request: HttpRequest, id):
@@ -65,7 +65,7 @@ def updateUser(request: HttpRequest, id):
         if key in parsedBody:
             setattr(user, key, parsedBody[key])
     user.save()
-    j = JsonResponse({"user": AutoUserSerializer(user).data}) # return the newly saved user
+    j = __makeJSONResponse(user.pk) # return the newly saved user
     return __update_cors(j, request)
 @csrf_exempt
 def userAddMoney(request: HttpRequest, id):
@@ -74,7 +74,7 @@ def userAddMoney(request: HttpRequest, id):
     newBalance = user.balance + abs(int(parsedBody.get('amount')))
     user.balance = newBalance
     user.save()
-    j = JsonResponse({"user": AutoUserSerializer(user).data})  # return the newly saved user
+    j = __makeJSONResponse(user.pk)  # return the newly saved user
     return __update_cors(j, request)
 
 @csrf_exempt
@@ -84,7 +84,7 @@ def userRemoveMoney(request: HttpRequest, id):
     newBalance = user.balance - abs(int(parsedBody.get('amount')))
     user.balance = newBalance
     user.save()
-    j = JsonResponse({"user": AutoUserSerializer(user).data})  # return the newly saved user
+    j = __makeJSONResponse(user.pk)  # return the newly saved user
     return __update_cors(j, request)
 
 def __createUserDatabase(parsedBody) -> AutoUser:
@@ -95,11 +95,18 @@ def __createUserDatabase(parsedBody) -> AutoUser:
     newUser = AutoUser.objects.create(email=parsedBody['email'], name=parsedBody['name'], phoneNumber = parsedBody['phoneNumber'], user=newUserAuth,)
     return newUser
 
+def __makeJSONResponse(userID: int) -> JsonResponse:
+    return JsonResponse(__getUserInfo(userID))
+
+def __getUserInfo(userID: int) -> dict:
+    return {"user": __getSerializedUserInfo(userID),
+                         "reservations": __getSerializedReservations(userID)}
+def __getSerializedReservations(userID: int):
+    return [ReservationSerializer(reservation.autoUser.pk == userID).data for reservation in Reservation.objects.all()]
 
 def __getSerializedUserInfo(id):
     userModel = get_object_or_404(AutoUser, pk=id)
-    serializer = AutoUserSerializer(userModel)
-    return serializer.data
+    return AutoUserSerializer(userModel).data
 def __validateAuthenticationBody(request, parsedBody: dict) -> dict:
     response = {}
     if request.method == 'POST':

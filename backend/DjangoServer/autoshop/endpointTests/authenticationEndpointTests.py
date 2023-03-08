@@ -1,14 +1,15 @@
 from django.test import TestCase, Client
 import uuid
 import json
+from .helperTestFunctions import createUser
 # Create your tests here.
 
 class TestAuthentication(TestCase):
     def setUp(self):
         self.client = Client()
         self.data = {'name': 'test', 'email': f'test@gmail.com{uuid.uuid4()}', 'password': 'testpass', 'phoneNumber': '2222222'}
-        response = self.client.post('http://localhost:8000/user', data=self.data)
-        self.assertEqual(response.status_code, 200)
+        self.user = createUser(self.client, self.data)
+
 
     def testValidAuthentication(self):
         response = self.client.post('http://localhost:8000/user/login', data={'email': self.data['email'], 'password': self.data['password']})

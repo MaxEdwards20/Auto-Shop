@@ -54,7 +54,9 @@ class TestUserEndpoints(TestCase):
         user = createUser(self.client)
         response = self.client.get(BASE_URL + f"user/{user['id']}")
         self.assertEqual(response.status_code, 200)
+        content = json.loads(response.content)
         self.assertContains(response, 'user')
+        self.assertContains(response, 'reservations')
         # Make sure we can't get a user that doesn't exist
         response = self.client.get(BASE_URL + f"user/99999")
         self.assertEqual(response.status_code, 404)

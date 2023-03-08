@@ -49,7 +49,7 @@ const Dashboard = () => {
   }
   // User is signed in
   const [balance, setBalance] = useState<number>(user.balance);
-  const { name, reservations } = user;
+  const { name } = user;
 
   const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(event.target.value);
@@ -110,7 +110,7 @@ const Dashboard = () => {
         </Button>
       </form>
       <UpcomingReservationsDashboard
-        reservations={reservations}
+        reservations={user.reservations}
         classes={classes}
       ></UpcomingReservationsDashboard>
     </div>

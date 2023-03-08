@@ -13,6 +13,8 @@ export type ReservationInfo = {
   endDate: string;
   vehicle: string;
   amountDue: number;
+  id: number;
+  autoUser?: number;
 };
 
 export type UserCheckinInfo = {
