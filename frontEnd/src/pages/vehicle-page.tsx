@@ -24,7 +24,7 @@ function VehiclePage() {
       <div className="carListContainer">
         {carList &&
           carList.map((rental) => (
-            <div className="carListTile">
+            <div className="carListTile" key={rental.id}>
               <CarListing {...rental} />
             </div>
           ))}

@@ -41,6 +41,7 @@ export const UpcomingReservationsDashboard = ({
               variant="contained"
               color="primary"
               className={classes.button}
+              size="small"
               onClick={() => navigate("/reservations")}
             >
               Create Reservation

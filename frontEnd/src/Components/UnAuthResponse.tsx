@@ -1,7 +1,7 @@
 import { Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-export const UserNotSignedIn = () => {
+export const UnAuthResponse = () => {
   const navigate = useNavigate();
   return (
     <div className="root">

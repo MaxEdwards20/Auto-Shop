@@ -5,6 +5,7 @@ export type Vehicle = {
   imageURL: string;
   pricePerDay: number;
   isPurchased?: boolean;
+  id: number;
 };
 
 export type ReservationInfo = {

@@ -12,7 +12,7 @@ export default function CarListing(props: Vehicle) {
     // api.createReservation();
   };
   return (
-    <li key={props.vin} className="reservationListing">
+    <li key={props.id} className="reservationListing">
       <img
         src={props.imageURL}
         alt="Sick superhero vehicle"

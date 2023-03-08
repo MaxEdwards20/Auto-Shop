@@ -11,7 +11,7 @@ import { Typography } from "@mui/material";
 import { AuthContext } from "../contexts/AuthContext";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { UserNotSignedIn } from "../components/UserNotSignedIn";
+import { UnAuthResponse } from "../components/UnAuthResponse";
 
 export default function BasicDateTimePicker() {
   const [startDate, setStartDate] = useState<Dayjs | null>(dayjs());
@@ -35,7 +35,7 @@ export default function BasicDateTimePicker() {
   }, []);
 
   if (!user) {
-    return <UserNotSignedIn></UserNotSignedIn>;
+    return <UnAuthResponse></UnAuthResponse>;
   }
 
   return (
@@ -89,7 +89,7 @@ export default function BasicDateTimePicker() {
       <div className="carList">
         <ul>
           {carList.map((rental) => (
-            <div className="reservationContainer">
+            <div className="reservationContainer" key={rental.id}>
               <CarListing {...rental} />
             </div>
           ))}

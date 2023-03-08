@@ -3,6 +3,8 @@ import { AuthContext } from "../contexts/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import { Typography, TextField, Button } from "@material-ui/core";
+import Stack from "@mui/material/Stack";
+
 import { UnAuthDashboard } from "../components/UnAuthDashboard";
 import { UpcomingReservationsDashboard } from "../components/UpcomingReservationsDashboard";
 
@@ -38,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Dashboard = () => {
   const classes = useStyles();
-  const { user, api } = useContext(AuthContext);
+  const { user, api, logout } = useContext(AuthContext);
   const [amountToAdd, adjustedAmount] = useState<number>(0);
   const navigate = useNavigate();
   // If user not signed in
@@ -68,9 +70,20 @@ const Dashboard = () => {
 
   return (
     <div className={classes.root}>
-      <Typography variant="h5" className={classes.title}>
-        Welcome, {name}!
-      </Typography>
+      <Stack direction="row" spacing={50}>
+        <Typography variant="h5" className={classes.title}>
+          Welcome, {name}!
+        </Typography>
+        <Button
+          variant="contained"
+          color="secondary"
+          className={classes.button}
+          size="small"
+          onClick={() => logout()}
+        >
+          Logout
+        </Button>
+      </Stack>
       <Typography variant="subtitle1" className="m-2 p-3">
         Your current balance is: ${balance.toFixed(2)}
       </Typography>
