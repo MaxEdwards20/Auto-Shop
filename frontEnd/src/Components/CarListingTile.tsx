@@ -1,3 +1,4 @@
+import { Typography } from "@mui/material";
 import { Vehicle } from "../types/DataTypes";
 
 export default function CarListing(props: Vehicle) {
@@ -8,7 +9,11 @@ export default function CarListing(props: Vehicle) {
         alt="Sick superhero vehicle"
         className="vehicleListingImage"
       ></img>
-      <span>{`${props.name} Fee per day: ${props.pricePerDay} `}</span>
+      <Typography variant="h5">{`${props.name} `}</Typography>
+      <Typography variant="subtitle1">
+        {" "}
+        {`Fee per day: $${props.pricePerDay}`}
+      </Typography>
     </div>
   );
 }

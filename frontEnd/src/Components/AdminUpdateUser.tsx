@@ -1,4 +1,3 @@
-import { getAllUsers, updateUser } from "../urls";
 import { useState, useEffect } from "react";
 
 interface User {
@@ -11,7 +10,7 @@ export default function AdminUpdateUser() {
   const [users, setUsers] = useState<User[]>([]);
 
   const collectUsers = () => {
-    let url = getAllUsers;
+    let url = "";
     fetch(url)
       .then((response) => response.json())
       .then((data) => setUsers(data));
@@ -22,7 +21,7 @@ export default function AdminUpdateUser() {
   }, []);
 
   const handleStatusChange = (id: string, newStatus: User["status"]) => {
-    fetch(`${updateUser}/${id}`, {
+    fetch(`${""}/${id}`, {
       method: "PUT",
       body: JSON.stringify({ status: newStatus }),
       headers: {

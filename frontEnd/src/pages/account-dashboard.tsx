@@ -2,17 +2,9 @@ import React, { useContext, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
-
-import { ReservationInfo } from "../types/DataTypes";
-import {
-  Typography,
-  TextField,
-  Button,
-  List,
-  ListItem,
-  ListItemText,
-} from "@material-ui/core";
-import Divider from "@mui/material/Divider";
+import { Typography, TextField, Button } from "@material-ui/core";
+import { UnAuthDashboard } from "../components/UnAuthDashboard";
+import { UpcomingReservationsDashboard } from "../components/UpcomingReservationsDashboard";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -46,40 +38,13 @@ const useStyles = makeStyles((theme) => ({
 
 const Dashboard = () => {
   const classes = useStyles();
-  const { user } = useContext(AuthContext);
+  const { user, api } = useContext(AuthContext);
   const [amountToAdd, adjustedAmount] = useState<number>(0);
-
   const navigate = useNavigate();
-  const { api } = useContext(AuthContext);
   // If user not signed in
   if (!user) {
-    return (
-      <div className={classes.root}>
-        <Typography variant="h5" className={classes.title}>
-          Pleased to see you!
-        </Typography>
-        <Button
-          variant="contained"
-          color="primary"
-          className={classes.button}
-          component={Link}
-          to="/account/login"
-        >
-          Login
-        </Button>
-        <Button
-          variant="contained"
-          color="secondary"
-          className={classes.button}
-          component={Link}
-          to="/account/create"
-        >
-          Create Account
-        </Button>
-      </div>
-    );
+    return <UnAuthDashboard></UnAuthDashboard>;
   }
-
   // User is signed in
   const [balance, setBalance] = useState<number>(user.balance);
   const { name, reservations } = user;
@@ -131,33 +96,10 @@ const Dashboard = () => {
           Add
         </Button>
       </form>
-      <Divider>
-        <Typography variant="h6">Upcoming Reservations</Typography>
-      </Divider>
-      <List className={classes.list}>
-        {reservations ? (
-          reservations.map((reservation, index) => (
-            <ListItem key={index}>
-              <ListItemText
-                primary={`${reservation.startDate} to ${reservation.endDate}`}
-                secondary={reservation.amountDue}
-              />
-            </ListItem>
-          ))
-        ) : (
-          <>
-            <Typography align="center">No upcoming reservations</Typography>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={() => navigate("/reservations")}
-            >
-              Create Reservation
-            </Button>
-          </>
-        )}
-      </List>
+      <UpcomingReservationsDashboard
+        reservations={reservations}
+        classes={classes}
+      ></UpcomingReservationsDashboard>
     </div>
   );
 };
