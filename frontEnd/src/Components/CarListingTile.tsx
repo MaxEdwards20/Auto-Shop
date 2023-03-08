@@ -4,7 +4,7 @@ export default function CarListing(props: Vehicle) {
   return (
     <div className="carTile" key={props.vin}>
       <img
-        src={props.image}
+        src={props.imageURL}
         alt="Sick superhero vehicle"
         className="vehicleListingImage"
       ></img>

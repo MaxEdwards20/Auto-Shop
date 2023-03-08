@@ -2,9 +2,9 @@ export type Vehicle = {
   vin: string;
   name: string;
   vehicleType: string;
-  image: string;
-  isPurchased?: boolean;
+  imageURL: string;
   pricePerDay: number;
+  isPurchased?: boolean;
 };
 
 export type ReservationInfo = {

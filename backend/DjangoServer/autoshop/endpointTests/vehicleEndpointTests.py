@@ -57,9 +57,10 @@ class TestVehicleEndpoints(TestCase):
         self.assertEqual(response.status_code, 200)
         vehicles = json.loads(response.content)['vehicles']
         self.assertGreaterEqual(len(vehicles), 5)
-        self.assertContains(vehicles[0], 'pricePerDay')
-        self.assertContains(vehicles[1], 'isInsured')
-        self.assertContains(vehicles[1], 'image')
+        vehicle = vehicles[0]
+        self.assertTrue('pricePerDay' in vehicle)
+        self.assertTrue('isInsured' in vehicle)
+        self.assertTrue('imageURL' in vehicle)
 
 
 

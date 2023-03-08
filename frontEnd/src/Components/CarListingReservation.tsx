@@ -14,7 +14,7 @@ export default function CarListing(props: Vehicle) {
   return (
     <li key={props.vin} className="reservationListing">
       <img
-        src={props.image}
+        src={props.imageURL}
         alt="Sick superhero vehicle"
         className="vehicleReservationImage"
       ></img>

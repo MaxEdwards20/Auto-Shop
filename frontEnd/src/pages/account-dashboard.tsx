@@ -51,7 +51,7 @@ const Dashboard = () => {
 
   const navigate = useNavigate();
   const { api } = useContext(AuthContext);
-
+  // If user not signed in
   if (!user) {
     return (
       <div className={classes.root}>
@@ -79,6 +79,8 @@ const Dashboard = () => {
       </div>
     );
   }
+
+  // User is signed in
   const [balance, setBalance] = useState<number>(user.balance);
   const { name, reservations } = user;
 
@@ -90,11 +92,12 @@ const Dashboard = () => {
   };
 
   const handleAddMoney = () => {
-    api.addMoneyToUser(user.id, amountToAdd).then((user) => {
-      if (!user) {
+    api.addMoneyToUser(user.id, amountToAdd).then((updateUser) => {
+      if (!updateUser) {
         return;
       }
-      setBalance(user.balance);
+      user.balance = updateUser.balance;
+      setBalance(updateUser.balance);
     });
   };
 
