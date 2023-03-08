@@ -5,7 +5,6 @@ import { useState } from "react";
 import { getToken } from "./miscFunctions";
 import { removeToken } from "./miscFunctions";
 import { LoginUserBody } from "../dto/apiTypes";
-
 type UserInfo = () => {
   user: User | undefined;
   setNewUser: (user: User) => void;
@@ -32,6 +31,8 @@ export const useUserInfo: UserInfo = () => {
   const logout = () => {
     removeToken();
     setUser(undefined);
+    setUserPermission("guest");
+    setIsAuthenticated(false);
   };
 
   return { user, setNewUser, logout, api, userPermission, isAuthenticated };

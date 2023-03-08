@@ -58,6 +58,11 @@ const Dashboard = () => {
     }
   };
 
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
+
   const handleAddMoney = () => {
     api.addMoneyToUser(user.id, amountToAdd).then((updateUser) => {
       if (!updateUser) {
@@ -79,7 +84,7 @@ const Dashboard = () => {
           color="secondary"
           className={classes.button}
           size="small"
-          onClick={() => logout()}
+          onClick={() => handleLogout()}
         >
           Logout
         </Button>

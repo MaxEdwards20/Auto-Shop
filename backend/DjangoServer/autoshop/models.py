@@ -39,4 +39,4 @@ class Reservation(models.Model):
     amountDue = models.FloatField(default=100)
 
     def __str__(self):
-        return self.vehicle.name + " from " + self.startDate + " to " + self.endDate
+        return f"Vehicle: {self.vehicle.name} User: {self.autoUser.name} "

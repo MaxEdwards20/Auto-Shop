@@ -11,10 +11,10 @@ export type Vehicle = {
 export type ReservationInfo = {
   startDate: string;
   endDate: string;
-  vehicle: string;
+  vehicle: number; // api returns the id of the vehicle
+  autoUser: number; // api returns the id of the user
   amountDue: number;
   id: number;
-  autoUser?: number;
 };
 
 export type UserCheckinInfo = {

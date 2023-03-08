@@ -47,7 +47,6 @@ def __createReservationDatabase(parsedBody: dict, request: HttpRequest) -> Reser
 
 
 def __getUser(userID: int):
-    users = AutoUser.objects.all()
     return get_object_or_404(AutoUser, pk=userID)
 
 

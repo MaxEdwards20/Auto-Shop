@@ -102,7 +102,7 @@ def __getUserInfo(userID: int) -> dict:
     return {"user": __getSerializedUserInfo(userID),
                          "reservations": __getSerializedReservations(userID)}
 def __getSerializedReservations(userID: int):
-    return [ReservationSerializer(reservation.autoUser.pk == userID).data for reservation in Reservation.objects.all()]
+    return [ReservationSerializer(reservation).data for reservation in Reservation.objects.all() if reservation.autoUser.pk ==userID]
 
 def __getSerializedUserInfo(id):
     userModel = get_object_or_404(AutoUser, pk=id)
