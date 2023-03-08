@@ -1,9 +1,9 @@
 import { useState, useContext } from "react";
 import { Form, Button, Card } from "react-bootstrap";
 import { UserPermission } from "../types/DataTypes";
-import { createUser } from "../urls";
 import { AuthContext } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { Typography } from "@mui/material";
 
 interface Props {
   onSubmit: (userData: {
@@ -47,7 +47,7 @@ export default function CreateAccount() {
 
   return (
     <Card className="m-2">
-      <Form.Label> Sign Up Here!</Form.Label>
+      <Typography> Sign Up Here!</Typography>
 
       <Form.Group controlId="formBasicName">
         <Form.Label>Name</Form.Label>

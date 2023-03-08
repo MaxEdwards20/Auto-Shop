@@ -2,6 +2,7 @@ import CarListing from "../components/CarListingTile";
 import { Vehicle } from "../types/DataTypes";
 import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
+import { Typography } from "@mui/material";
 
 function VehiclePage() {
   const [carList, setCarList] = useState<Vehicle[]>();
@@ -27,6 +28,7 @@ function VehiclePage() {
               <CarListing {...rental} />
             </div>
           ))}
+        {userMessage && <Typography> {userMessage}</Typography>}
       </div>
     </div>
   );

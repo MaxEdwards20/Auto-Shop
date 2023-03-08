@@ -10,6 +10,7 @@ import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { Typography } from "@mui/material";
 import { AuthContext } from "../contexts/AuthContext";
 import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function BasicDateTimePicker() {
   const [startDate, setStartDate] = useState<Dayjs | null>(dayjs());
@@ -24,12 +25,30 @@ export default function BasicDateTimePicker() {
   let cMonth = currentDate.getMonth() + 1;
   let cYear = currentDate.getFullYear();
   const today = dayjs(`${cYear}-${cMonth}-${cDay}`);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setStartDate(today);
     setEndDate(today);
     setMinEndDate(today);
   }, []);
+
+  if (!user) {
+    return (
+      <div className="root">
+        <Typography variant="h5" className="title p-3">
+          Please login to access reservations
+        </Typography>
+        <button
+          onClick={() => {
+            navigate("/account/login");
+          }}
+        >
+          Log In
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="root">
