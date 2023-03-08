@@ -4,6 +4,7 @@ import { AuthContext } from "../contexts/AuthContext";
 import { useState } from "react";
 import { UnAuthResponse } from "./UnAuthResponse";
 import { ReserveModal } from "./ReserveModal";
+import { formatCurrency } from "../hooks/miscFunctions";
 
 type CarListingProps = {
   vehicle: Vehicle;
@@ -44,11 +45,11 @@ export default function CarListing({
       <span className="outerButtonContainer">
         <span className="buttonContainer">
           <button id="reserveButton" onClick={() => handleClick()}>
-            ${vehicle.pricePerDay}/day
+            {formatCurrency(vehicle.pricePerDay)}/day
           </button>
         </span>
       </span>
-      {user && startDate && endDate && (
+      {user && startDate && endDate && showModal && (
         <ReserveModal
           vehicle={vehicle}
           handleCloseModal={handleCloseModal}

@@ -51,7 +51,9 @@ def getAllAvailableVehicles(request: HttpRequest):
     for vehicle in Vehicle.objects.all():
         if vehicle.pk not in alreadyReserved:
             availableVehicles.append(VehicleSerializer(vehicle).data)
-    j = JsonResponse({"vehicles": availableVehicles})
+
+    vehicles = sorted(availableVehicles, key=lambda vehicle: int(vehicle['pricePerDay']))
+    j = JsonResponse({"vehicles": vehicles})
     return __update_cors(j, request)
 
 

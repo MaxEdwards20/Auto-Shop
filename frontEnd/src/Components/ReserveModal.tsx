@@ -77,7 +77,7 @@ export const ReserveModal = ({
   };
 
   return (
-    <Dialog open={showModal} onClose={handleCloseModal}>
+    <Dialog open={true} onClose={handleCloseModal}>
       <DialogTitle>{vehicle.name}</DialogTitle>
       <DialogContent>
         <DialogContentText>

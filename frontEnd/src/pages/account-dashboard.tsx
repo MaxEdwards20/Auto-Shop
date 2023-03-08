@@ -54,7 +54,6 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (vehicles.length < 1) {
-      console.log("Updating vehicles from dashboard");
       api.getAllVehicles().then((vehicles) => {
         if (!vehicles) {
           return;
@@ -110,11 +109,7 @@ const Dashboard = () => {
       <form className={classes.form} noValidate autoComplete="off">
         <TextField
           id="amount"
-          label="Add money to your account"
           type="number"
-          InputLabelProps={{
-            shrink: true,
-          }}
           variant="outlined"
           className={classes.textField}
           value={amountToAdd}
