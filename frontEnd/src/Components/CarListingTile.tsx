@@ -1,20 +1,14 @@
 import { Vehicle } from "../types/DataTypes";
 
-interface CarListingProps {
-  car: Vehicle;
-}
-
-export default function CarListing(props: CarListingProps) {
+export default function CarListing(props: Vehicle) {
   return (
-    <div className="carTile" key={props.car.vin}>
+    <div className="carTile" key={props.vin}>
       <img
-        src={props.car.imageSrc}
+        src={props.image}
         alt="Sick superhero vehicle"
         className="vehicleListingImage"
       ></img>
-      <span>
-        {`${props.car.year} ${props.car.make} ${props.car.model} ${props.car.edition} ${props.car.color} ${props.car.mileage}`}
-      </span>
+      <span>{`${props.name} Fee per day: ${props.pricePerDay} `}</span>
     </div>
   );
 }

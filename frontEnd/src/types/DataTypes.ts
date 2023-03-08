@@ -1,13 +1,10 @@
 export type Vehicle = {
   vin: string;
-  make: string;
-  model: string;
-  edition: string;
-  year: number;
-  color: string;
-  mileage: number;
-  titleType: string;
-  imageSrc: string;
+  name: string;
+  vehicleType: string;
+  image: string;
+  isPurchased?: boolean;
+  pricePerDay: number;
 };
 
 export type ReservationInfo = {

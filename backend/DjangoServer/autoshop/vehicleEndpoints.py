@@ -109,7 +109,7 @@ def __createVehicleDatabase(parsedBody: dict):
     newVehicle = Vehicle()
     newVehicle.name = parsedBody['name']
     newVehicle.vehicleType = parsedBody['vehicleType']
-    newVehicle.image = parsedBody['image']
+    newVehicle.imageURL = parsedBody['image']
     newVehicle.vin = parsedBody['vin']
     newVehicle.isInsured = False
     newVehicle.isPending = False

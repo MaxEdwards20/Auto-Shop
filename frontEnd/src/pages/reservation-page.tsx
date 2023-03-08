@@ -4,7 +4,6 @@ import TextField from "@mui/material/TextField";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 // import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
-import { Rentals } from "../DummyData";
 import CarListing from "../components/CarListingReservation";
 import { Vehicle } from "../types/DataTypes";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
@@ -75,7 +74,6 @@ export default function BasicDateTimePicker() {
               }
               setCarList(cars);
             });
-            // setCarList(Rentals); // Dummy data
           }}
         >
           Show Me The Vehicles!
@@ -85,7 +83,7 @@ export default function BasicDateTimePicker() {
         <ul>
           {carList.map((rental) => (
             <div className="reservationContainer">
-              <CarListing car={rental} />
+              <CarListing {...rental} />
             </div>
           ))}
         </ul>

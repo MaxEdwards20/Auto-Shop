@@ -52,6 +52,17 @@ class TestVehicleEndpoints(TestCase):
         response = self.client.get((f"{BASE_URL}vehicle/INVALID"))
         self.assertEqual(response.status_code, 404)
 
+    def testGetAllVehicles(self):
+        response = self.client.get(reverse('getAllVehicles'))
+        self.assertEqual(response.status_code, 200)
+        vehicles = json.loads(response.content)['vehicles']
+        self.assertGreaterEqual(len(vehicles), 5)
+        self.assertContains(vehicles[0], 'pricePerDay')
+        self.assertContains(vehicles[1], 'isInsured')
+        self.assertContains(vehicles[1], 'image')
+
+
+
 
     def testGetAvailableVehicles(self):
         today = datetime.now().date()
