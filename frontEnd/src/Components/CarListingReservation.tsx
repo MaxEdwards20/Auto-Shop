@@ -1,31 +1,60 @@
 import { useContext } from "react";
 import { Vehicle } from "../types/DataTypes";
 import { AuthContext } from "../contexts/AuthContext";
+import { useState } from "react";
+import { UnAuthResponse } from "./UnAuthResponse";
+import { ReserveModal } from "./ReserveModal";
 
-export default function CarListing(props: Vehicle) {
+type CarListingProps = {
+  vehicle: Vehicle;
+  startDate?: Date;
+  endDate?: Date;
+};
+
+export default function CarListing({
+  vehicle,
+  startDate,
+  endDate,
+}: CarListingProps) {
+  const [showModal, setShowModal] = useState(false);
   const { api, user } = useContext(AuthContext);
-  const handleClick = () => {
-    console.log(`You reserved the ${props.name} `);
-    // Create pop up modal here?
 
-    //TODO: Add reservation to database
-    // api.createReservation();
+  const handleClick = () => {
+    if (!user) {
+      return <UnAuthResponse></UnAuthResponse>;
+    }
+    setShowModal(true);
   };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
   return (
-    <li key={props.id} className="reservationListing">
+    <li key={vehicle.id} className="reservationListing">
       <img
-        src={props.imageURL}
+        src={vehicle.imageURL}
         alt="Sick superhero vehicle"
         className="vehicleReservationImage"
       ></img>
-      {props.name}
+      {vehicle.name}
       <span className="outerButtonContainer">
         <span className="buttonContainer">
           <button id="reserveButton" onClick={() => handleClick()}>
-            Reserve for {props.pricePerDay}
+            Reserve for {vehicle.pricePerDay}
           </button>
         </span>
       </span>
+      {user && startDate && endDate && (
+        <ReserveModal
+          vehicle={vehicle}
+          handleCloseModal={handleCloseModal}
+          user={user}
+          showModal={showModal}
+          startDate={startDate}
+          endDate={endDate}
+        ></ReserveModal>
+      )}
     </li>
   );
 }

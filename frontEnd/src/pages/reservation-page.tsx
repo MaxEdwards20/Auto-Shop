@@ -90,7 +90,7 @@ export default function BasicDateTimePicker() {
         <ul>
           {carList.map((rental) => (
             <div className="reservationContainer" key={rental.id}>
-              <CarListing {...rental} />
+              <CarListing vehicle={rental} />
             </div>
           ))}
         </ul>
