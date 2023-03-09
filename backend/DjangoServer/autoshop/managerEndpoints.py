@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from .serializers import AutoUserSerializer, ReservationSerializer
-from .helperFunctions import __update_cors, __getReqBody
+from .helperFunctions import update_cors, getReqBody, error400, error401
 
 ADMIN_PASS = "admin123"
 ADMIN_USERNAME = "admin123"
@@ -19,7 +19,10 @@ def initializeDatabase():
         admin =  __createManager()
     return __makeJSONResponse(admin.pk)
 
-def getManager():
+@csrf_exempt
+def getManager(request: HttpRequest):
+    if request.method != "GET":
+        error400(request)
     admin = AutoUser.objects.filter(permission="admin", email=ADMIN_PASS, password=ADMIN_PASS)
     return __makeJSONResponse(admin.pk)
 

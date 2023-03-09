@@ -6,91 +6,91 @@ from django.contrib.auth import authenticate
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from .serializers import AutoUserSerializer, ReservationSerializer
-from .helperFunctions import __update_cors, __getReqBody
+from .helperFunctions import update_cors, getReqBody, error400, error401
 from .managerEndpoints import ADMIN_USERNAME, ADMIN_PASS
 import json
 
 @csrf_exempt
 def authenticateUser(request: HttpRequest):
-    parsedBody = __getReqBody(request)
+    parsedBody = getReqBody(request)
     # Check if the request has the correct formatting
     response = __validateAuthenticationBody(request, parsedBody)
     if 'error' in response:
-        return __update_cors(JsonResponse(response, status=401), request)
+        return error401(request)
     email = parsedBody['email']
     password = parsedBody['password']
     # Check if actually valid user
     user = authenticate(request, username=email, password=password)
     if not user:
-        return __update_cors(JsonResponse(response, status=401), request)
+        return error401(request)
     j = __makeJSONResponse(user.pk)
-    return __update_cors(j, request)
+    return update_cors(j, request)
 
 @csrf_exempt
 def createUser(request: HttpRequest):
     # https://www.django-rest-framework.org/tutorial/1-serialization/
-    parsedBody = __getReqBody(request)
+    parsedBody = getReqBody(request)
     response = __validateCreateUserBody(request, parsedBody)
     if 'error' in response:
-        return __update_cors(JsonResponse(response, status=400), request)
+        return error400(request)
     user = __createUserDatabase(parsedBody)
     j = __makeJSONResponse(user.pk)
-    return __update_cors(j, request)
+    return update_cors(j, request)
 
 @csrf_exempt
 def deleteUser(request, id):
     user = get_object_or_404(AutoUser, pk=id)
     response = JsonResponse({"user": AutoUserSerializer(user).data})
     user.delete()
-    return __update_cors(response, request)
+    return update_cors(response, request)
 
 @csrf_exempt
 def getUser(request: HttpRequest, id):
     j = __makeJSONResponse(id)
-    return __update_cors(j, request)
+    return update_cors(j, request)
 
 @csrf_exempt
 def getUsers(request: HttpRequest):
-    parsedBody = __getReqBody(request)
+    parsedBody = getReqBody(request)
     clientID = parsedBody.get('id')
     admin = AutoUser.objects.filter(permission="admin", email=ADMIN_PASS, password=ADMIN_PASS)
     if not clientID or int(clientID) != admin.pk:
-        return __update_cors(JsonResponse({'error': "Unauthorized access"}, status=401), request)
+        return error401(request)
     allUsersList = [__getUserInfo(user.pk) for user in AutoUser.objects.all()]
     j = JsonResponse({"users": allUsersList})
-    return __update_cors(j, request)
+    return update_cors(j, request)
 
 
 @csrf_exempt
 def updateUser(request: HttpRequest, id):
     user = get_object_or_404(AutoUser, pk=id)
-    parsedBody = __getReqBody(request)
+    parsedBody = getReqBody(request)
     # Actually update the user
     for key in ['name', 'permission', 'balance', 'needHelp', 'ethicsViolation', 'location', 'email']:
         if key in parsedBody:
             setattr(user, key, parsedBody[key])
     user.save()
     j = __makeJSONResponse(user.pk) # return the newly saved user
-    return __update_cors(j, request)
+    return update_cors(j, request)
 @csrf_exempt
 def userAddMoney(request: HttpRequest, id):
     user = get_object_or_404(AutoUser, pk=id)
-    parsedBody = __getReqBody(request)
+    parsedBody = getReqBody(request)
     newBalance = user.balance + abs(int(parsedBody.get('amount')))
     user.balance = newBalance
     user.save()
     j = __makeJSONResponse(user.pk)  # return the newly saved user
-    return __update_cors(j, request)
+    return update_cors(j, request)
 
 @csrf_exempt
 def userRemoveMoney(request: HttpRequest, id):
     user = get_object_or_404(AutoUser, pk=id)
-    parsedBody = __getReqBody(request)
+    parsedBody = getReqBody(request)
     newBalance = user.balance - abs(int(parsedBody.get('amount')))
     user.balance = newBalance
     user.save()
     j = __makeJSONResponse(user.pk)  # return the newly saved user
-    return __update_cors(j, request)
+    return update_cors(j, request)
 
 
 def __createUserDatabase(parsedBody) -> AutoUser:

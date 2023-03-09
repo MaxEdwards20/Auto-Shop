@@ -4,20 +4,20 @@ from django.http import HttpRequest, JsonResponse
 from .serializers import AutoUserSerializer, VehicleSerializer, ReservationSerializer
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
-from .helperFunctions import __getReqBody, __update_cors, parseDates, vehicleIsAvailable
+from .helperFunctions import getReqBody, update_cors, parseDates, vehicleIsAvailable, error400, error401
 
 @csrf_exempt
 def createReservation(request: HttpRequest):
-    parsedBody = __getReqBody(request)
+    parsedBody = getReqBody(request)
     valid = __validateCreateReservationBody(request, parsedBody)
     if not valid:
-        return __update_cors(JsonResponse({'error': "missing params or wrong method"}, status=400), request)
+        return error400(request)
     available = __validateReservationAvailable(request, parsedBody)
     if not available:
-        return __update_cors(JsonResponse({'error': "This car is not available during these dates"}, status=400), request)
+        return error400(request, "Vehicle unavailable these days")
     newReservation = __createReservationDatabase(parsedBody, request)
     j = JsonResponse({"reservation": ReservationSerializer(newReservation).data})
-    return __update_cors(j, request)
+    return update_cors(j, request)
 
 
 @csrf_exempt
@@ -25,14 +25,14 @@ def deleteReservation(request: HttpRequest, id: int):
     reservation = get_object_or_404(Reservation, pk=id)
     response = JsonResponse({'reservation': ReservationSerializer(reservation).data})
     reservation.delete()
-    return __update_cors(response, request)
+    return update_cors(response, request)
 
 
 @csrf_exempt
 def getReservation(request: HttpRequest, id:int):
     reservation = get_object_or_404(Reservation, pk=id)
     j = JsonResponse({"reservation": ReservationSerializer(reservation).data})
-    return __update_cors(j ,request)
+    return update_cors(j, request)
 
 
 def __createReservationDatabase(parsedBody: dict, request: HttpRequest) -> Reservation:

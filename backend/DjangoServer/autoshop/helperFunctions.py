@@ -5,14 +5,14 @@ import datetime
 import json
 from .models import Reservation
 
-def __update_cors(j: JsonResponse, request: HttpRequest) -> JsonResponse:
+def update_cors(j: JsonResponse, request: HttpRequest) -> JsonResponse:
     if 'Origin' in request.headers:
         j['Access-Control-Allow-Origin'] = request.headers['Origin']
     else:
         j['Access-Control-Allow-Origin'] = '*'
     return j
 
-def __getReqBody(request: HttpRequest) -> dict:
+def getReqBody(request: HttpRequest) -> dict:
     if request.POST:
         parsedBody = request.POST
     else:
@@ -21,14 +21,18 @@ def __getReqBody(request: HttpRequest) -> dict:
 
 
 def parseDates(request: HttpRequest) -> tuple:
-    parsedBody = __getReqBody(request)
+    parsedBody = getReqBody(request)
     startDate = parsedBody['startDate'][:10]
     endDate = parsedBody['endDate'][:10]
     startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d").date()
     endDate = datetime.datetime.strptime(endDate, "%Y-%m-%d").date()
     return startDate, endDate
 
+def error400(request: HttpRequest, message: str = "Incorrect usage") -> JsonResponse:
+    return update_cors(JsonResponse({'error': message}, status=400, safe=False), request)
 
+def error401(request: HttpRequest) -> JsonResponse:
+    return update_cors(JsonResponse({'error': "Unauthorized access"}, status=401, safe=False), request)
 
 def vehicleIsAvailable(startDate, endDate, reservation: Reservation) -> bool:
     return reservation.startDate > endDate or reservation.endDate < startDate

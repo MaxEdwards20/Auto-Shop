@@ -28,5 +28,6 @@ urlpatterns = [
     path('reservation/<int:id>', views.reservationRouter, name='reservationRouter'), # GET, DEL
 
     # manager
-    path("manager/init", views.initializeDatabase, name="initalizeDatabase")
+    path("manager/init", views.initializeDatabase, name="initalizeDatabase"),
+    path("manager/", views.getManager, name="getManager"),
 ]
