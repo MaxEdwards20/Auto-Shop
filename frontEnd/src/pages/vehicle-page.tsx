@@ -1,11 +1,11 @@
 import CarListingTile from "../components/CarListingTile";
 import { Vehicle } from "../types/DataTypes";
 import { useState, useEffect, useContext } from "react";
-import { AuthContext } from "../contexts/AuthContext";
+import { UserContext } from "../contexts/AuthContext";
 import { Typography } from "@mui/material";
 
 function VehiclePage() {
-  const { api, user, vehicles } = useContext(AuthContext);
+  const { api, user, vehicles } = useContext(UserContext);
   const [userMessage, setUserMessage] = useState("");
 
   return (

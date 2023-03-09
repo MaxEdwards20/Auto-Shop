@@ -2,7 +2,7 @@ import Container from "react-bootstrap/esm/Container";
 import Nav from "react-bootstrap/esm/Nav";
 import Navbar from "react-bootstrap/esm/Navbar";
 import { NavLink } from "react-router-dom";
-import { AuthContext } from "../contexts/AuthContext";
+import { UserContext } from "../contexts/AuthContext";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
@@ -18,7 +18,7 @@ const StyledLink = styled(Link)`
 `;
 
 function NavBar() {
-  const { user } = useContext(AuthContext);
+  const { user } = useContext(UserContext);
   if (user.permission == "admin") {
     return (
       <Navbar bg="light" expand="lg">

@@ -6,17 +6,6 @@ import { getToken } from "./miscFunctions";
 import { removeToken } from "./miscFunctions";
 import { LoginUserBody } from "../dto/apiTypes";
 
-type UserInfo = () => {
-  user: User;
-  manager: User;
-  setNewUser: (user: User) => void;
-  logout: () => void;
-  api: Api;
-  vehicles: Vehicle[];
-  setNewVehicles: (vehicles: Vehicle[]) => void;
-  setNewManager: (manager: User) => void;
-};
-
 const permission: UserPermission = "admin";
 const userPermission: UserPermission = "guest";
 const defaultManager = {
@@ -47,6 +36,14 @@ const defaultUser = {
   isAuthenticated: false,
 };
 
+type UserInfo = () => {
+  user: User;
+  setNewUser: (user: User) => void;
+  logout: () => void;
+  api: Api;
+  updateUserBalance: (newBalance: number) => void;
+};
+
 export const useUserInfo: UserInfo = () => {
   const [user, setUser] = useState<User>(defaultUser);
   const [api] = useState(new Api());
@@ -54,7 +51,6 @@ export const useUserInfo: UserInfo = () => {
   const [manager, setManager] = useState<User>(defaultManager);
 
   const setNewUser = (newUser: User) => {
-    // if (!getToken()) return; // add this if we start using tokens
     if (!newUser) return;
     if (newUser !== defaultUser) {
       newUser.isAuthenticated = true;
@@ -62,17 +58,9 @@ export const useUserInfo: UserInfo = () => {
     }
   };
 
-  const setNewManager = (newManager: User) => {
-    if (!newManager) return;
-    if (newManager !== defaultManager) {
-      newManager.isAuthenticated = true;
-      setManager(newManager);
-    }
-  };
-
-  const setNewVehicles = (newVehicles: Vehicle[]) => {
-    if (!newVehicles) return;
-    setVehicles(newVehicles);
+  const updateUserBalance = (newBalance: number) => {
+    const newUser = { ...user, balance: newBalance };
+    setUser(newUser);
   };
 
   const logout = () => {
@@ -83,11 +71,8 @@ export const useUserInfo: UserInfo = () => {
   return {
     user,
     setNewUser,
-    vehicles,
-    setNewVehicles,
-    manager,
-    setNewManager,
     logout,
     api,
+    updateUserBalance,
   };
 };

@@ -11,20 +11,27 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
-import { AuthContext } from "../contexts/AuthContext";
+import { UserContext } from "../contexts/AuthContext";
 import { ClassNameMap } from "@material-ui/core/styles/withStyles";
 import { Vehicle, ReservationInfo } from "../types/DataTypes";
 
 type UpcomingReservationsDashboardProps = {
-  reservations: ReservationInfo[];
   classes: ClassNameMap;
 };
 
 export const UpcomingReservationsDashboard = ({
-  reservations,
   classes,
 }: UpcomingReservationsDashboardProps) => {
-  const { vehicles } = useContext(AuthContext);
+  const { vehicles, user, api } = useContext(UserContext);
+  const { reservations } = user;
+  // const reservations = api.getUserReservations(user.id).then((reservations) => {
+  //   if (!reservations) {
+  //     return;
+  //   }
+  //   return reservations;
+  // });
+
+  console.log("UpcomingReservationsDashboard: ", reservations);
   const navigate = useNavigate();
 
   const makeReservationInfo = (reservation: ReservationInfo, index: number) => {

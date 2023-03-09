@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../contexts/AuthContext";
+import { UserContext } from "../contexts/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import { Typography, TextField, Button } from "@material-ui/core";
@@ -40,15 +40,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Dashboard = () => {
-  checkUserAndRedirect();
-
-  const classes = useStyles();
-  const { user, api, logout, vehicles, setNewVehicles } =
-    useContext(AuthContext);
-  const [amountToAdd, adjustedAmount] = useState<number>(0);
-  const navigate = useNavigate();
+  const { user, api, logout, vehicles, setNewVehicles, setNewUser } =
+    useContext(UserContext);
+  const [amountToAdd, setAmountToAdd] = useState<number>(0);
   // User is signed in
-  const [balance, setBalance] = useState<number>(user.balance);
+  const [displayBalance, setDisplayBalance] = useState<number>(user.balance);
+  checkUserAndRedirect();
+  const navigate = useNavigate();
+  const classes = useStyles();
 
   useEffect(() => {
     if (vehicles.length < 1) {
@@ -61,10 +60,20 @@ const Dashboard = () => {
     }
   }, []);
 
+  useEffect(() => {
+    api.getUser(user.id).then((user) => {
+      if (!user) {
+        return;
+      }
+      setNewUser(user);
+      setDisplayBalance(user.balance);
+    });
+  }, [user]);
+
   const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(event.target.value);
     if (value >= 0) {
-      adjustedAmount(value);
+      setAmountToAdd(value);
     }
   };
 
@@ -73,7 +82,7 @@ const Dashboard = () => {
     navigate("/");
   };
 
-  const handleAddMoney = () => {
+  const handleUserDepositFunds = () => {
     if (amountToAdd <= 0) {
       return;
     }
@@ -81,10 +90,14 @@ const Dashboard = () => {
       if (!updateUser) {
         return;
       }
-      user.balance = updateUser.balance;
-      setBalance(updateUser.balance);
+      let newUser = { ...user };
+      newUser.balance = user.balance + amountToAdd;
+      setNewUser(newUser);
+      setDisplayBalance(newUser.balance);
+      setAmountToAdd(0);
     });
   };
+
   return (
     <div className={classes.root}>
       <Stack direction="row" spacing={50}>
@@ -102,7 +115,7 @@ const Dashboard = () => {
         </Button>
       </Stack>
       <Typography variant="subtitle1" className="m-2 p-3">
-        Your current balance is: {formatCurrency(balance)}
+        Your current balance is: {formatCurrency(displayBalance)}
       </Typography>
       <form className={classes.form} noValidate autoComplete="off">
         <TextField
@@ -117,13 +130,12 @@ const Dashboard = () => {
           variant="contained"
           color="primary"
           className={classes.button}
-          onClick={handleAddMoney}
+          onClick={handleUserDepositFunds}
         >
           Add Funds
         </Button>
       </form>
       <UpcomingReservationsDashboard
-        reservations={user.reservations}
         classes={classes}
       ></UpcomingReservationsDashboard>
     </div>

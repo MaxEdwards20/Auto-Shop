@@ -1,8 +1,8 @@
 import { BrowserRouter } from "react-router-dom";
 import Router from "./components/Router";
 import NavBar from "./components/Navbar";
-import { AuthContext } from "./contexts/AuthContext";
-import { useUserInfo } from "./hooks/useApi";
+import { UserContext } from "./contexts/AuthContext";
+import { useUserInfo } from "./hooks/useUserInfo";
 import { useEffect } from "react";
 
 function App() {
@@ -11,15 +11,15 @@ function App() {
     setNewUser,
     logout,
     api,
-    isAuthenticated,
     vehicles,
     setNewVehicles,
     manager,
     setNewManager,
   } = useUserInfo();
 
+
   return (
-    <AuthContext.Provider
+    <UserContext.Provider
       value={{
         user,
         setNewUser,
@@ -36,7 +36,7 @@ function App() {
         <NavBar></NavBar>
         <Router></Router>
       </BrowserRouter>
-    </AuthContext.Provider>
+    </UserContext.Provider>
   );
 }
 

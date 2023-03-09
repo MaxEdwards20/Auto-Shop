@@ -7,13 +7,13 @@ import {
   CardGroup,
   FloatingLabel,
 } from "react-bootstrap";
-import { AuthContext } from "../contexts/AuthContext";
+import { UserContext } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const {  setNewUser, api } = useContext(AuthContext);
+  const { setNewUser, api } = useContext(UserContext);
   const [userMessage, setUserMessage] = useState("");
   const navigate = useNavigate();
 

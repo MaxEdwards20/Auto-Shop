@@ -8,11 +8,11 @@ import VehiclePage from "../pages/vehicle-page";
 import ManagerPage from "../pages/manager-page";
 import CreateAccount from "./CreateAccount";
 import { useEffect, useContext } from "react";
-import { AuthContext } from "../contexts/AuthContext";
+import { UserContext } from "../contexts/AuthContext";
 import { initializeFrontend } from "../hooks/miscFunctions";
 import { UnAuthDashboard } from "./UnAuthDashboard";
 function Router() {
-  const { setNewVehicles, api, setNewManager } = useContext(AuthContext);
+  const { setNewVehicles, api, setNewManager } = useContext(UserContext);
   // Load all the vehicles into the context
   useEffect(() => {
     initializeFrontend({ api, setNewVehicles, setNewManager });

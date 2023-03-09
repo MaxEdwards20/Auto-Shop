@@ -10,10 +10,9 @@ import {
   Typography,
 } from "@material-ui/core";
 import { differenceInDays } from "date-fns";
-import { AuthContext } from "../contexts/AuthContext";
-import { useContext, useState } from "react";
+import { UserContext } from "../contexts/AuthContext";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { UnAuthResponse } from "./UnAuthResponse";
 import { formatCurrency, setupManager } from "../hooks/miscFunctions";
 
 type ReserveModalProps = {
@@ -33,29 +32,39 @@ export const ReserveModal = ({
   endDate,
   ref,
 }: ReserveModalProps) => {
-  const totalCost =
-    (differenceInDays(endDate, startDate) + 1) * vehicle.pricePerDay;
-  const { api, user, manager, setNewManager } = useContext(AuthContext);
-
+  const { api, user, manager, setNewUser } = useContext(UserContext);
   const [userMessage, setUserMessage] = useState("");
-  const [disabled, setDisabled] = useState(user.balance < totalCost);
+  const [disabled, setDisabled] = useState(false);
+  const [totalCost, setTotalCost] = useState(0);
+  const [displayBalance, setDisplayBalance] = useState(user.balance);
   const navigate = useNavigate();
+
+  const getTotalCost = () => {
+    const diffDays = differenceInDays(endDate, startDate);
+    let estimatedCost = diffDays * vehicle.pricePerDay;
+    if (estimatedCost === 0) {
+      setTotalCost(vehicle.pricePerDay);
+    } else {
+      setTotalCost(estimatedCost);
+    }
+  };
+
+  useEffect(() => {
+    getTotalCost();
+  }, [startDate, endDate]);
 
   const removeFunds = () => {
     api.removeMoneyFromUser(user.id, totalCost).then((user) => {
       if (!user) {
         setUserMessage("Error updating user balance. Please try again.");
       } else {
-        user.balance = user.balance - totalCost;
+        setDisplayBalance(displayBalance - totalCost);
         setUserMessage("Reservation created successfully");
         setDisabled(true);
       }
-
       // now we update the manager balance because we took the money from the user
       api.addMoneyToUser(manager.id, totalCost).then((manager) => {
-        if (manager) {
-          manager.balance = manager.balance + totalCost;
-        } else {
+        if (!manager) {
           console.error("Error updating manager balance. Please try again.");
         }
       });
@@ -73,20 +82,25 @@ export const ReserveModal = ({
         if (!reservation) {
           setUserMessage("Error creating reservation. Please try again.");
         } else {
-          console.log(user.reservations);
-          if (user.reservations.length > 0) {
-            user.reservations = [...user.reservations, reservation];
+          let newUser = { ...user };
+          if (user.reservations) {
+            newUser.reservations = [...user.reservations, reservation];
           } else {
-            user.reservations = [reservation];
+            newUser.reservations = [reservation];
           }
+          setNewUser(newUser);
           // update the user's reservations
           removeFunds(); // Reservation is made so update the funds available for the user
         }
       });
   };
 
+  if (user.balance < totalCost) {
+    setDisabled(true);
+  }
+
   return (
-    <Dialog open={true} onClose={handleCloseModal} ref={ref}>
+    <Dialog open={showModal} onClose={handleCloseModal} ref={ref}>
       <DialogTitle>{vehicle.name}</DialogTitle>
       <DialogContent>
         <DialogContentText>
@@ -96,7 +110,7 @@ export const ReserveModal = ({
           Price for the entire reservation: {formatCurrency(totalCost)}
         </DialogContentText>
         <DialogContentText>
-          Your account balance: ${user.balance}
+          Your account balance: {formatCurrency(displayBalance)}
         </DialogContentText>
         {userMessage && (
           <DialogContentText color="secondary">{userMessage}</DialogContentText>

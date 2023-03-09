@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { AuthContext } from "../contexts/AuthContext";
+import { UserContext } from "../contexts/AuthContext";
 import { User } from "../types/DataTypes";
 import {
   Typography,
@@ -12,7 +12,7 @@ import { Stack, styled, Paper, Grid } from "@mui/material";
 
 export default function ManagerUpdateUser() {
   const [allUsers, setAllUsers] = useState<User[]>([]);
-  const { api, user } = useContext(AuthContext);
+  const { api, user } = useContext(UserContext);
 
   useEffect(() => {
     if (user) {
@@ -62,7 +62,6 @@ export default function ManagerUpdateUser() {
   }));
 
   return (
-    // TODO: Make this a grid
     // TODO: Change the button options based on what the user already is
     <div>
       <Typography variant="h5">Current Users</Typography>

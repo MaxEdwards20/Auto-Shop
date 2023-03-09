@@ -7,7 +7,7 @@ import { CarListing } from "../components/CarListingReservation";
 import { Vehicle } from "../types/DataTypes";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { Typography } from "@mui/material";
-import { AuthContext } from "../contexts/AuthContext";
+import { UserContext } from "../contexts/AuthContext";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { UnAuthResponse } from "../components/UnAuthResponse";
@@ -27,7 +27,7 @@ export default function ReservationPage() {
   const [minEndDate, setMinEndDate] = useState<Dayjs | null>(dayjs());
   const [availableVehicles, setAvailableVehicles] = useState<Vehicle[]>([]);
   const [userMessage, setUserMessage] = useState("");
-  const { user, api } = useContext(AuthContext);
+  const { user, api } = useContext(UserContext);
   const navigate = useNavigate();
 
   useEffect(() => {

@@ -5,9 +5,8 @@ import {
   checkUserIsManagerAndRedirect,
 } from "../hooks/miscFunctions";
 import { useContext, useEffect } from "react";
-import { AuthContext } from "../contexts/AuthContext";
+import { UserContext } from "../contexts/AuthContext";
 export default function ManagerPage() {
-  
   checkUserIsManagerAndRedirect();
 
   return <ManagerUpdateUser />;

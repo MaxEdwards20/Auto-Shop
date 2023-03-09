@@ -1,7 +1,7 @@
 import { useState, useContext } from "react";
 import { Form, Button, Card } from "react-bootstrap";
 import { UserPermission } from "../types/DataTypes";
-import { AuthContext } from "../contexts/AuthContext";
+import { UserContext } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Typography } from "@mui/material";
 
@@ -11,7 +11,7 @@ export default function CreateAccount() {
   const [name, setName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const { api, setNewUser } = useContext(AuthContext);
+  const { api, setNewUser } = useContext(UserContext);
   const navigator = useNavigate();
 
   const handleSubmit = () => {

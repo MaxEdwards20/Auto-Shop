@@ -91,6 +91,14 @@ export class Api {
     });
   }
 
+  getUserReservations(id: number): Promise<ReservationInfo[] | null> {
+    return this.get(`user/${id}`).then((res) => {
+      if (!res?.reservations) return null;
+      this.setToken(res.token);
+      return res.reservations;
+    });
+  }
+
   addMoneyToUser(id: number, amount: number): Promise<User | null> {
     return this.post(`user/${id}/addMoney`, { amount }).then((res) => {
       if (!res?.user) return null;

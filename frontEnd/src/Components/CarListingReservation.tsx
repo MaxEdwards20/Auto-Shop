@@ -1,13 +1,13 @@
 import { useContext } from "react";
 import { Vehicle } from "../types/DataTypes";
-import { AuthContext } from "../contexts/AuthContext";
+import { UserContext } from "../contexts/AuthContext";
 import { useState } from "react";
 import { UnAuthResponse } from "./UnAuthResponse";
 import { ReserveModal } from "./ReserveModal";
 import { formatCurrency } from "../hooks/miscFunctions";
 import React from "react";
 import { forwardRef } from "react";
-
+import { checkUserAndRedirect } from "../hooks/miscFunctions";
 type CarListingProps = {
   vehicle: Vehicle;
   startDate?: Date;
@@ -20,12 +20,10 @@ export const CarListing = forwardRef(function (
   ref
 ) {
   const [showModal, setShowModal] = useState(false);
-  const { api, user } = useContext(AuthContext);
+  const { api, user } = useContext(UserContext);
+  checkUserAndRedirect();
 
   const handleClick = () => {
-    if (!user) {
-      return <UnAuthResponse></UnAuthResponse>;
-    }
     setShowModal(true);
   };
 
