@@ -30,9 +30,9 @@ function NavBar() {
               <StyledLink to="/">Home</StyledLink>
               <StyledLink to="/vehicles">View Our Vehicles </StyledLink>
               <StyledLink to="/reservations">Make a Reservation</StyledLink>
-              <StyledLink to="/account/dashboard">Account</StyledLink>
+              <StyledLink to="/account/dashboard">Dashboard</StyledLink>
               <StyledLink to="/manager/payemployees">Pay Employees</StyledLink>
-              <StyledLink to="/manager">Admin</StyledLink>
+              <StyledLink to="/manager">Manager</StyledLink>
             </Nav>
           </Navbar.Collapse>
         </Container>
@@ -49,7 +49,7 @@ function NavBar() {
               <StyledLink to="/">Home</StyledLink>
               <StyledLink to="/vehicles">View Our Vehicles </StyledLink>
               <StyledLink to="/reservations">Make a Reservation</StyledLink>
-              <StyledLink to="/account/dashboard">Account</StyledLink>
+              <StyledLink to="/account/dashboard">Dashboard</StyledLink>
               <StyledLink to="/employee/loghours">Log Hours</StyledLink>
             </Nav>
           </Navbar.Collapse>
@@ -67,7 +67,7 @@ function NavBar() {
               <StyledLink to="/">Home</StyledLink>
               <StyledLink to="/vehicles">View Our Vehicles </StyledLink>
               <StyledLink to="/reservations">Make a Reservation</StyledLink>
-              <StyledLink to="/account/dashboard">Account</StyledLink>
+              <StyledLink to="/account/dashboard">Dashboard</StyledLink>
             </Nav>
           </Navbar.Collapse>
         </Container>

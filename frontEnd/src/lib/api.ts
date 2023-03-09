@@ -155,6 +155,14 @@ export class Api {
     });
   }
 
+  getPurchasedVehicles(): Promise<Vehicle[] | null> {
+    return this.get("vehicle/all/purchased").then((res) => {
+      if (!res?.vehicles) return null;
+      this.setToken(res.token);
+      return res.vehicles;
+    });
+  }
+
   getAllUsers(userID: number): Promise<UserWithReservation[] | null> {
     return this.get(`user/${userID}/all`).then((res) => {
       if (!res?.users) return null;

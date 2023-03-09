@@ -12,7 +12,7 @@ export function initializeFrontend({
   setNewVehicles,
   setNewManager,
 }: setupProps) {
-  api.getAllVehicles().then((cars) => {
+  api.getPurchasedVehicles().then((cars) => {
     if (cars) {
       setNewVehicles(cars);
     }
