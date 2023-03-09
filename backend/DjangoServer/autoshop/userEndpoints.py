@@ -7,6 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from .serializers import AutoUserSerializer, ReservationSerializer
 from .helperFunctions import __update_cors, __getReqBody
+from .managerEndpoints import ADMIN_USERNAME, ADMIN_PASS
 import json
 
 @csrf_exempt
@@ -50,7 +51,11 @@ def getUser(request: HttpRequest, id):
 
 @csrf_exempt
 def getUsers(request: HttpRequest):
-    # TODO: Add some validation that id of user requesting this is an admin or manager
+    parsedBody = __getReqBody(request)
+    clientID = parsedBody.get('id')
+    admin = AutoUser.objects.filter(permission="admin", email=ADMIN_PASS, password=ADMIN_PASS)
+    if not clientID or int(clientID) != admin.pk:
+        return __update_cors(JsonResponse({'error': "Unauthorized access"}, status=401), request)
     allUsersList = [__getUserInfo(user.pk) for user in AutoUser.objects.all()]
     j = JsonResponse({"users": allUsersList})
     return __update_cors(j, request)
@@ -86,6 +91,7 @@ def userRemoveMoney(request: HttpRequest, id):
     user.save()
     j = __makeJSONResponse(user.pk)  # return the newly saved user
     return __update_cors(j, request)
+
 
 def __createUserDatabase(parsedBody) -> AutoUser:
     newUserAuth = User.objects.create_user(
