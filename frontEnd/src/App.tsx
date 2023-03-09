@@ -1,6 +1,6 @@
 import { BrowserRouter } from "react-router-dom";
-import Router from "./components/Router";
-import NavBar from "./components/Navbar";
+import Router from "./components/navigation/Router";
+import NavBar from "./components/navigation/Navbar";
 import { UserContext } from "./contexts/UserContext";
 import { useUserInfo } from "./hooks/useUserInfo";
 import { useVehicleInfo } from "./hooks/useVehicleInfo";

@@ -3,7 +3,7 @@ import dayjs, { Dayjs } from "dayjs";
 import TextField from "@mui/material/TextField";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { CarListing } from "../components/CarListingReservation";
+import { CarListing } from "../components/vehicle/CarListingReservation";
 import { Vehicle } from "../types/DataTypes";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { Typography } from "@mui/material";
@@ -11,6 +11,7 @@ import { UserContext } from "../contexts/UserContext";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { checkUserAndRedirect } from "../hooks/validationHooks";
+import { UnAuthResponse } from "../components/user/UnAuthResponse";
 
 export default function ReservationPage() {
   const getToday = () => {
@@ -28,7 +29,7 @@ export default function ReservationPage() {
   const [availableVehicles, setAvailableVehicles] = useState<Vehicle[]>([]);
   const [today, setToday] = useState<Dayjs>(getToday());
   const [userMessage, setUserMessage] = useState("");
-  const { api } = useContext(UserContext);
+  const { api, user } = useContext(UserContext);
 
   useEffect(() => {
     const todayCalc = getToday();
@@ -38,7 +39,9 @@ export default function ReservationPage() {
     setMinEndDate(todayCalc);
   }, []);
 
-  checkUserAndRedirect();
+  if (user.permission === "guest") {
+    return <UnAuthResponse></UnAuthResponse>;
+  }
 
   const updateAvailableVehicles = () => {
     setUserMessage("");

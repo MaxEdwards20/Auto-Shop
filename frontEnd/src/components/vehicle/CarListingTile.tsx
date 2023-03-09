@@ -1,5 +1,5 @@
 import { Typography } from "@mui/material";
-import { Vehicle } from "../types/DataTypes";
+import { Vehicle } from "../../types/DataTypes";
 
 export default function CarListingTile(vehicle: Vehicle) {
   return (

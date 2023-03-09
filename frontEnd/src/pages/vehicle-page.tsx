@@ -1,4 +1,4 @@
-import CarListingTile from "../components/CarListingTile";
+import CarListingTile from "../components/vehicle/CarListingTile";
 import { Vehicle } from "../types/DataTypes";
 import { useState, useEffect, useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
