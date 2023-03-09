@@ -19,15 +19,17 @@ urlpatterns = [
     # vehicles
     path('vehicle', views.vehicleRouter, name='createVehicle'),  # POST
     path('vehicle/<int:id>', views.vehicleRouter, name='vehicleRouter' ),# GET, PUT, DEL
-    path('vehicle/all', views.getAllVehicles, name="getAllVehicles"), # Get all vehicles to show
+    path('vehicle/all', views.getAllPurchasedVehicles, name="getAllVehicles"), # Get all vehicles to show
     path('vehicle/available', views.getAllAvailableVehicles, name="getAllAvailableVehicles"),
     path('vehicle/<int:id>/available', views.vehicleAvailability, name='vehicleAvailability'),
     path('vehicle/<int:id>/purchase', views.purchaseVehicle, name='purchaseVehicle'),
     path('vehicle/all', views.getAllVehicles, name="getAllVehicles"), # Get all vehicles to show
+    path('vehicle/all/purchased', views.getAllPurchasedVehicles, name="getAllPurchasedVehciles"),
 
     # reservations
     path('reservation', views.reservationRouter, name='createReservation'),  # POST
     path('reservation/<int:id>', views.reservationRouter, name='reservationRouter'), # GET, DEL
+    path('reservation/cost', views.calculateCost, name="calculateCost"),
 
     # manager
     path("manager/init", views.initializeDatabase, name="initalizeDatabase"),

@@ -1,19 +1,20 @@
 import CarListingTile from "../components/CarListingTile";
 import { Vehicle } from "../types/DataTypes";
 import { useState, useEffect, useContext } from "react";
-import { AuthContext } from "../contexts/AuthContext";
+import { UserContext } from "../contexts/UserContext";
 import { Typography } from "@mui/material";
+import { VehicleContext } from "../contexts/VehicleContext";
 
 function VehiclePage() {
-  const { api, user, vehicles } = useContext(AuthContext);
+  const { vehicles } = useContext(VehicleContext);
   const [userMessage, setUserMessage] = useState("");
 
   return (
     <div className="root">
       <div className="carListContainer">
-        {vehicles.map((rental) => (
-          <div className="carListTile" key={rental.id}>
-            <CarListingTile {...rental} />
+        {vehicles.map((vehicle) => (
+          <div className="carListTile" key={vehicle.id}>
+            <CarListingTile {...vehicle} />
           </div>
         ))}
         {userMessage && <Typography> {userMessage}</Typography>}

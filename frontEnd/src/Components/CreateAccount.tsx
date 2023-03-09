@@ -1,17 +1,17 @@
 import { useState, useContext } from "react";
 import { Form, Button, Card } from "react-bootstrap";
 import { UserPermission } from "../types/DataTypes";
-import { AuthContext } from "../contexts/AuthContext";
+import { UserContext } from "../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 import { Typography } from "@mui/material";
 
-export default function CreateAccount() {
+export default function CreateAccountForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const { api, setNewUser } = useContext(AuthContext);
+  const { api, setNewUser } = useContext(UserContext);
   const navigator = useNavigate();
 
   const handleSubmit = () => {
@@ -24,7 +24,7 @@ export default function CreateAccount() {
     api.createUser(data).then((user) => {
       setErrorMessage("Creating account...");
       if (!user) {
-        setErrorMessage("Invalid email or password.");
+        setErrorMessage("That email is already in use.");
         return;
       }
       setNewUser(user);

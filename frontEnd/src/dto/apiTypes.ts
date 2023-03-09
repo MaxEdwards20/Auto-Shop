@@ -21,3 +21,5 @@ export type UpdateUserBody = {
 export type CreateVehicleBody = {};
 
 export type CreateReservationBody = {};
+
+// TODO: Fill this in for the return types

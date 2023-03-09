@@ -1,6 +1,6 @@
-import CreateAccount from "../components/CreateAccount";
+import CreateAccountForm from "../components/CreateAccount";
 
 function CreateAccountPage() {
-  return { CreateAccount };
+  return { CreateAccountForm };
 }
 export default CreateAccountPage;

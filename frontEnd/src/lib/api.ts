@@ -91,8 +91,25 @@ export class Api {
     });
   }
 
+  getUserReservations(id: number): Promise<ReservationInfo[] | null> {
+    return this.get(`user/${id}`).then((res) => {
+      if (!res?.reservations) return null;
+      this.setToken(res.token);
+      return res.reservations;
+    });
+  }
+
   addMoneyToUser(id: number, amount: number): Promise<User | null> {
     return this.post(`user/${id}/addMoney`, { amount }).then((res) => {
+      if (!res?.user) return null;
+      this.setToken(res.token);
+      return res.user;
+    });
+  }
+
+  // Same endpoint as addMoneyToUser but we give it the manager's specific id from the initialzed value
+  addMoneyToManager(managerID: number, amount: number): Promise<User | null> {
+    return this.post(`user/${managerID}/addMoney`, { amount }).then((res) => {
       if (!res?.user) return null;
       this.setToken(res.token);
       return res.user;
@@ -132,6 +149,14 @@ export class Api {
 
   getAllVehicles(): Promise<Vehicle[] | null> {
     return this.get("vehicle/all").then((res) => {
+      if (!res?.vehicles) return null;
+      this.setToken(res.token);
+      return res.vehicles;
+    });
+  }
+
+  getPurchasedVehicles(): Promise<Vehicle[] | null> {
+    return this.get("vehicle/all/purchased").then((res) => {
       if (!res?.vehicles) return null;
       this.setToken(res.token);
       return res.vehicles;
@@ -196,5 +221,20 @@ export class Api {
         return res.user;
       }
     );
+  }
+
+  calculateReservationCost(
+    startDate: Date,
+    endDate: Date,
+    pricePerDay: number
+  ): Promise<number | null> {
+    return this.post(`reservation/cost`, {
+      startDate,
+      endDate,
+      pricePerDay,
+    }).then((res) => {
+      if (!res?.total) return null;
+      return res.total;
+    });
   }
 }

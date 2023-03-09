@@ -5,7 +5,7 @@ from .serializers import AutoUserSerializer, VehicleSerializer, ReservationSeria
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
 from .helperFunctions import getReqBody, update_cors, parseDates, vehicleIsAvailable, error400, error401
-
+from datetime import datetime, timedelta
 @csrf_exempt
 def createReservation(request: HttpRequest):
     parsedBody = getReqBody(request)
@@ -33,6 +33,25 @@ def getReservation(request: HttpRequest, id:int):
     reservation = get_object_or_404(Reservation, pk=id)
     j = JsonResponse({"reservation": ReservationSerializer(reservation).data})
     return update_cors(j, request)
+
+@csrf_exempt
+def calculateCost(request: HttpRequest):
+    #TODO Write unit tests for this
+    if request.method != "POST":
+        return error400(request)
+    parsedBody = getReqBody(request)
+    if not ('startDate' in parsedBody and 'endDate' in parsedBody and 'pricePerDay'):
+        return error400(request)
+    startDate, endDate = parseDates(request)
+    diff: timedelta = endDate - startDate
+    pricePerDay = int(parsedBody['pricePerDay'])
+    print(f"Diff days is: {diff}")
+    total = pricePerDay * (diff.days + 1) # no difference means you rent for 1 day, every day after is another fee
+    if total == 0:
+        total = pricePerDay
+    j = JsonResponse({"total": total})
+    return update_cors(j, request)
+
 
 
 def __createReservationDatabase(parsedBody: dict, request: HttpRequest) -> Reservation:

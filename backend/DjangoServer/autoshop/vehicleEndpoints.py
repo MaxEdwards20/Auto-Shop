@@ -29,6 +29,12 @@ def getVehicle(request: HttpRequest, id):
 
 @csrf_exempt
 def getAllVehicles(request: HttpRequest):
+    vehicles = [VehicleSerializer(vehicle).data for vehicle in Vehicle.objects.all()]
+    j = JsonResponse({"vehicles": vehicles}, safe=False)
+    return update_cors(j, request)
+
+@csrf_exempt
+def getAllPurchasedVehicles(request: HttpRequest):
     vehicles = [VehicleSerializer(vehicle).data for vehicle in Vehicle.objects.all() if vehicle.isPurchased]
     j = JsonResponse({"vehicles": vehicles}, safe=False)
     return update_cors(j, request)

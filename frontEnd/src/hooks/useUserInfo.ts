@@ -5,33 +5,9 @@ import { useState } from "react";
 import { getToken } from "./miscFunctions";
 import { removeToken } from "./miscFunctions";
 import { LoginUserBody } from "../dto/apiTypes";
+import { ReservationInfo } from "../types/DataTypes";
 
-type UserInfo = () => {
-  user: User;
-  manager: User;
-  setNewUser: (user: User) => void;
-  logout: () => void;
-  api: Api;
-  vehicles: Vehicle[];
-  setNewVehicles: (vehicles: Vehicle[]) => void;
-  setNewManager: (manager: User) => void;
-};
-
-const permission: UserPermission = "admin";
 const userPermission: UserPermission = "guest";
-const defaultManager = {
-  id: 0,
-  name: "No Manager",
-  permission: permission,
-  balance: 0,
-  needHelp: false,
-  location: "No Location",
-  email: "No Email",
-  ethicsViolation: "No Violation",
-  phoneNumber: "No Phone Number",
-  reservations: [],
-  isAuthenticated: false,
-};
 
 const defaultUser = {
   id: 0,
@@ -47,11 +23,19 @@ const defaultUser = {
   isAuthenticated: false,
 };
 
+export type UserInfo = () => {
+  user: User;
+  api: Api;
+  setNewUser: (user: User) => void;
+  logout: () => void;
+  addMoney: (newBalance: number) => void;
+  subtractMoney: (newBalance: number) => void;
+  addNewReservation: (newReservation: ReservationInfo) => void;
+};
+
 export const useUserInfo: UserInfo = () => {
   const [user, setUser] = useState<User>(defaultUser);
   const [api] = useState(new Api());
-  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
-  const [manager, setManager] = useState<User>(defaultManager);
 
   const setNewUser = (newUser: User) => {
     // if (!getToken()) return; // add this if we start using tokens
@@ -62,17 +46,16 @@ export const useUserInfo: UserInfo = () => {
     }
   };
 
-  const setNewManager = (newManager: User) => {
-    if (!newManager) return;
-    if (newManager !== defaultManager) {
-      newManager.isAuthenticated = true;
-      setManager(newManager);
-    }
+  const addMoney = (newDeposit: number) => {
+    const newBalance = user.balance + newDeposit;
+    const newUser = { ...user, balance: newBalance };
+    setUser(newUser);
   };
 
-  const setNewVehicles = (newVehicles: Vehicle[]) => {
-    if (!newVehicles) return;
-    setVehicles(newVehicles);
+  const subtractMoney = (newPurchase: number) => {
+    const newBalance = user.balance - newPurchase;
+    const newUser = { ...user, balance: newBalance };
+    setUser(newUser);
   };
 
   const logout = () => {
@@ -80,14 +63,21 @@ export const useUserInfo: UserInfo = () => {
     setUser(defaultUser);
   };
 
+  const addNewReservation = (newReservation: ReservationInfo) => {
+    const newUser = {
+      ...user,
+      reservations: [...user.reservations, newReservation],
+    };
+    setUser(newUser);
+  };
+
   return {
+    api,
     user,
     setNewUser,
-    vehicles,
-    setNewVehicles,
-    manager,
-    setNewManager,
+    addMoney,
+    subtractMoney,
+    addNewReservation,
     logout,
-    api,
   };
 };

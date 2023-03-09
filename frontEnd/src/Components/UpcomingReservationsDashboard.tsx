@@ -11,20 +11,22 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
-import { AuthContext } from "../contexts/AuthContext";
+import { UserContext } from "../contexts/UserContext";
 import { ClassNameMap } from "@material-ui/core/styles/withStyles";
 import { Vehicle, ReservationInfo } from "../types/DataTypes";
+import { VehicleContext } from "../contexts/VehicleContext";
 
 type UpcomingReservationsDashboardProps = {
-  reservations: ReservationInfo[];
   classes: ClassNameMap;
 };
 
 export const UpcomingReservationsDashboard = ({
-  reservations,
   classes,
 }: UpcomingReservationsDashboardProps) => {
-  const { vehicles } = useContext(AuthContext);
+  const { user, api } = useContext(UserContext);
+  const { vehicles } = useContext(VehicleContext);
+  const { reservations } = user;
+
   const navigate = useNavigate();
 
   const makeReservationInfo = (reservation: ReservationInfo, index: number) => {

@@ -26,7 +26,7 @@ def parseDates(request: HttpRequest) -> tuple:
     endDate = parsedBody['endDate'][:10]
     startDate = datetime.datetime.strptime(startDate, "%Y-%m-%d").date()
     endDate = datetime.datetime.strptime(endDate, "%Y-%m-%d").date()
-    return startDate, endDate
+    return (startDate , endDate)
 
 def error400(request: HttpRequest, message: str = "Incorrect usage") -> JsonResponse:
     return update_cors(JsonResponse({'error': message}, status=400, safe=False), request)
