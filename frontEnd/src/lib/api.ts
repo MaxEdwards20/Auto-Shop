@@ -1,6 +1,12 @@
 import { CreateUserBody, LoginUserBody } from "../dto/apiTypes";
 import { getToken, setTokenToLocalStorage } from "../hooks/miscFunctions";
-import { ReservationInfo, User, Vehicle } from "../types/DataTypes";
+import {
+  ReservationInfo,
+  User,
+  usersDict as UsersDict,
+  UserWithReservation,
+  Vehicle,
+} from "../types/DataTypes";
 type Method = "get" | "post" | "put" | "del";
 
 export class Api {
@@ -132,6 +138,14 @@ export class Api {
     });
   }
 
+  getAllUsers(userID: number): Promise<UserWithReservation[] | null> {
+    return this.get(`user/${userID}/all`).then((res) => {
+      if (!res?.users) return null;
+      this.setToken(res.token);
+      return res.users;
+    });
+  }
+
   getVehicle(id: number): Promise<Vehicle | null> {
     return this.get(`vehicle/${id}`).then((res) => {
       console.log(res);
@@ -170,5 +184,17 @@ export class Api {
       if (!res?.user) return null;
       return res.user;
     });
+  }
+
+  updateUserPermission(
+    userID: number,
+    permission: string
+  ): Promise<User | null> {
+    return this.post(`user/${userID}/permission`, { permission }).then(
+      (res) => {
+        if (!res?.user) return null;
+        return res.user;
+      }
+    );
   }
 }

@@ -24,7 +24,7 @@ export type UserCheckinInfo = {
   upcomingReservations: ReservationInfo[];
 };
 
-export type UserPermission = "manager" | "user" | "employee" | "guest";
+export type UserPermission = "admin" | "user" | "employee" | "guest";
 
 export type User = {
   name: string;
@@ -37,4 +37,13 @@ export type User = {
   phoneNumber: string;
   reservations: ReservationInfo[];
   id: number;
+};
+
+export type UserWithReservation = {
+  user: User;
+  reservation: ReservationInfo;
+};
+
+export type usersDict = {
+  users: UserWithReservation[];
 };

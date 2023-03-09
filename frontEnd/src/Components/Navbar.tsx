@@ -18,8 +18,8 @@ const StyledLink = styled(Link)`
 `;
 
 function NavBar() {
-  const { userPermission: userType } = useContext(AuthContext);
-  if (userType == "admin") {
+  const { user } = useContext(AuthContext);
+  if (user?.permission == "admin") {
     return (
       <Navbar bg="light" expand="lg">
         <Container>
@@ -30,14 +30,15 @@ function NavBar() {
               <StyledLink to="/">Home</StyledLink>
               <StyledLink to="/vehicles">View Our Vehicles </StyledLink>
               <StyledLink to="/reservations">Make a Reservation</StyledLink>
-              <StyledLink to="/admin/payemployees">Pay Employees</StyledLink>
-              <StyledLink to="/admin/">Admin</StyledLink>
+              <StyledLink to="/account/dashboard">Account</StyledLink>
+              <StyledLink to="/manager/payemployees">Pay Employees</StyledLink>
+              <StyledLink to="/manager">Admin</StyledLink>
             </Nav>
           </Navbar.Collapse>
         </Container>
       </Navbar>
     );
-  } else if (userType == "employee") {
+  } else if (user?.permission == "employee") {
     return (
       <Navbar bg="light" expand="lg">
         <Container>
@@ -48,6 +49,7 @@ function NavBar() {
               <StyledLink to="/">Home</StyledLink>
               <StyledLink to="/vehicles">View Our Vehicles </StyledLink>
               <StyledLink to="/reservations">Make a Reservation</StyledLink>
+              <StyledLink to="/account/dashboard">Account</StyledLink>
               <StyledLink to="/employee/loghours">Log Hours</StyledLink>
             </Nav>
           </Navbar.Collapse>

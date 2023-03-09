@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { Api } from "../lib/api";
-import { User, UserPermission, Vehicle } from "../types/DataTypes";
+import { User, Vehicle, UserPermission } from "../types/DataTypes";
 import { useState } from "react";
 import { getToken } from "./miscFunctions";
 import { removeToken } from "./miscFunctions";
@@ -8,7 +8,7 @@ import { LoginUserBody } from "../dto/apiTypes";
 
 type UserInfo = () => {
   user: User | undefined;
-  manager: User | undefined;
+  manager: User;
   setNewUser: (user: User) => void;
   logout: () => void;
   isAuthenticated: boolean;
@@ -19,11 +19,24 @@ type UserInfo = () => {
 };
 
 export const useUserInfo: UserInfo = () => {
+  const permission: UserPermission = "admin";
+  const defaultManager = {
+    id: 0,
+    name: "No Manager",
+    permission: permission,
+    balance: 0,
+    needHelp: false,
+    location: "No Location",
+    email: "No Email",
+    ethicsViolation: "No Violation",
+    phoneNumber: "No Phone Number",
+    reservations: [],
+  };
   const [user, setUser] = useState<User>();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [api] = useState(new Api());
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
-  const [manager, setManager] = useState<User>();
+  const [manager, setManager] = useState<User>(defaultManager);
 
   const setNewUser = (newUser: User) => {
     // if (!getToken()) return; // add this if we start using tokens

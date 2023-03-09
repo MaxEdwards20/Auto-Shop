@@ -30,8 +30,7 @@ def authenticateUser(request: HttpRequest):
 def createUser(request: HttpRequest):
     # https://www.django-rest-framework.org/tutorial/1-serialization/
     parsedBody = getReqBody(request)
-    response = __validateCreateUserBody(request, parsedBody)
-    if 'error' in response:
+    if not __validateCreateUserBody(request, parsedBody):
         return error400(request)
     user = __createUserDatabase(parsedBody)
     j = __makeJSONResponse(user.pk)
@@ -50,15 +49,33 @@ def getUser(request: HttpRequest, id):
     return update_cors(j, request)
 
 @csrf_exempt
-def getUsers(request: HttpRequest):
-    parsedBody = getReqBody(request)
-    clientID = parsedBody.get('id')
-    admin = AutoUser.objects.filter(permission="admin", email=ADMIN_PASS, password=ADMIN_PASS)
-    if not clientID or int(clientID) != admin.pk:
+def getAllUsers(request: HttpRequest, id: int):
+    if request.method != "GET":
+        return error400(request)
+    try:
+        admin = AutoUser.objects.get(permission="admin", email=ADMIN_PASS)
+    except Exception as e:
+        return error400(request, "Admin doesn't exist")
+    if id != admin.pk:
         return error401(request)
     allUsersList = [__getUserInfo(user.pk) for user in AutoUser.objects.all()]
     j = JsonResponse({"users": allUsersList})
     return update_cors(j, request)
+
+@csrf_exempt
+def updateUserPermission(request: HttpRequest, id: int):
+    # TODO: Write unit test for this
+    parsedBody = getReqBody(request)
+    if request.method != "POST" or 'permission' not in parsedBody:
+        return error400(request)
+    user: AutoUser = get_object_or_404(AutoUser, pk=id)
+    validPermissionValues = {"user", "admin", "employee"}
+    if parsedBody['permission'] not in validPermissionValues:
+        return error400(request, "Not a valid permission")
+    user.permission = parsedBody['permission']
+    user.save()
+    return __makeJSONResponse(user.pk)
+
 
 
 @csrf_exempt
@@ -125,20 +142,20 @@ def __validateAuthenticationBody(request, parsedBody: dict) -> dict:
     if request.method == 'GET':
         response['error'] = 'You must use a post request when authenticating a user.'
     return response
-def __validateCreateUserBody(request: HttpRequest, parsedBody: dict) -> dict:
-    response = {}
+def __validateCreateUserBody(request: HttpRequest, parsedBody: dict) -> bool:
     NEEDED_PARAMS = {'password', 'name', 'email', 'phoneNumber'}
-    if request.method == 'POST':
-        for item in NEEDED_PARAMS:
-            if item not in parsedBody:
-                response['error'] = "Need an email, password, name and phoneNumber"
-    if request.method == 'GET':
-        response['error'] = 'You must use a post request when creating a user.'
+    if request.method != "POST":
+        return False
+    for item in NEEDED_PARAMS:
+        if item not in parsedBody:
+            return False
     # check to see if the email already exists.
-    if 'email' in parsedBody and 'error' not in response:
-        email = parsedBody['email']
-        user = AutoUser.objects.filter(email=email)
-        if user:
-            response['error'] = 'This user already exists.'
-    return response
+    email = parsedBody['email']
+    #TODO: Add a unit test to ensure an existing user will get an error
+    try:
+        AutoUser.objects.get(email=email)
+    except Exception as e:
+        # item doesn't exist, so we are good
+        return True
+    return False
 

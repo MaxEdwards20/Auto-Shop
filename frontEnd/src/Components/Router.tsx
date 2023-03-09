@@ -9,12 +9,12 @@ import ManagerPage from "../pages/manager-page";
 import CreateAccount from "./CreateAccount";
 import { useEffect, useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
-import { setupClient } from "../hooks/miscFunctions";
+import { initializeFrontend } from "../hooks/miscFunctions";
 function Router() {
   const { setNewVehicles, api, setNewManager } = useContext(AuthContext);
   // Load all the vehicles into the context
   useEffect(() => {
-    setupClient({ api, setNewVehicles, setNewManager });
+    initializeFrontend({ api, setNewVehicles, setNewManager });
   }, []);
 
   return (
@@ -22,7 +22,10 @@ function Router() {
     <Routes>
       <Route path="/" element={<HomePage></HomePage>} />
       <Route path="/home" element={<HomePage></HomePage>} />
-      <Route path="/manager" element={<ManagerPage />} />
+      <Route path="/manager" element={<ManagerPage />}>
+        <Route path="employees"></Route>
+        <Route path="vehicles/new"></Route>
+      </Route>
       <Route path="/reservations" element={<ReservationPage />} />
       <Route path="/vehicles" element={<VehiclePage />} />
       <Route path="/account">
@@ -30,7 +33,7 @@ function Router() {
         <Route path="login" element={<LoginPage />} />
         <Route path="create" element={<CreateAccount />} />
       </Route>
-      <Route path="/vehicles/new"></Route>
+
       <Route path="*" element={<ErrorPage />}></Route>
     </Routes>
   );

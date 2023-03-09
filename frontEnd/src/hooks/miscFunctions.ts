@@ -25,7 +25,7 @@ type setupProps = {
   setNewManager: (manager: User) => void;
 };
 
-export function setupClient({
+export function initializeFrontend({
   api,
   setNewVehicles,
   setNewManager,
@@ -37,6 +37,14 @@ export function setupClient({
   });
 
   api.initializeDatabase().then((manager) => {
+    if (manager) {
+      setNewManager(manager);
+    }
+  });
+}
+
+export function setupManager(api: Api, setNewManager: (manager: User) => void) {
+  api.getManager().then((manager) => {
     if (manager) {
       setNewManager(manager);
     }

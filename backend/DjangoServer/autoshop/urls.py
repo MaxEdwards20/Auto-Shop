@@ -10,8 +10,10 @@ urlpatterns = [
     path('user/<int:id>', views.userRouter, name='userRouter'), #  GET, PUT, DEL
     path('user/<int:id>/addMoney', views.userAddMoney, name="addMoney"),
     path('user/<int:id>/removeMoney', views.userRemoveMoney, name="removeMoney"),
+    path('user/<int:id>/all', views.getAllUsers, name="getAllUsers"),  # Get all Users to show
+    path('user/<int:id>/permission', views.updateUserPermission, name="updatePermission"),  # Get all Users to show
+
     path('user/login', views.authenticateUser, name='authenticateUser'),
-    path('user/all', views.getUsers, name="getAllUsers"), # Get all Users to show
     path('user/<int:id>/reservations', views.getUser, name='getUserReservations'),
 
     # vehicles

@@ -5,12 +5,12 @@ import { LoginUserBody } from "../dto/apiTypes";
 
 export const AuthContext = createContext({
   user: {} as User | undefined,
-  manager: {} as User | undefined,
+  manager: {} as User,
   vehicles: [] as Vehicle[],
   isAuthenticated: false,
   api: {} as Api,
   setNewUser: (user: User) => {},
   setNewVehicles: (vehicles: Vehicle[]) => {},
-  setNewManager: (user: User) => {},
+  setNewManager: (manager: User) => {},
   logout: () => {},
 });

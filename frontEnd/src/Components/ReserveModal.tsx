@@ -14,7 +14,7 @@ import { AuthContext } from "../contexts/AuthContext";
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { UnAuthResponse } from "./UnAuthResponse";
-import { formatCurrency } from "../hooks/miscFunctions";
+import { formatCurrency, setupManager } from "../hooks/miscFunctions";
 
 type ReserveModalProps = {
   vehicle: Vehicle;
@@ -33,9 +33,12 @@ export const ReserveModal = ({
 }: ReserveModalProps) => {
   const totalCost =
     (differenceInDays(endDate, startDate) + 1) * vehicle.pricePerDay;
-  const { api, user } = useContext(AuthContext);
+  const { api, user, manager, setNewManager } = useContext(AuthContext);
   if (!user) {
     return <UnAuthResponse />;
+  }
+  if (!manager) {
+    setupManager(api, setNewManager);
   }
   const [userMessage, setUserMessage] = useState("");
   const [disabled, setDisabled] = useState(user.balance < totalCost);
@@ -50,6 +53,15 @@ export const ReserveModal = ({
         setUserMessage("Reservation created successfully");
         setDisabled(true);
       }
+
+      // now we update the manager balance because we took the money from the user
+      api.addMoneyToUser(manager.id, totalCost).then((manager) => {
+        if (manager) {
+          manager.balance = manager.balance + totalCost;
+        } else {
+          console.error("Error updating manager balance. Please try again.");
+        }
+      });
     });
   };
 

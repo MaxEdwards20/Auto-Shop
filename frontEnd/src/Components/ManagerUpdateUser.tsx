@@ -1,63 +1,108 @@
-import { useState, useEffect } from "react";
-
-interface User {
-  id: string;
-  name: string;
-  status: "employee" | "user" | "manager";
-}
+import { useState, useEffect, useContext } from "react";
+import { AuthContext } from "../contexts/AuthContext";
+import { User } from "../types/DataTypes";
+import {
+  Typography,
+  List,
+  ListItem,
+  ListItemText,
+  Button,
+} from "@material-ui/core";
+import { Stack, styled, Paper } from "@mui/material";
 
 export default function ManagerUpdateUser() {
-  const [users, setUsers] = useState<User[]>([]);
-
-  const collectUsers = () => {
-    let url = "";
-    fetch(url)
-      .then((response) => response.json())
-      .then((data) => setUsers(data));
-  };
+  const [allUsers, setAllUsers] = useState<User[]>([]);
+  const { api, user } = useContext(AuthContext);
 
   useEffect(() => {
-    collectUsers();
+    if (user) {
+      api.getAllUsers(user.id).then((users) => {
+        if (!users) {
+          return;
+        }
+        console.log("received users: ", users);
+        let newUsers: User[] = [];
+        users.map((newUser) => {
+          if (newUser.user.id !== user.id) {
+            newUsers.push(newUser.user);
+          }
+        });
+        setAllUsers(newUsers);
+      });
+    }
   }, []);
 
-  const handleStatusChange = (id: string, newStatus: User["status"]) => {
-    fetch(`${""}/${id}`, {
-      method: "PUT",
-      body: JSON.stringify({ status: newStatus }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((updatedUser) => {
-        setUsers((prevUsers) =>
-          prevUsers.map((user) =>
-            user.id === updatedUser.id ? updatedUser : user
-          )
-        );
-      })
-      .catch((error) => console.error(error));
+  const handleStatusChange = (
+    id: number,
+    newPermission: User["permission"]
+  ) => {
+    api.updateUserPermission(id, newPermission).then((updatedUser) => {
+      if (!updatedUser) {
+        return;
+      }
+      console.log("updated user: ", updatedUser);
+      let newUsers: User[] = [];
+      allUsers.map((newUser) => {
+        if (newUser.id !== id) {
+          newUsers.push(newUser);
+        } else {
+          newUsers.push(updatedUser);
+        }
+      });
+      setAllUsers(newUsers);
+    });
   };
 
+  const Item = styled(Paper)(({ theme }) => ({
+    backgroundColor: "#add8e6",
+    padding: theme.spacing(1),
+    textAlign: "center",
+    fontSize: "20px",
+    fontFamily: "inherit",
+  }));
+
   return (
+    // TODO: Make this a grid
+    // TODO: Change the button options based on what the user already is
     <div>
-      <h1>Current Users</h1>
-      <ul>
-        {users.map((user) => (
-          <li key={user.id}>
-            {user.name} - {user.status}
-            <button onClick={() => handleStatusChange(user.id, "employee")}>
-              Set Employee
-            </button>
-            <button onClick={() => handleStatusChange(user.id, "user")}>
-              Set User
-            </button>
-            <button onClick={() => handleStatusChange(user.id, "manager")}>
-              Set Manager
-            </button>
-          </li>
+      <Item>Current Users</Item>
+      <List>
+        {allUsers.map((grabbedUser) => (
+          <ListItem key={grabbedUser.id}>
+            <Stack>
+              <Item>Name: {grabbedUser.name}</Item>
+              <Item>Current Permission: {grabbedUser.permission}</Item>
+              <Item>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => handleStatusChange(grabbedUser.id, "employee")}
+                >
+                  Set Employee
+                </Button>
+              </Item>
+              <Item>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => handleStatusChange(grabbedUser.id, "user")}
+                >
+                  Set User
+                </Button>
+              </Item>
+              <Item>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => handleStatusChange(grabbedUser.id, "admin")}
+                >
+                  Set Admin
+                </Button>
+              </Item>
+            </Stack>
+          </ListItem>
         ))}
-      </ul>
+      </List>
     </div>
   );
 }

@@ -86,7 +86,7 @@ export default function CreateAccount() {
         Submit
       </Button>
 
-      {errorMessage && <Typography variant="h3">{errorMessage}</Typography>}
+      {errorMessage && <Typography variant="body1">{errorMessage}</Typography>}
     </Card>
   );
 }
