@@ -5,20 +5,16 @@ import ReservationPage from "../pages/reservation-page";
 import Dashboard from "../pages/account-dashboard";
 import LoginPage from "../pages/login-page";
 import VehiclePage from "../pages/vehicle-page";
-import AdminPage from "../pages/admin-page";
+import ManagerPage from "../pages/manager-page";
 import CreateAccount from "./CreateAccount";
 import { useEffect, useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
+import { setupClient } from "../hooks/miscFunctions";
 function Router() {
-  const { vehicles, setNewVehicles, api } = useContext(AuthContext);
+  const { setNewVehicles, api, setNewManager } = useContext(AuthContext);
   // Load all the vehicles into the context
   useEffect(() => {
-    api.getAllVehicles().then((cars) => {
-      if (!cars) {
-        return;
-      }
-      setNewVehicles(cars);
-    });
+    setupClient({ api, setNewVehicles, setNewManager });
   }, []);
 
   return (
@@ -26,7 +22,7 @@ function Router() {
     <Routes>
       <Route path="/" element={<HomePage></HomePage>} />
       <Route path="/home" element={<HomePage></HomePage>} />
-      <Route path="/admin" element={<AdminPage />} />
+      <Route path="/manager" element={<ManagerPage />} />
       <Route path="/reservations" element={<ReservationPage />} />
       <Route path="/vehicles" element={<VehiclePage />} />
       <Route path="/account">

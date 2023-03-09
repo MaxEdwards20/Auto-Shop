@@ -29,5 +29,5 @@ urlpatterns = [
 
     # manager
     path("manager/init", views.initializeDatabase, name="initalizeDatabase"),
-    path("manager/", views.getManager, name="getManager"),
+    path("manager", views.getManager, name="getManager"),
 ]

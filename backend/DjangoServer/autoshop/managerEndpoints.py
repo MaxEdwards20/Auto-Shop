@@ -8,13 +8,15 @@ from django.contrib.auth.models import User
 from .serializers import AutoUserSerializer, ReservationSerializer
 from .helperFunctions import update_cors, getReqBody, error400, error401
 
-ADMIN_PASS = "admin123"
 ADMIN_USERNAME = "admin123"
+ADMIN_PASS = "admin123"
 
 @csrf_exempt
-def initializeDatabase():
+def initializeDatabase(request: HttpRequest):
+    if  request.method != "POST":
+        return error400(request)
     # First check to make sure we have an admin user or not, create if not there
-    admin = AutoUser.objects.filter(permission="admin", email=ADMIN_PASS, password=ADMIN_PASS)
+    admin = AutoUser.objects.get(permission="admin", email=ADMIN_USERNAME)
     if not admin:
         admin =  __createManager()
     return __makeJSONResponse(admin.pk)
@@ -23,7 +25,7 @@ def initializeDatabase():
 def getManager(request: HttpRequest):
     if request.method != "GET":
         error400(request)
-    admin = AutoUser.objects.filter(permission="admin", email=ADMIN_PASS, password=ADMIN_PASS)
+    admin = AutoUser.objects.filter(permission="admin", email=ADMIN_PASS)
     return __makeJSONResponse(admin.pk)
 
 def __createManager():

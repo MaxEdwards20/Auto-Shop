@@ -4,7 +4,6 @@ from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from .serializers import VehicleSerializer
 from .helperFunctions import getReqBody, update_cors, parseDates, vehicleIsAvailable, error400, error401
-import datetime
 
 @csrf_exempt
 def createVehicle(request: HttpRequest):

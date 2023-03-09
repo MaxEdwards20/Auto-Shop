@@ -24,7 +24,7 @@ export type UserCheckinInfo = {
   upcomingReservations: ReservationInfo[];
 };
 
-export type UserPermission = "admin" | "user" | "employee" | "guest";
+export type UserPermission = "manager" | "user" | "employee" | "guest";
 
 export type User = {
   name: string;
@@ -36,5 +36,5 @@ export type User = {
   ethicsViolation: string;
   phoneNumber: string;
   reservations: ReservationInfo[];
-  id: number; // only get id after creating the user
+  id: number;
 };

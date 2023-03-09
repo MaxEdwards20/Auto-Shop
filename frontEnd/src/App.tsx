@@ -12,9 +12,10 @@ function App() {
     logout,
     api,
     isAuthenticated,
-    userPermission,
     vehicles,
     setNewVehicles,
+    manager,
+    setNewManager,
   } = useUserInfo();
 
   return (
@@ -25,9 +26,10 @@ function App() {
         logout,
         api,
         isAuthenticated,
-        userPermission,
         vehicles,
         setNewVehicles,
+        manager,
+        setNewManager,
       }}
     >
       <BrowserRouter>

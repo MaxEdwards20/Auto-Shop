@@ -6,7 +6,7 @@ interface User {
   status: "employee" | "user" | "manager";
 }
 
-export default function AdminUpdateUser() {
+export default function ManagerUpdateUser() {
   const [users, setUsers] = useState<User[]>([]);
 
   const collectUsers = () => {
