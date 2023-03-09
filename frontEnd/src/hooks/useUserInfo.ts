@@ -5,22 +5,9 @@ import { useState } from "react";
 import { getToken } from "./miscFunctions";
 import { removeToken } from "./miscFunctions";
 import { LoginUserBody } from "../dto/apiTypes";
+import { ReservationInfo } from "../types/DataTypes";
 
-const permission: UserPermission = "admin";
 const userPermission: UserPermission = "guest";
-const defaultManager = {
-  id: 0,
-  name: "No Manager",
-  permission: permission,
-  balance: 0,
-  needHelp: false,
-  location: "No Location",
-  email: "No Email",
-  ethicsViolation: "No Violation",
-  phoneNumber: "No Phone Number",
-  reservations: [],
-  isAuthenticated: false,
-};
 
 const defaultUser = {
   id: 0,
@@ -36,12 +23,14 @@ const defaultUser = {
   isAuthenticated: false,
 };
 
-type UserInfo = () => {
+export type UserInfo = () => {
   user: User;
+  api: Api;
   setNewUser: (user: User) => void;
   logout: () => void;
-  api: Api;
-  updateUserBalance: (newBalance: number) => void;
+  addMoney: (newBalance: number) => void;
+  subtractMoney: (newBalance: number) => void;
+  addNewReservation: (newReservation: ReservationInfo) => void;
 };
 
 export const useUserInfo: UserInfo = () => {
@@ -57,7 +46,14 @@ export const useUserInfo: UserInfo = () => {
     }
   };
 
-  const updateUserBalance = (newBalance: number) => {
+  const addMoney = (newDeposit: number) => {
+    const newBalance = user.balance + newDeposit;
+    const newUser = { ...user, balance: newBalance };
+    setUser(newUser);
+  };
+
+  const subtractMoney = (newPurchase: number) => {
+    const newBalance = user.balance - newPurchase;
     const newUser = { ...user, balance: newBalance };
     setUser(newUser);
   };
@@ -67,11 +63,21 @@ export const useUserInfo: UserInfo = () => {
     setUser(defaultUser);
   };
 
+  const addNewReservation = (newReservation: ReservationInfo) => {
+    const newUser = {
+      ...user,
+      reservations: [...user.reservations, newReservation],
+    };
+    setUser(newUser);
+  };
+
   return {
     api,
     user,
     setNewUser,
-    updateUserBalance,
+    addMoney,
+    subtractMoney,
+    addNewReservation,
     logout,
   };
 };

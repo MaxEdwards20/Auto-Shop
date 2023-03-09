@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { UserContext } from "../contexts/AuthContext";
+import { UserContext } from "../contexts/UserContext";
 import { User } from "../types/DataTypes";
 import {
   Typography,

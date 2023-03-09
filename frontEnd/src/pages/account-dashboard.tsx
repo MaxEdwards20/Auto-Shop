@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { UserContext } from "../contexts/AuthContext";
+import { UserContext } from "../contexts/UserContext";
 import { Link, useNavigate } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import { Typography, TextField, Button } from "@material-ui/core";
@@ -7,7 +7,10 @@ import Stack from "@mui/material/Stack";
 import { Vehicle } from "../types/DataTypes";
 import { UnAuthDashboard } from "../components/UnAuthDashboard";
 import { UpcomingReservationsDashboard } from "../components/UpcomingReservationsDashboard";
-import { checkUserAndRedirect, formatCurrency } from "../hooks/miscFunctions";
+import { formatCurrency } from "../hooks/miscFunctions";
+import { VehicleContext } from "../contexts/VehicleContext";
+import { checkUserAndRedirect } from "../hooks/validationHooks";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
@@ -40,37 +43,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Dashboard = () => {
-  const { user, api, logout, vehicles, setNewVehicles, setNewUser } =
-    useContext(UserContext);
+  const { user, api, logout, addMoney } = useContext(UserContext);
+  const { vehicles } = useContext(VehicleContext);
   const [amountToAdd, setAmountToAdd] = useState<number>(0);
   // User is signed in
-  const [displayBalance, setDisplayBalance] = useState<number>(user.balance);
   checkUserAndRedirect();
   const navigate = useNavigate();
   const classes = useStyles();
 
-  useEffect(() => {
-    if (vehicles.length < 1) {
-      api.getAllVehicles().then((vehicles) => {
-        if (!vehicles) {
-          return;
-        }
-        setNewVehicles(vehicles);
-      });
-    }
-  }, []);
-
-  useEffect(() => {
-    api.getUser(user.id).then((user) => {
-      if (!user) {
-        return;
-      }
-      setNewUser(user);
-      setDisplayBalance(user.balance);
-    });
-  }, [user]);
-
-  const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAmountToAddChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const value = parseInt(event.target.value);
     if (value >= 0) {
       setAmountToAdd(value);
@@ -90,10 +73,7 @@ const Dashboard = () => {
       if (!updateUser) {
         return;
       }
-      let newUser = { ...user };
-      newUser.balance = user.balance + amountToAdd;
-      setNewUser(newUser);
-      setDisplayBalance(newUser.balance);
+      addMoney(amountToAdd);
       setAmountToAdd(0);
     });
   };
@@ -115,7 +95,7 @@ const Dashboard = () => {
         </Button>
       </Stack>
       <Typography variant="subtitle1" className="m-2 p-3">
-        Your current balance is: {formatCurrency(displayBalance)}
+        Your current balance is: {formatCurrency(user.balance)}
       </Typography>
       <form className={classes.form} noValidate autoComplete="off">
         <TextField
@@ -124,7 +104,7 @@ const Dashboard = () => {
           variant="outlined"
           className={classes.textField}
           value={amountToAdd}
-          onChange={handleAmountChange}
+          onChange={handleAmountToAddChange}
         />
         <Button
           variant="contained"

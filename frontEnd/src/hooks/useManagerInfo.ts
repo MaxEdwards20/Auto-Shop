@@ -7,7 +7,6 @@ import { removeToken } from "./miscFunctions";
 import { LoginUserBody } from "../dto/apiTypes";
 
 const permission: UserPermission = "admin";
-const userPermission: UserPermission = "guest";
 const defaultManager = {
   id: 0,
   name: "No Manager",
@@ -21,58 +20,24 @@ const defaultManager = {
   reservations: [],
   isAuthenticated: false,
 };
-
-const defaultUser = {
-  id: 0,
-  name: "No Manager",
-  permission: userPermission,
-  balance: 0,
-  needHelp: false,
-  location: "No Location",
-  email: "No Email",
-  ethicsViolation: "No Violation",
-  phoneNumber: "No Phone Number",
-  reservations: [],
-  isAuthenticated: false,
+type ManagerInfo = () => {
+  manager: User;
+  setNewManager: (manager: User) => void;
 };
 
-type UserInfo = () => {
-  user: User;
-  setNewUser: (user: User) => void;
-  logout: () => void;
-  api: Api;
-  updateUserBalance: (newBalance: number) => void;
-};
-
-export const useUserInfo: UserInfo = () => {
-  const [user, setUser] = useState<User>(defaultUser);
-  const [api] = useState(new Api());
-  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+export const useManagerInfo: ManagerInfo = () => {
   const [manager, setManager] = useState<User>(defaultManager);
 
-  const setNewUser = (newUser: User) => {
-    if (!newUser) return;
-    if (newUser !== defaultUser) {
-      newUser.isAuthenticated = true;
-      setUser(newUser);
+  const setNewManager = (newManager: User) => {
+    if (!newManager) return;
+    if (newManager !== defaultManager) {
+      newManager.isAuthenticated = true;
+      setManager(newManager);
     }
   };
 
-  const updateUserBalance = (newBalance: number) => {
-    const newUser = { ...user, balance: newBalance };
-    setUser(newUser);
-  };
-
-  const logout = () => {
-    removeToken();
-    setUser(defaultUser);
-  };
-
   return {
-    user,
-    setNewUser,
-    logout,
-    api,
-    updateUserBalance,
+    setNewManager,
+    manager,
   };
 };

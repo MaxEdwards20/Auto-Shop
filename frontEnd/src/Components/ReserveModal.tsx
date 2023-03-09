@@ -6,14 +6,11 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  TextField,
-  Typography,
 } from "@material-ui/core";
-import { differenceInDays } from "date-fns";
-import { UserContext } from "../contexts/AuthContext";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { formatCurrency, setupManager } from "../hooks/miscFunctions";
+import { formatCurrency } from "../hooks/miscFunctions";
+import { Api } from "../lib/api";
 
 type ReserveModalProps = {
   vehicle: Vehicle;
@@ -21,7 +18,10 @@ type ReserveModalProps = {
   showModal: boolean;
   startDate: Date;
   endDate: Date;
-  ref: React.ForwardedRef<unknown>;
+  user: User;
+  api: Api;
+  handleReserveClick: () => void;
+  totalCost: number;
 };
 
 export const ReserveModal = ({
@@ -30,77 +30,15 @@ export const ReserveModal = ({
   showModal,
   startDate,
   endDate,
-  ref,
+  handleReserveClick,
+  user,
+  totalCost,
 }: ReserveModalProps) => {
-  const { api, user, manager, setNewUser } = useContext(UserContext);
   const [userMessage, setUserMessage] = useState("");
-  const [disabled, setDisabled] = useState(false);
-  const [totalCost, setTotalCost] = useState(0);
-  const [displayBalance, setDisplayBalance] = useState(user.balance);
+  const [reserved, setReserved] = useState(false);
   const navigate = useNavigate();
-
-  const getTotalCost = () => {
-    const diffDays = differenceInDays(endDate, startDate);
-    let estimatedCost = diffDays * vehicle.pricePerDay;
-    if (estimatedCost === 0) {
-      setTotalCost(vehicle.pricePerDay);
-    } else {
-      setTotalCost(estimatedCost);
-    }
-  };
-
-  useEffect(() => {
-    getTotalCost();
-  }, [startDate, endDate]);
-
-  const removeFunds = () => {
-    api.removeMoneyFromUser(user.id, totalCost).then((user) => {
-      if (!user) {
-        setUserMessage("Error updating user balance. Please try again.");
-      } else {
-        setDisplayBalance(displayBalance - totalCost);
-        setUserMessage("Reservation created successfully");
-        setDisabled(true);
-      }
-      // now we update the manager balance because we took the money from the user
-      api.addMoneyToUser(manager.id, totalCost).then((manager) => {
-        if (!manager) {
-          console.error("Error updating manager balance. Please try again.");
-        }
-      });
-    });
-  };
-
-  const handleReserveClick = () => {
-    if (user.balance < totalCost) {
-      setUserMessage("Insufficent Funds");
-      return;
-    }
-    api
-      .createReservation(user.id, vehicle.id, startDate, endDate)
-      .then((reservation) => {
-        if (!reservation) {
-          setUserMessage("Error creating reservation. Please try again.");
-        } else {
-          let newUser = { ...user };
-          if (user.reservations) {
-            newUser.reservations = [...user.reservations, reservation];
-          } else {
-            newUser.reservations = [reservation];
-          }
-          setNewUser(newUser);
-          // update the user's reservations
-          removeFunds(); // Reservation is made so update the funds available for the user
-        }
-      });
-  };
-
-  if (user.balance < totalCost) {
-    setDisabled(true);
-  }
-
   return (
-    <Dialog open={showModal} onClose={handleCloseModal} ref={ref}>
+    <Dialog open={showModal} onClose={() => handleCloseModal()}>
       <DialogTitle>{vehicle.name}</DialogTitle>
       <DialogContent>
         <DialogContentText>
@@ -110,7 +48,7 @@ export const ReserveModal = ({
           Price for the entire reservation: {formatCurrency(totalCost)}
         </DialogContentText>
         <DialogContentText>
-          Your account balance: {formatCurrency(displayBalance)}
+          Your account balance: {formatCurrency(user.balance)}
         </DialogContentText>
         {userMessage && (
           <DialogContentText color="secondary">{userMessage}</DialogContentText>
@@ -120,8 +58,11 @@ export const ReserveModal = ({
             type="submit"
             variant="contained"
             color="primary"
-            onClick={handleReserveClick}
-            disabled={disabled}
+            onClick={() => {
+              handleReserveClick();
+              setReserved(true);
+            }}
+            disabled={user.balance < totalCost || reserved}
           >
             Reserve
           </Button>
@@ -135,7 +76,7 @@ export const ReserveModal = ({
             Add Funds
           </Button>
           <Button
-            onClick={handleCloseModal}
+            onClick={() => handleCloseModal()}
             variant="contained"
             color="secondary"
           >

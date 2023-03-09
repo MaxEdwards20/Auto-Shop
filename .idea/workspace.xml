@@ -6,6 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="798bd63e-d7e6-4f44-9b5e-3f4cb6158f82" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/DjangoServer/autoshop/helperFunctions.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/DjangoServer/autoshop/helperFunctions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/DjangoServer/autoshop/reservationEndpoints.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/DjangoServer/autoshop/reservationEndpoints.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/DjangoServer/autoshop/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/DjangoServer/autoshop/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/DjangoServer/autoshop/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/DjangoServer/autoshop/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -6,13 +6,17 @@ import Dashboard from "../pages/account-dashboard";
 import LoginPage from "../pages/login-page";
 import VehiclePage from "../pages/vehicle-page";
 import ManagerPage from "../pages/manager-page";
-import CreateAccount from "./CreateAccount";
+import CreateAccountForm from "./CreateAccount";
 import { useEffect, useContext } from "react";
-import { UserContext } from "../contexts/AuthContext";
-import { initializeFrontend } from "../hooks/miscFunctions";
+import { UserContext } from "../contexts/UserContext";
+import { initializeFrontend } from "../hooks/initializers";
 import { UnAuthDashboard } from "./UnAuthDashboard";
+import { VehicleContext } from "../contexts/VehicleContext";
+import { ManagerContext } from "../contexts/ManagerContext";
 function Router() {
-  const { setNewVehicles, api, setNewManager } = useContext(UserContext);
+  const { setNewVehicles } = useContext(VehicleContext);
+  const { setNewManager } = useContext(ManagerContext);
+  const { api } = useContext(UserContext);
   // Load all the vehicles into the context
   useEffect(() => {
     initializeFrontend({ api, setNewVehicles, setNewManager });
@@ -32,7 +36,7 @@ function Router() {
       <Route path="/account">
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="login" element={<LoginPage />} />
-        <Route path="create" element={<CreateAccount />} />
+        <Route path="create" element={<CreateAccountForm />} />
       </Route>
       <Route
         path="/unauthorized"

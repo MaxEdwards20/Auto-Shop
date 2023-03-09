@@ -107,6 +107,15 @@ export class Api {
     });
   }
 
+  // Same endpoint as addMoneyToUser but we give it the manager's specific id from the initialzed value
+  addMoneyToManager(managerID: number, amount: number): Promise<User | null> {
+    return this.post(`user/${managerID}/addMoney`, { amount }).then((res) => {
+      if (!res?.user) return null;
+      this.setToken(res.token);
+      return res.user;
+    });
+  }
+
   removeMoneyFromUser(id: number, amount: number): Promise<User | null> {
     return this.post(`user/${id}/removeMoney`, { amount }).then((res) => {
       if (!res?.user) return null;
@@ -204,5 +213,20 @@ export class Api {
         return res.user;
       }
     );
+  }
+
+  calculateReservationCost(
+    startDate: Date,
+    endDate: Date,
+    pricePerDay: number
+  ): Promise<number | null> {
+    return this.post(`reservation/cost`, {
+      startDate,
+      endDate,
+      pricePerDay,
+    }).then((res) => {
+      if (!res?.total) return null;
+      return res.total;
+    });
   }
 }

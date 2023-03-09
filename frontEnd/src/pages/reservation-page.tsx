@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import TextField from "@mui/material/TextField";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -7,33 +7,35 @@ import { CarListing } from "../components/CarListingReservation";
 import { Vehicle } from "../types/DataTypes";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { Typography } from "@mui/material";
-import { UserContext } from "../contexts/AuthContext";
+import { UserContext } from "../contexts/UserContext";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { UnAuthResponse } from "../components/UnAuthResponse";
-import { checkUserAndRedirect } from "../hooks/miscFunctions";
+import { checkUserAndRedirect } from "../hooks/validationHooks";
 
 export default function ReservationPage() {
-  // Initialize today's date
-  let currentDate = new Date();
-  let cDay = currentDate.getDate();
-  let cMonth = currentDate.getMonth() + 1;
-  let cYear = currentDate.getFullYear();
-  const today = dayjs(`${cYear}-${cMonth}-${cDay}`);
-
+  const getToday = () => {
+    // Initialize today's date
+    let currentDate = new Date();
+    let cDay = currentDate.getDate();
+    let cMonth = currentDate.getMonth() + 1;
+    let cYear = currentDate.getFullYear();
+    return dayjs(`${cYear}-${cMonth}-${cDay}`);
+  };
   // state values
-  const [startDate, setStartDate] = useState<Dayjs>(today);
-  const [endDate, setEndDate] = useState<Dayjs>(today);
+  const [startDate, setStartDate] = useState<Dayjs>(getToday());
+  const [endDate, setEndDate] = useState<Dayjs>(getToday());
   const [minEndDate, setMinEndDate] = useState<Dayjs | null>(dayjs());
   const [availableVehicles, setAvailableVehicles] = useState<Vehicle[]>([]);
+  const [today, setToday] = useState<Dayjs>(getToday());
   const [userMessage, setUserMessage] = useState("");
-  const { user, api } = useContext(UserContext);
-  const navigate = useNavigate();
+  const { api } = useContext(UserContext);
 
   useEffect(() => {
-    setStartDate(today);
-    setEndDate(today);
-    setMinEndDate(today);
+    const todayCalc = getToday();
+    setToday(todayCalc);
+    setStartDate(todayCalc);
+    setEndDate(todayCalc);
+    setMinEndDate(todayCalc);
   }, []);
 
   checkUserAndRedirect();

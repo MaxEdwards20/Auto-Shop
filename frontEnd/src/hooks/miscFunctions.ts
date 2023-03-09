@@ -1,7 +1,7 @@
 import { Api } from "../lib/api";
 import { User, Vehicle } from "../types/DataTypes";
 import { useContext, useEffect } from "react";
-import { UserContext } from "../contexts/AuthContext";
+import { UserContext } from "../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 
 export function setTokenToLocalStorage(token: string) {
@@ -22,5 +22,3 @@ export function formatCurrency(num: number): string {
     maximumFractionDigits: 2,
   })}`;
 }
-
-
