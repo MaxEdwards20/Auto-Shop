@@ -1,5 +1,9 @@
 import { Api } from "../lib/api";
 import { User, Vehicle } from "../types/DataTypes";
+import { useContext, useEffect } from "react";
+import { AuthContext } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+
 export function setTokenToLocalStorage(token: string) {
   localStorage.setItem("token", token);
 }
@@ -49,4 +53,24 @@ export function setupManager(api: Api, setNewManager: (manager: User) => void) {
       setNewManager(manager);
     }
   });
+}
+
+export function checkUserAndRedirect() {
+  const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
+  useEffect(() => {
+    if (!user.isAuthenticated) {
+      navigate("/unauthorized");
+    }
+  }, []);
+}
+
+export function checkUserIsManagerAndRedirect() {
+  const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
+  useEffect(() => {
+    if (!user.isAuthenticated || user.permission != "admin") {
+      navigate("/unauthorized");
+    }
+  }, []);
 }

@@ -5,6 +5,8 @@ import { useState } from "react";
 import { UnAuthResponse } from "./UnAuthResponse";
 import { ReserveModal } from "./ReserveModal";
 import { formatCurrency } from "../hooks/miscFunctions";
+import React from "react";
+import { forwardRef } from "react";
 
 type CarListingProps = {
   vehicle: Vehicle;
@@ -13,12 +15,10 @@ type CarListingProps = {
   updateVehicleList: () => void;
 };
 
-export default function CarListing({
-  vehicle,
-  startDate,
-  endDate,
-  updateVehicleList,
-}: CarListingProps) {
+export const CarListing = forwardRef(function (
+  { vehicle, startDate, endDate, updateVehicleList }: CarListingProps,
+  ref
+) {
   const [showModal, setShowModal] = useState(false);
   const { api, user } = useContext(AuthContext);
 
@@ -56,8 +56,9 @@ export default function CarListing({
           showModal={showModal}
           startDate={startDate}
           endDate={endDate}
+          ref={ref}
         ></ReserveModal>
       )}
     </li>
   );
-}
+});

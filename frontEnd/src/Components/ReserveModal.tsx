@@ -22,6 +22,7 @@ type ReserveModalProps = {
   showModal: boolean;
   startDate: Date;
   endDate: Date;
+  ref: React.ForwardedRef<unknown>;
 };
 
 export const ReserveModal = ({
@@ -30,16 +31,12 @@ export const ReserveModal = ({
   showModal,
   startDate,
   endDate,
+  ref,
 }: ReserveModalProps) => {
   const totalCost =
     (differenceInDays(endDate, startDate) + 1) * vehicle.pricePerDay;
   const { api, user, manager, setNewManager } = useContext(AuthContext);
-  if (!user) {
-    return <UnAuthResponse />;
-  }
-  if (!manager) {
-    setupManager(api, setNewManager);
-  }
+
   const [userMessage, setUserMessage] = useState("");
   const [disabled, setDisabled] = useState(user.balance < totalCost);
   const navigate = useNavigate();
@@ -89,7 +86,7 @@ export const ReserveModal = ({
   };
 
   return (
-    <Dialog open={true} onClose={handleCloseModal}>
+    <Dialog open={true} onClose={handleCloseModal} ref={ref}>
       <DialogTitle>{vehicle.name}</DialogTitle>
       <DialogContent>
         <DialogContentText>

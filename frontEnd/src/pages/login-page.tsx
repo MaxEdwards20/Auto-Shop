@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { isAuthenticated, setNewUser, api } = useContext(AuthContext);
+  const {  setNewUser, api } = useContext(AuthContext);
   const [userMessage, setUserMessage] = useState("");
   const navigate = useNavigate();
 

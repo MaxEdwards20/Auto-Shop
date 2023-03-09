@@ -7,33 +7,48 @@ import { removeToken } from "./miscFunctions";
 import { LoginUserBody } from "../dto/apiTypes";
 
 type UserInfo = () => {
-  user: User | undefined;
+  user: User;
   manager: User;
   setNewUser: (user: User) => void;
   logout: () => void;
-  isAuthenticated: boolean;
   api: Api;
   vehicles: Vehicle[];
   setNewVehicles: (vehicles: Vehicle[]) => void;
   setNewManager: (manager: User) => void;
 };
 
+const permission: UserPermission = "admin";
+const userPermission: UserPermission = "guest";
+const defaultManager = {
+  id: 0,
+  name: "No Manager",
+  permission: permission,
+  balance: 0,
+  needHelp: false,
+  location: "No Location",
+  email: "No Email",
+  ethicsViolation: "No Violation",
+  phoneNumber: "No Phone Number",
+  reservations: [],
+  isAuthenticated: false,
+};
+
+const defaultUser = {
+  id: 0,
+  name: "No Manager",
+  permission: userPermission,
+  balance: 0,
+  needHelp: false,
+  location: "No Location",
+  email: "No Email",
+  ethicsViolation: "No Violation",
+  phoneNumber: "No Phone Number",
+  reservations: [],
+  isAuthenticated: false,
+};
+
 export const useUserInfo: UserInfo = () => {
-  const permission: UserPermission = "admin";
-  const defaultManager = {
-    id: 0,
-    name: "No Manager",
-    permission: permission,
-    balance: 0,
-    needHelp: false,
-    location: "No Location",
-    email: "No Email",
-    ethicsViolation: "No Violation",
-    phoneNumber: "No Phone Number",
-    reservations: [],
-  };
-  const [user, setUser] = useState<User>();
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [user, setUser] = useState<User>(defaultUser);
   const [api] = useState(new Api());
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [manager, setManager] = useState<User>(defaultManager);
@@ -41,13 +56,18 @@ export const useUserInfo: UserInfo = () => {
   const setNewUser = (newUser: User) => {
     // if (!getToken()) return; // add this if we start using tokens
     if (!newUser) return;
-    setUser(newUser);
-    setIsAuthenticated(true);
+    if (newUser !== defaultUser) {
+      newUser.isAuthenticated = true;
+      setUser(newUser);
+    }
   };
 
   const setNewManager = (newManager: User) => {
     if (!newManager) return;
-    setManager(newManager);
+    if (newManager !== defaultManager) {
+      newManager.isAuthenticated = true;
+      setManager(newManager);
+    }
   };
 
   const setNewVehicles = (newVehicles: Vehicle[]) => {
@@ -57,8 +77,7 @@ export const useUserInfo: UserInfo = () => {
 
   const logout = () => {
     removeToken();
-    setUser(undefined);
-    setIsAuthenticated(false);
+    setUser(defaultUser);
   };
 
   return {
@@ -70,6 +89,5 @@ export const useUserInfo: UserInfo = () => {
     setNewManager,
     logout,
     api,
-    isAuthenticated,
   };
 };

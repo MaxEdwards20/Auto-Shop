@@ -7,7 +7,7 @@ import Stack from "@mui/material/Stack";
 import { Vehicle } from "../types/DataTypes";
 import { UnAuthDashboard } from "../components/UnAuthDashboard";
 import { UpcomingReservationsDashboard } from "../components/UpcomingReservationsDashboard";
-import { formatCurrency } from "../hooks/miscFunctions";
+import { checkUserAndRedirect, formatCurrency } from "../hooks/miscFunctions";
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
@@ -40,15 +40,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Dashboard = () => {
+  checkUserAndRedirect();
+
   const classes = useStyles();
   const { user, api, logout, vehicles, setNewVehicles } =
     useContext(AuthContext);
   const [amountToAdd, adjustedAmount] = useState<number>(0);
   const navigate = useNavigate();
-  // If user not signed in
-  if (!user) {
-    return <UnAuthDashboard></UnAuthDashboard>;
-  }
   // User is signed in
   const [balance, setBalance] = useState<number>(user.balance);
 

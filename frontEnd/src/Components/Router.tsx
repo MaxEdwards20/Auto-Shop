@@ -10,6 +10,7 @@ import CreateAccount from "./CreateAccount";
 import { useEffect, useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import { initializeFrontend } from "../hooks/miscFunctions";
+import { UnAuthDashboard } from "./UnAuthDashboard";
 function Router() {
   const { setNewVehicles, api, setNewManager } = useContext(AuthContext);
   // Load all the vehicles into the context
@@ -33,6 +34,10 @@ function Router() {
         <Route path="login" element={<LoginPage />} />
         <Route path="create" element={<CreateAccount />} />
       </Route>
+      <Route
+        path="/unauthorized"
+        element={<UnAuthDashboard></UnAuthDashboard>}
+      ></Route>
 
       <Route path="*" element={<ErrorPage />}></Route>
     </Routes>

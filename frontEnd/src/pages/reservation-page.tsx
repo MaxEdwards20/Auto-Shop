@@ -3,7 +3,7 @@ import dayjs, { Dayjs } from "dayjs";
 import TextField from "@mui/material/TextField";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import CarListing from "../components/CarListingReservation";
+import { CarListing } from "../components/CarListingReservation";
 import { Vehicle } from "../types/DataTypes";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { Typography } from "@mui/material";
@@ -11,6 +11,7 @@ import { AuthContext } from "../contexts/AuthContext";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { UnAuthResponse } from "../components/UnAuthResponse";
+import { checkUserAndRedirect } from "../hooks/miscFunctions";
 
 export default function ReservationPage() {
   // Initialize today's date
@@ -35,9 +36,7 @@ export default function ReservationPage() {
     setMinEndDate(today);
   }, []);
 
-  if (!user) {
-    return <UnAuthResponse></UnAuthResponse>;
-  }
+  checkUserAndRedirect();
 
   const updateAvailableVehicles = () => {
     setUserMessage("");

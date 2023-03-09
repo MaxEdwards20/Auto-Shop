@@ -8,7 +8,7 @@ import {
   ListItemText,
   Button,
 } from "@material-ui/core";
-import { Stack, styled, Paper } from "@mui/material";
+import { Stack, styled, Paper, Grid } from "@mui/material";
 
 export default function ManagerUpdateUser() {
   const [allUsers, setAllUsers] = useState<User[]>([]);
@@ -65,10 +65,10 @@ export default function ManagerUpdateUser() {
     // TODO: Make this a grid
     // TODO: Change the button options based on what the user already is
     <div>
-      <Item>Current Users</Item>
-      <List>
+      <Typography variant="h5">Current Users</Typography>
+      <Grid container spacing={2}>
         {allUsers.map((grabbedUser) => (
-          <ListItem key={grabbedUser.id}>
+          <Grid item xs={12} sm={6} key={grabbedUser.id}>
             <Stack>
               <Item>Name: {grabbedUser.name}</Item>
               <Item>Current Permission: {grabbedUser.permission}</Item>
@@ -100,9 +100,9 @@ export default function ManagerUpdateUser() {
                 </Button>
               </Item>
             </Stack>
-          </ListItem>
+          </Grid>
         ))}
-      </List>
+      </Grid>
     </div>
   );
 }

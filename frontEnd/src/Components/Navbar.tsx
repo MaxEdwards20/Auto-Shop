@@ -19,7 +19,7 @@ const StyledLink = styled(Link)`
 
 function NavBar() {
   const { user } = useContext(AuthContext);
-  if (user?.permission == "admin") {
+  if (user.permission == "admin") {
     return (
       <Navbar bg="light" expand="lg">
         <Container>
@@ -38,7 +38,7 @@ function NavBar() {
         </Container>
       </Navbar>
     );
-  } else if (user?.permission == "employee") {
+  } else if (user.permission == "employee") {
     return (
       <Navbar bg="light" expand="lg">
         <Container>

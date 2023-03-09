@@ -11,7 +11,7 @@ export default function CreateAccount() {
   const [name, setName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const { isAuthenticated, api, setNewUser } = useContext(AuthContext);
+  const { api, setNewUser } = useContext(AuthContext);
   const navigator = useNavigate();
 
   const handleSubmit = () => {

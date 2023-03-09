@@ -37,6 +37,7 @@ export type User = {
   phoneNumber: string;
   reservations: ReservationInfo[];
   id: number;
+  isAuthenticated: boolean;
 };
 
 export type UserWithReservation = {

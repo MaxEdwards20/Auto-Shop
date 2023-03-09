@@ -14,7 +14,9 @@ Download dependencies
 
 Create and populate the database
 
-`$ python3 manage.py makemigrations $ python manage.py migrate`
+`$ python manage.py makemigrations`
+
+`$ python manage.py migrate`
 
 Run the following command to start the server:
 
@@ -22,32 +24,26 @@ Run the following command to start the server:
 
 This will start the server at: http://localhost:8000/
 
-The frontend instructions are found in the frontend folder of this repository. Just be sure to run this in a separate terminal than the frontend.
+The frontend instructions are found in the [frontend](../../frontend/README.md) of this repository. Be sure to start the server first, then do the frontend.
 
 ### Admin abilities
 
-To create an Admin account and add dummy data:
+We configured the frontend to create an admin for you. Start the server <Strong>before </Strong>starting the client.
 
-`$ python manage.py createsuperuser`
-
-Enter a username, email, and password
-
-Start the server and add in data
-
-admin
-admin@email.com
-admin123
+- email: admin123
+- password: admin123
 
 ### To Adjust Filler Data:
+
 Delete the db.sqlite3 file
 
 Make desired adjustments to the `populate` migration
 
-Create and populate the database:
-* `$ python3 manage.py makemigrations `
-* `$ python manage.py migrate`
-
 To Create a new Migration Script:
-* `$ python manage.py makemigrations --empty autoshop --name populate`
 
+- `$ python manage.py makemigrations --empty autoshop --name populate`
 
+Create and populate the database:
+
+- `$ python3 manage.py makemigrations `
+- `$ python manage.py migrate`
