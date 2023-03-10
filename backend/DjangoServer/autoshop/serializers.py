@@ -10,7 +10,7 @@ class AutoUserSerializer(serializers.ModelSerializer):
 class VehicleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Vehicle
-        fields = ('name', 'id', 'vin', 'location', 'isPurchased', 'isPending', 'vehicleType', 'isInsured', 'isLoadJacked', 'imageURL', 'pricePerDay')
+        fields = ('name', 'id', 'vin', 'vehicleType', 'location', 'isPurchased', 'isPending', 'vehicleType', 'isInsured', 'isLoadJacked', 'imageURL', 'pricePerDay', 'purchasePrice')
 
 
 class ReservationSerializer(serializers.ModelSerializer):

@@ -13,6 +13,7 @@ class Vehicle(models.Model):
     isInsured = models.BooleanField(default=False)
     isLoadJacked = models.BooleanField(default=False)
     pricePerDay = models.IntegerField(default=100)
+    purchasePrice = models.IntegerField(default=5000)
 
     def __str__(self):
         return self.name

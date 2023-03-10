@@ -3,9 +3,11 @@ import Nav from "react-bootstrap/esm/Nav";
 import Navbar from "react-bootstrap/esm/Navbar";
 import { NavLink } from "react-router-dom";
 import { UserContext } from "../../contexts/UserContext";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { ManagerDrawer } from "./ManagerDrawer";
+import { IconButton } from "material-ui";
 
 const StyledLink = styled(Link)`
   color: #000;
@@ -19,6 +21,8 @@ const StyledLink = styled(Link)`
 
 function NavBar() {
   const { user } = useContext(UserContext);
+  const [drawerIsOpen, setDrawerIsOpen] = useState(false);
+
   if (user.permission == "admin") {
     return (
       <Navbar bg="light" expand="lg">
@@ -31,8 +35,19 @@ function NavBar() {
               <StyledLink to="/vehicles">View Our Vehicles </StyledLink>
               <StyledLink to="/reservations">Make a Reservation</StyledLink>
               <StyledLink to="/account/dashboard">Dashboard</StyledLink>
-              <StyledLink to="/manager/payemployees">Pay Employees</StyledLink>
-              <StyledLink to="/manager">Manager</StyledLink>
+              <IconButton
+                color="inherit"
+                aria-label="manager"
+                onClick={() => {
+                  setDrawerIsOpen(true);
+                }}
+              ></IconButton>
+              <ManagerDrawer
+                open={drawerIsOpen}
+                onClose={() => {
+                  setDrawerIsOpen(false);
+                }}
+              />
             </Nav>
           </Navbar.Collapse>
         </Container>

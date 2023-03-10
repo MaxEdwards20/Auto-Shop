@@ -10,7 +10,7 @@ import {
 } from "@material-ui/core";
 import { Stack, styled, Paper, Grid } from "@mui/material";
 
-export default function ManagerUpdateUser() {
+export const ManagerUpdateUser = () => {
   const [allUsers, setAllUsers] = useState<User[]>([]);
   const { api, user } = useContext(UserContext);
 
@@ -20,7 +20,6 @@ export default function ManagerUpdateUser() {
         if (!users) {
           return;
         }
-        console.log("received users: ", users);
         let newUsers: User[] = [];
         users.map((newUser) => {
           if (newUser.user.id !== user.id) {
@@ -40,7 +39,6 @@ export default function ManagerUpdateUser() {
       if (!updatedUser) {
         return;
       }
-      console.log("updated user: ", updatedUser);
       let newUsers: User[] = [];
       allUsers.map((newUser) => {
         if (newUser.id !== id) {
@@ -60,6 +58,10 @@ export default function ManagerUpdateUser() {
     fontSize: "20px",
     fontFamily: "inherit",
   }));
+
+  if (allUsers.length === 0 || !allUsers) {
+    return <div></div>;
+  }
 
   return (
     // TODO: Change the button options based on what the user already is
@@ -104,4 +106,4 @@ export default function ManagerUpdateUser() {
       </Grid>
     </div>
   );
-}
+};

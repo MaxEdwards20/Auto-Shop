@@ -1,8 +1,3 @@
-# python manage.py makemigrations --empty autoshop --name populateVehicles
-# python manage.py makemigrations $ python manage.py migrate
-
-from django.db import migrations
-
 from django.db import migrations
 
 def populate_db(apps, schema_editor):
@@ -48,10 +43,13 @@ def populate_db(apps, schema_editor):
     Vehicle.objects.create(name="Red Motorscooter", vehicleType="motorcycle", imageURL=
                            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse2.mm.bing.net%2Fth%3Fid%3DOIP.e7HjunmHrolBgnJ3bxBPNgHaFj%26pid%3DApi&f=1&ipt=8a013a4dd1b92d2d60b8363dc4e73e4237eb91735fe0061bf4a018743d5d19fd&ipo=images"
                            )
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
         ('autoshop', '0001_initial'),
     ]
 
-    operations = [migrations.RunPython(populate_db), ]
+    operations = [migrations.RunPython(populate_db),
+    ]

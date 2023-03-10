@@ -60,6 +60,21 @@ class TestVehicleEndpoints(TestCase):
         self.assertTrue('imageURL' in vehicle)
 
 
+    def testGetAllVehiclesReturnsUnpurchased(self):
+        newVehicle = createVehicle(self.client)
+        response = self.client.get(reverse('getAllVehicles'))
+        self.assertEqual(response.status_code, 200)
+        vehicles = json.loads(response.content)['vehicles']
+        self.assertGreaterEqual(len(vehicles), 5)
+        vehicle = vehicles[0]
+        self.assertTrue('pricePerDay' in vehicle)
+        self.assertTrue('isInsured' in vehicle)
+        self.assertTrue('imageURL' in vehicle)
+        # ensure
+        for vehicle in vehicles:
+            if vehicle['id'] == newVehicle['id']:
+                self.assertFalse(vehicle['isPurchased'])
+
     def testGetAvailableVehicles(self):
         today = datetime.now().date()
         start_date = today + timedelta(days=1)
