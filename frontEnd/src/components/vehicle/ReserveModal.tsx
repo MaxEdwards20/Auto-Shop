@@ -1,4 +1,4 @@
-import { User, Vehicle } from "../types/DataTypes";
+import { User, Vehicle } from "../../types/DataTypes";
 import {
   Button,
   Dialog,
@@ -9,8 +9,8 @@ import {
 } from "@material-ui/core";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { formatCurrency } from "../hooks/miscFunctions";
-import { Api } from "../lib/api";
+import { formatCurrency } from "../../hooks/miscFunctions";
+import { Api } from "../../lib/api";
 
 type ReserveModalProps = {
   vehicle: Vehicle;

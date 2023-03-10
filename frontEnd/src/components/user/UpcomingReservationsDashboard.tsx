@@ -11,10 +11,10 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
-import { UserContext } from "../contexts/UserContext";
+import { UserContext } from "../../contexts/UserContext";
 import { ClassNameMap } from "@material-ui/core/styles/withStyles";
-import { Vehicle, ReservationInfo } from "../types/DataTypes";
-import { VehicleContext } from "../contexts/VehicleContext";
+import { Vehicle, ReservationInfo } from "../../types/DataTypes";
+import { VehicleContext } from "../../contexts/VehicleContext";
 
 type UpcomingReservationsDashboardProps = {
   classes: ClassNameMap;

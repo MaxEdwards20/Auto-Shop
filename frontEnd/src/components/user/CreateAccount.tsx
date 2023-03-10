@@ -1,7 +1,7 @@
 import { useState, useContext } from "react";
 import { Form, Button, Card } from "react-bootstrap";
-import { UserPermission } from "../types/DataTypes";
-import { UserContext } from "../contexts/UserContext";
+import { UserPermission } from "../../types/DataTypes";
+import { UserContext } from "../../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 import { Typography } from "@mui/material";
 

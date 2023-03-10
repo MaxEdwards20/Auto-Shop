@@ -124,6 +124,19 @@ export class Api {
     });
   }
 
+  removeMoneyFromManager(
+    managerID: number,
+    amount: number
+  ): Promise<User | null> {
+    return this.post(`user/${managerID}/removeMoney`, { amount }).then(
+      (res) => {
+        if (!res?.user) return null;
+        this.setToken(res.token);
+        return res.user;
+      }
+    );
+  }
+
   purchaseVehicle(vehicleID: number, userID: number): Promise<Vehicle | null> {
     return this.post(`vehicle/${vehicleID}/purchase`, { userID }).then(
       (res) => {
@@ -132,6 +145,14 @@ export class Api {
         return res.vehicle;
       }
     );
+  }
+
+  sellVehicle(vehicleID: number, userID: number): Promise<Vehicle | null> {
+    return this.post(`vehicle/${vehicleID}/sell`, { userID }).then((res) => {
+      if (!res?.vehicle) return null;
+      this.setToken(res.token);
+      return res.vehicle;
+    });
   }
 
   getAvailableVehicles(
@@ -147,9 +168,8 @@ export class Api {
     );
   }
 
-  getAllVehicles(): Promise<Vehicle[] | null> {
+  getAllVehicles(): Promise<Vehicle[]> {
     return this.get("vehicle/all").then((res) => {
-      if (!res?.vehicles) return null;
       this.setToken(res.token);
       return res.vehicles;
     });

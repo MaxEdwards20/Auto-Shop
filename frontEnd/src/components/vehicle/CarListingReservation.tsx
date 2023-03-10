@@ -1,14 +1,14 @@
 import { useContext, useEffect } from "react";
-import { Vehicle } from "../types/DataTypes";
-import { UserContext } from "../contexts/UserContext";
+import { Vehicle } from "../../types/DataTypes";
+import { UserContext } from "../../contexts/UserContext";
 import { useState } from "react";
-import { UnAuthResponse } from "./UnAuthResponse";
+import { UnAuthResponse } from "../user/UnAuthResponse";
 import { ReserveModal } from "./ReserveModal";
-import { formatCurrency } from "../hooks/miscFunctions";
+import { formatCurrency } from "../../hooks/miscFunctions";
 import React from "react";
 import { forwardRef } from "react";
-import { checkUserAndRedirect } from "../hooks/validationHooks";
-import { ManagerContext } from "../contexts/ManagerContext";
+import { checkUserAndRedirect } from "../../hooks/validationHooks";
+import { ManagerContext } from "../../contexts/ManagerContext";
 import { differenceInDays } from "date-fns";
 
 type CarListingProps = {

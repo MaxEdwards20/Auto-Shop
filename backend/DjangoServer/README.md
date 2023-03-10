@@ -41,7 +41,7 @@ Make desired adjustments to the `populate` migration
 
 To Create a new Migration Script:
 
-- `$ python manage.py makemigrations --empty autoshop --name populate`
+- `$ python manage.py makemigrations --empty autoshop --name populateVehicles`
 
 Create and populate the database:
 

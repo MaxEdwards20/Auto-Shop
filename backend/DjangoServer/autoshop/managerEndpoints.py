@@ -16,8 +16,9 @@ def initializeDatabase(request: HttpRequest):
     if  request.method != "POST":
         return error400(request)
     # First check to make sure we have an admin user or not, create if not there
-    admin = AutoUser.objects.get(permission="admin", email=ADMIN_USERNAME)
-    if not admin:
+    try:
+        admin = AutoUser.objects.get(permission="admin", email=ADMIN_USERNAME)
+    except Exception as e:# Meaning the admin does not exist
         admin =  __createManager()
     return __makeJSONResponse(admin.pk)
 

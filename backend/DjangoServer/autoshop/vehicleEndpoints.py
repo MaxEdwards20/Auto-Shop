@@ -93,7 +93,19 @@ def purchaseVehicle(request: HttpRequest, id: int):
     j = JsonResponse({"vehicle": VehicleSerializer(vehicle).data}, safe=False)
     return update_cors(j, request)
 
-
+@csrf_exempt
+def sellVehicle(request: HttpRequest, id: int):
+    # TODO: Unit tests
+    # TODO: Delete all reservations associated with this vehicle because it is no longer available
+    # TODO: Return the number of current reservations with this object
+    if not request.method == "POST":
+        return error400(request)
+    parsedBody = getReqBody(request)
+    vehicle = get_object_or_404(Vehicle, pk=id)
+    vehicle.isPurchased = False
+    vehicle.save()
+    j = JsonResponse({"vehicle": VehicleSerializer(vehicle).data}, safe=False)
+    return update_cors(j, request)
 def __validateCreateVehicleBody(request: HttpRequest, parsedBody: dict) -> bool:
     NEEDED_PARAMS = {'name', 'image'}
     if request.method != "POST": return False
