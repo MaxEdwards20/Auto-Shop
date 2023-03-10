@@ -28,7 +28,7 @@ function Router() {
     <Routes>
       <Route path="/" element={<HomePage></HomePage>} />
       <Route path="/home" element={<HomePage></HomePage>} />
-      <Route path="/manager" element={<ManagerPage />}>
+      <Route path="/manager">
         <Route path="employees"></Route>
         <Route path="purchase" element={<ManagerPurchaseVehicle />}></Route>
         <Route path="users" element={<ManagerUpdateUser />}></Route>

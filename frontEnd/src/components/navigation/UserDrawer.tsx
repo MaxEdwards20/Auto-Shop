@@ -17,8 +17,6 @@ import {
 } from "@material-ui/icons";
 import { Link as RouterLink } from "react-router-dom";
 
-import { AccountCircle, DirectionsCar, Payment } from "@material-ui/icons";
-
 const useStyles = makeStyles({
   list: {
     width: 250,
@@ -30,24 +28,9 @@ type DrawerProps = {
   onClose: () => void;
 };
 
-export const ManagerDrawer = ({ open, onClose }: DrawerProps) => {
+export const UserDrawer = ({ open, onClose }: DrawerProps) => {
   const classes = useStyles();
   const navigate = useNavigate();
-
-  const handleUpdateUserClick = () => {
-    navigate("/manager/users");
-    onClose();
-  };
-
-  const handlePurchaseVehicleClick = () => {
-    navigate("/manager/purchase");
-    onClose();
-  };
-
-  const handlePayEmployeeClick = () => {
-    navigate("/manager/employees");
-    onClose();
-  };
 
   return (
     <Drawer anchor="left" open={open} onClose={onClose}>
@@ -76,24 +59,6 @@ export const ManagerDrawer = ({ open, onClose }: DrawerProps) => {
               <AccountIcon />
             </ListItemIcon>
             <ListItemText primary="Dashboard" />
-          </ListItem>
-          <ListItem button component={RouterLink} to="/manager/users">
-            <ListItemIcon>
-              <AccountCircle />
-            </ListItemIcon>
-            <ListItemText primary="View Users" />
-          </ListItem>
-          <ListItem button component={RouterLink} to="/manager/purchase">
-            <ListItemIcon>
-              <DirectionsCar />
-            </ListItemIcon>
-            <ListItemText primary="Purchase Vehicle" />
-          </ListItem>
-          <ListItem button component={RouterLink} to="/manager/employees">
-            <ListItemIcon>
-              <Payment />
-            </ListItemIcon>
-            <ListItemText primary="Pay Employees" />
           </ListItem>
         </List>
       </div>

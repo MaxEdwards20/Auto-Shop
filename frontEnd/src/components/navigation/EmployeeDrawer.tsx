@@ -14,10 +14,11 @@ import {
   DirectionsCar as CarIcon,
   EventSeat as ReservationIcon,
   AccountCircle as AccountIcon,
+  AccessTime as LogHoursIcon,
+  ExitToApp as CheckoutVehicleIcon,
 } from "@material-ui/icons";
-import { Link as RouterLink } from "react-router-dom";
 
-import { AccountCircle, DirectionsCar, Payment } from "@material-ui/icons";
+import { Link as RouterLink } from "react-router-dom";
 
 const useStyles = makeStyles({
   list: {
@@ -30,24 +31,8 @@ type DrawerProps = {
   onClose: () => void;
 };
 
-export const ManagerDrawer = ({ open, onClose }: DrawerProps) => {
+export const EmployeeDrawer = ({ open, onClose }: DrawerProps) => {
   const classes = useStyles();
-  const navigate = useNavigate();
-
-  const handleUpdateUserClick = () => {
-    navigate("/manager/users");
-    onClose();
-  };
-
-  const handlePurchaseVehicleClick = () => {
-    navigate("/manager/purchase");
-    onClose();
-  };
-
-  const handlePayEmployeeClick = () => {
-    navigate("/manager/employees");
-    onClose();
-  };
 
   return (
     <Drawer anchor="left" open={open} onClose={onClose}>
@@ -77,23 +62,21 @@ export const ManagerDrawer = ({ open, onClose }: DrawerProps) => {
             </ListItemIcon>
             <ListItemText primary="Dashboard" />
           </ListItem>
-          <ListItem button component={RouterLink} to="/manager/users">
+          <ListItem button component={RouterLink} to="/account/log-hours">
             <ListItemIcon>
-              <AccountCircle />
+              <LogHoursIcon />
             </ListItemIcon>
-            <ListItemText primary="View Users" />
+            <ListItemText primary="Log Hours" />
           </ListItem>
-          <ListItem button component={RouterLink} to="/manager/purchase">
+          <ListItem
+            button
+            component={RouterLink}
+            to="/account/checkout-vehicle"
+          >
             <ListItemIcon>
-              <DirectionsCar />
+              <CheckoutVehicleIcon />
             </ListItemIcon>
-            <ListItemText primary="Purchase Vehicle" />
-          </ListItem>
-          <ListItem button component={RouterLink} to="/manager/employees">
-            <ListItemIcon>
-              <Payment />
-            </ListItemIcon>
-            <ListItemText primary="Pay Employees" />
+            <ListItemText primary="Checkout Vehicle" />
           </ListItem>
         </List>
       </div>

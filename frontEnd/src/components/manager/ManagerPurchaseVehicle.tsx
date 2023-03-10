@@ -11,6 +11,8 @@ import { Subheader } from "material-ui";
 import { ViewAvailableVehicles } from "./ViewAvailableVehicles";
 import { ViewPurchasedVehicles } from "./ViewPurchasedVehicles";
 
+import { Container } from "@material-ui/core";
+
 export const ManagerPurchaseVehicle = () => {
   const { api, user } = useContext(UserContext);
   const { vehicles: purchasedVehicles } = useContext(VehicleContext);
@@ -26,16 +28,18 @@ export const ManagerPurchaseVehicle = () => {
   }, []);
 
   return (
-    <Grid container spacing={3}>
-      <Grid item xs={12} md={6}>
-        <Typography variant="h4">Owned Vehicles</Typography>
-        <Typography>Account Balance: ${user.balance}</Typography>
-        <ViewPurchasedVehicles vehicles={purchasedVehicles} />
+    <Container maxWidth="lg">
+      <Grid container spacing={3}>
+        <Grid item xs={12} md={6}>
+          <Typography variant="h4">Owned Vehicles</Typography>
+          <Typography>Account Balance: ${user.balance}</Typography>
+          <ViewPurchasedVehicles vehicles={purchasedVehicles} />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Typography variant="h4">Available for Purchase</Typography>
+          <ViewAvailableVehicles vehicles={availableVehicles} />
+        </Grid>
       </Grid>
-      <Grid item xs={12} md={6}>
-        <Typography variant="h4">Available for Purchase</Typography>
-        <ViewAvailableVehicles vehicles={availableVehicles} />
-      </Grid>
-    </Grid>
+    </Container>
   );
 };

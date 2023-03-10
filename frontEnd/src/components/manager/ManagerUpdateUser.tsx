@@ -60,7 +60,7 @@ export const ManagerUpdateUser = () => {
   }));
 
   if (allUsers.length === 0 || !allUsers) {
-    return <div></div>;
+    return <div>There are currently no users</div>;
   }
 
   return (
