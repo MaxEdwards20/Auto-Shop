@@ -33,5 +33,6 @@ urlpatterns = [
 
     # manager
     path("manager/init", views.initializeDatabase, name="initalizeDatabase"),
+    path("manager/<int:id>", views.payEmployee, name="payEmployee"),
     path("manager", views.getManager, name="getManager"),
 ]

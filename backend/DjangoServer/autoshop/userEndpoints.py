@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from .serializers import AutoUserSerializer, ReservationSerializer
-from .helperFunctions import update_cors, getReqBody, error400, error401
+from .helperFunctions import update_cors, getReqBody, error400, error401, makeUserJSONResponse, createUserTransferObject
 from .managerEndpoints import ADMIN_USERNAME, ADMIN_PASS
 import json
 
@@ -23,7 +23,7 @@ def authenticateUser(request: HttpRequest):
     user = authenticate(request, username=email, password=password)
     if not user:
         return error401(request)
-    j = __makeJSONResponse(user.pk)
+    j = makeUserJSONResponse(user.pk)
     return update_cors(j, request)
 
 @csrf_exempt
@@ -33,7 +33,7 @@ def createUser(request: HttpRequest):
     if not __validateCreateUserBody(request, parsedBody):
         return error400(request)
     user = __createUserDatabase(parsedBody)
-    j = __makeJSONResponse(user.pk)
+    j = makeUserJSONResponse(user.pk)
     return update_cors(j, request)
 
 @csrf_exempt
@@ -45,7 +45,7 @@ def deleteUser(request, id):
 
 @csrf_exempt
 def getUser(request: HttpRequest, id):
-    j = __makeJSONResponse(id)
+    j = makeUserJSONResponse(id)
     return update_cors(j, request)
 
 @csrf_exempt
@@ -58,7 +58,7 @@ def getAllUsers(request: HttpRequest, id: int):
         return error400(request, "Admin doesn't exist")
     if id != admin.pk:
         return error401(request)
-    allUsersList = [__getUserInfo(user.pk) for user in AutoUser.objects.all()]
+    allUsersList = [createUserTransferObject(user.pk) for user in AutoUser.objects.all()]
     j = JsonResponse({"users": allUsersList})
     return update_cors(j, request)
 
@@ -74,7 +74,7 @@ def updateUserPermission(request: HttpRequest, id: int):
         return error400(request, "Not a valid permission")
     user.permission = parsedBody['permission']
     user.save()
-    return __makeJSONResponse(user.pk)
+    return makeUserJSONResponse(user.pk)
 
 
 
@@ -87,7 +87,7 @@ def updateUser(request: HttpRequest, id):
         if key in parsedBody:
             setattr(user, key, parsedBody[key])
     user.save()
-    j = __makeJSONResponse(user.pk) # return the newly saved user
+    j = makeUserJSONResponse(user.pk) # return the newly saved user
     return update_cors(j, request)
 @csrf_exempt
 def userAddMoney(request: HttpRequest, id):
@@ -96,7 +96,7 @@ def userAddMoney(request: HttpRequest, id):
     newBalance = user.balance + abs(int(parsedBody.get('amount')))
     user.balance = newBalance
     user.save()
-    j = __makeJSONResponse(user.pk)  # return the newly saved user
+    j = makeUserJSONResponse(user.pk)  # return the newly saved user
     return update_cors(j, request)
 
 @csrf_exempt
@@ -106,7 +106,7 @@ def userRemoveMoney(request: HttpRequest, id):
     newBalance = user.balance - abs(int(parsedBody.get('amount')))
     user.balance = newBalance
     user.save()
-    j = __makeJSONResponse(user.pk)  # return the newly saved user
+    j = makeUserJSONResponse(user.pk)  # return the newly saved user
     return update_cors(j, request)
 
 
@@ -120,18 +120,7 @@ def __createUserDatabase(parsedBody) -> AutoUser:
     newUser = AutoUser.objects.create(email=parsedBody['email'], name=parsedBody['name'], phoneNumber = parsedBody['phoneNumber'], user=newUserAuth, permission=(parsedBody.get('permission') or "user"))
     return newUser
 
-def __makeJSONResponse(userID: int) -> JsonResponse:
-    return JsonResponse(__getUserInfo(userID))
 
-def __getUserInfo(userID: int) -> dict:
-    return {"user": __getSerializedUserInfo(userID),
-                         "reservations": __getSerializedReservations(userID)}
-def __getSerializedReservations(userID: int):
-    return [ReservationSerializer(reservation).data for reservation in Reservation.objects.all() if reservation.autoUser.pk ==userID]
-
-def __getSerializedUserInfo(id):
-    userModel = get_object_or_404(AutoUser, pk=id)
-    return AutoUserSerializer(userModel).data
 def __validateAuthenticationBody(request, parsedBody: dict) -> dict:
     response = {}
     if request.method == 'POST':

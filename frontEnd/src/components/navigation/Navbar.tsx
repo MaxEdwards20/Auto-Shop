@@ -11,7 +11,6 @@ import "./navigationStyles.css";
 function NavBar() {
   const { user } = useContext(UserContext);
   const [isDrawerOpen, setDrawerIsOpen] = useState(false);
-  console.log("User permission is: ", user.permission);
   if (user.permission == "admin") {
     return (
       <div>

@@ -39,6 +39,8 @@ export type User = {
   reservations: ReservationInfo[];
   id: number;
   isAuthenticated: boolean;
+  hoursOwed: number;
+  wage: number;
 };
 
 export type UserWithReservation = {

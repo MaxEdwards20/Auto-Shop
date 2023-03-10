@@ -183,7 +183,7 @@ export class Api {
     });
   }
 
-  getAllUsers(userID: number): Promise<UserWithReservation[] | null> {
+  getAllUsers(userID: number): Promise<UserWithReservation[]> {
     return this.get(`user/${userID}/all`).then((res) => {
       if (!res?.users) return null;
       this.setToken(res.token);
@@ -255,6 +255,19 @@ export class Api {
     }).then((res) => {
       if (!res?.total) return null;
       return res.total;
+    });
+  }
+
+  payEmployee(
+    userID: number,
+    amount: number,
+    managerID: number
+  ): Promise<User> {
+    return this.post(`manager/${userID}/payEmployee`, {
+      amount,
+      managerID,
+    }).then((res) => {
+      return res.user;
     });
   }
 }

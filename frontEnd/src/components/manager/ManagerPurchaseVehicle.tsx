@@ -10,10 +10,13 @@ import { Api } from "../../lib/api";
 import { Subheader } from "material-ui";
 import { ViewAvailableVehicles } from "./ViewAvailableVehicles";
 import { ViewPurchasedVehicles } from "./ViewPurchasedVehicles";
+import { checkUserIsManagerAndRedirect } from "../../hooks/validationHooks";
 
 import { Container } from "@material-ui/core";
 
 export const ManagerPurchaseVehicle = () => {
+  checkUserIsManagerAndRedirect();
+
   const { api, user } = useContext(UserContext);
   const { vehicles: purchasedVehicles } = useContext(VehicleContext);
   const [availableVehicles, setAvailableVehicles] = useState<Vehicle[]>([]);
