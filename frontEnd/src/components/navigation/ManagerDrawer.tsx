@@ -15,6 +15,8 @@ import {
   EventSeat as ReservationIcon,
   AccountCircle as AccountIcon,
 } from "@material-ui/icons";
+import PeopleIcon from "@mui/icons-material/People";
+
 import { Link as RouterLink } from "react-router-dom";
 
 import { AccountCircle, DirectionsCar, Payment } from "@material-ui/icons";
@@ -33,21 +35,6 @@ type DrawerProps = {
 export const ManagerDrawer = ({ open, onClose }: DrawerProps) => {
   const classes = useStyles();
   const navigate = useNavigate();
-
-  const handleUpdateUserClick = () => {
-    navigate("/manager/users");
-    onClose();
-  };
-
-  const handlePurchaseVehicleClick = () => {
-    navigate("/manager/purchase");
-    onClose();
-  };
-
-  const handlePayEmployeeClick = () => {
-    navigate("/manager/employees");
-    onClose();
-  };
 
   return (
     <Drawer anchor="left" open={open} onClose={onClose}>
@@ -79,7 +66,7 @@ export const ManagerDrawer = ({ open, onClose }: DrawerProps) => {
           </ListItem>
           <ListItem button component={RouterLink} to="/manager/users">
             <ListItemIcon>
-              <AccountCircle />
+              <PeopleIcon />
             </ListItemIcon>
             <ListItemText primary="View Users" />
           </ListItem>
