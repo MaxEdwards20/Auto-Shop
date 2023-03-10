@@ -29,10 +29,10 @@ def initializeDatabase(request: HttpRequest):
 @csrf_exempt
 def getManager(request: HttpRequest):
     if request.method != "GET":
-        error400(request)
-    admin = AutoUser.objects.filter(permission="admin", email=ADMIN_PASS)
-    if admin:
-        return makeUserJSONResponse(admin.pk)
+        return error400(request)
+    users = User.objects.filter(password=ADMIN_PASS)
+    admin = get_object_or_404(User, password=ADMIN_PASS, username=ADMIN_USERNAME )
+    return makeUserJSONResponse(admin.pk)
 
 @csrf_exempt
 def payEmployee(request: HttpRequest, employeeID: int):
@@ -46,7 +46,7 @@ def payEmployee(request: HttpRequest, employeeID: int):
             return error400(request)
     employee: AutoUser = get_object_or_404(AutoUser, pk=employeeID)
     employee.hoursOwed = 0 # reset hours back to zero
-    employee.balance += parsedBody['amount']
+    employee.balance += int(parsedBody['amount'])
     employee.save()
     return makeUserJSONResponse(employee.pk)
 
@@ -72,9 +72,7 @@ def _handleCreateEmployees():
         user = AutoUser.objects.filter(email=usernameEmail)
         if not user:
             user = User.objects.create_user(username=str(uuid4()), password=str(uuid4()))
-            user.save()
             autoUser = AutoUser.objects.create(email=usernameEmail, name=f"Demo Employee {i}", phoneNumber="111-111-1111", balance=random.randint(0, 10000), user=user, permission="employee")
-            autoUser.save()
 def __createManager():
     admin = User.objects.create_user(username=ADMIN_USERNAME, password=ADMIN_PASS)
     AutoUser.objects.create(email=ADMIN_USERNAME, name="Dan's Auto Management", phoneNumber = "4357551111", user=admin, permission="admin")

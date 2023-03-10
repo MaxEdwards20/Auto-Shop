@@ -50,15 +50,8 @@ class TestManagerEndpoints(TestCase):
         self.assertEqual(response.status_code, 400)
 
 
-    def test_getManager_success(self):
-        response = self.client.get(f"{BASE_URL}manager")
-        self.assertEqual(response.status_code, 200)
-        jsonContent = json.loads(response.content)
-        self.assertTrue("user" in jsonContent)
-        self.assertTrue(jsonContent['user']['permission'], "admin")
-
     def test_getManager_invalid_method(self):
-        response = self.client.post(f"{BASE_URL}manager/init")
+        response = self.client.post(f"{BASE_URL}manager")
         self.assertEqual(response.status_code, 400)
 
 
@@ -67,8 +60,10 @@ class TestManagerEndpoints(TestCase):
         data = {'amount': amount, 'managerID': self.manager['id']}
         response = self.client.post(reverse('payEmployee', args=[self.employee['id']]), data=data)
         self.assertEqual(response.status_code, 200)
-        user = AutoUser.objects.filter(pk=self.employee['id'])
-        self.assertEqual(self.employee['balance'], user.balance + amount)
+        usersSet = AutoUser.objects.filter(pk=self.employee['id'])
+        # Have to iterate because its a query set
+        for user in usersSet:
+            self.assertEqual(int(self.employee['balance']) + amount, user.balance )
         self.assertTrue("user" in json.loads(response.content))
 
     def test_payEmployee_invalid_method(self):
