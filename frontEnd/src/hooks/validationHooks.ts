@@ -21,3 +21,13 @@ export function checkUserIsManagerAndRedirect() {
     }
   }, []);
 }
+
+export function checkUserIsEmployeeAndRedirect() {
+  const navigate = useNavigate();
+  const { user } = useContext(UserContext);
+  useEffect(() => {
+    if (!user.isAuthenticated || user.permission !== "employee") {
+      navigate("/unauthorized");
+    }
+  }, []);
+}

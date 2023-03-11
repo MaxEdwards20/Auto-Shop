@@ -18,6 +18,7 @@ function App() {
     addMoney,
     subtractMoney,
     addNewReservation,
+    addHours,
   } = useUserInfo();
   const { vehicles, setNewVehicles } = useVehicleInfo();
   const { manager, setNewManager } = useManagerInfo();
@@ -34,6 +35,7 @@ function App() {
             addMoney,
             subtractMoney,
             addNewReservation,
+            addHours,
           }}
         >
           <BrowserRouter>

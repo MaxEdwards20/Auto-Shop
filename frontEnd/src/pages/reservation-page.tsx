@@ -74,6 +74,7 @@ export default function ReservationPage() {
               if (endDate != null && newDate != null && endDate < newDate) {
                 setEndDate(newDate);
               }
+              updateAvailableVehicles();
             }}
             renderInput={(params) => <TextField {...params} />}
           />

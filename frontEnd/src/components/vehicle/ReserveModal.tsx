@@ -38,7 +38,7 @@ export const ReserveModal = ({
   const [reserved, setReserved] = useState(false);
   const navigate = useNavigate();
   return (
-    <Dialog open={showModal} onClose={() => handleCloseModal()}>
+    <Dialog open={showModal} onClose={handleCloseModal}>
       <DialogTitle>{vehicle.name}</DialogTitle>
       <DialogContent>
         <DialogContentText>
@@ -76,7 +76,7 @@ export const ReserveModal = ({
             Add Funds
           </Button>
           <Button
-            onClick={() => handleCloseModal()}
+            onClick={handleCloseModal}
             variant="contained"
             color="secondary"
           >

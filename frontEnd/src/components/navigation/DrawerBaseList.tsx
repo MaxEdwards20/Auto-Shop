@@ -51,12 +51,20 @@ export const DrawerBaseList = () => {
           <ListItemText primary="Logout" />
         </ListItem>
       ) : (
-        <ListItem button divider component={RouterLink} to="/account/login">
-          <ListItemIcon>
-            <AccountIcon />
-          </ListItemIcon>
-          <ListItemText primary="Login" />
-        </ListItem>
+        <>
+          <ListItem button component={RouterLink} to="/account/create">
+            <ListItemIcon>
+              <AccountIcon />
+            </ListItemIcon>
+            <ListItemText primary="Create Account" />
+          </ListItem>
+          <ListItem button divider component={RouterLink} to="/account/login">
+            <ListItemIcon>
+              <AccountIcon />
+            </ListItemIcon>
+            <ListItemText primary="Login" />
+          </ListItem>
+        </>
       )}
     </>
   );

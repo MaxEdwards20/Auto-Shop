@@ -270,4 +270,17 @@ export class Api {
       return res.user;
     });
   }
+
+  employeeAddHours(
+    employeeID: number,
+    hours: number,
+    managerID: number
+  ): Promise<User> {
+    return this.post(`manager/${employeeID}/hours`, {
+      hours,
+      managerID,
+    }).then((res) => {
+      return res.user;
+    });
+  }
 }

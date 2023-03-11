@@ -40,7 +40,7 @@ export const EmployeeDrawer = ({ open, onClose }: DrawerProps) => {
       <div className={classes.list} role="presentation">
         <List>
           <DrawerBaseList></DrawerBaseList>
-          <ListItem button component={RouterLink} to="/account/log-hours">
+          <ListItem button component={RouterLink} to="/employee/hours">
             <ListItemIcon>
               <LogHoursIcon />
             </ListItemIcon>
@@ -49,7 +49,7 @@ export const EmployeeDrawer = ({ open, onClose }: DrawerProps) => {
           <ListItem
             button
             component={RouterLink}
-            to="/account/checkout-vehicle"
+            to="/employee/checkout-vehicle"
           >
             <ListItemIcon>
               <CheckoutVehicleIcon />

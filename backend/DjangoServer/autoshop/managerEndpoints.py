@@ -36,7 +36,6 @@ def getManager(request: HttpRequest):
 
 @csrf_exempt
 def payEmployee(request: HttpRequest, employeeID: int):
-    #TODO: Unit tests
     if  request.method != "POST":
         return error400(request)
     parsedBody = getReqBody(request)
@@ -56,10 +55,28 @@ def payEmployee(request: HttpRequest, employeeID: int):
     employee.save()
     return makeUserJSONResponse(employee.pk)
 
+@csrf_exempt
+def addHoursWorked(request: HttpRequest, employeeID: int):
+    #TODO: Unit tests
+    if  request.method != "POST":
+        return error400(request)
+    parsedBody = getReqBody(request)
+    NEEDED_ITEMS = {"hours", "managerID"}
+    for key in NEEDED_ITEMS:
+        if key not in parsedBody:
+            return error400(request)
+    employee: AutoUser = get_object_or_404(AutoUser, pk=employeeID)
+    employee.hoursOwed += float(parsedBody['hours'])
+    employee.save()
+    return makeUserJSONResponse(employee.pk)
 def _handleCreateManager():
     allUsers: List[AutoUser] = AutoUser.objects.all()
     for user in allUsers:
         if user.email == ADMIN_USERNAME and user.permission == "admin":
+            return user
+
+    for user in User.objects.all():
+        if user.email == ADMIN_USERNAME and user.password == ADMIN_PASS:
             return user
     # admin was not there
     return  __createManager()
@@ -67,22 +84,30 @@ def _handleCreateManager():
 def _handleCreateUsers():
     for i in range(10):
         usernameEmail = f"user{i}@email.com"
-        user = AutoUser.objects.filter(email=usernameEmail)
-        if not user:
-            user = User.objects.create_user(username=str(uuid4()), password=str(uuid4()))
-            AutoUser.objects.create(email=usernameEmail, name=f"Demo User {i}", phoneNumber="111-111-1111", balance=random.randint(0, 10000), user=user)
-
+        checkAndCreateUser(usernameEmail, "user", i)
 def _handleCreateEmployees():
+    EMPLOYEE_USERNAME = "employme"
+    EMPLOYEE_PASS = "employme"
+    checkAndCreateUser(EMPLOYEE_USERNAME, "employee", 11, password=EMPLOYEE_PASS)
     for i in range(10):
         usernameEmail = f"employee{i}@dansauto.com"
-        user = AutoUser.objects.filter(email=usernameEmail)
-        if not user:
-            user = User.objects.create_user(username=str(uuid4()), password=str(uuid4()))
-            autoUser = AutoUser.objects.create(email=usernameEmail, name=f"Demo Employee {i}", phoneNumber="111-111-1111", balance=random.randint(0, 10000), user=user, permission="employee", hoursOwed=random.randint(0, 30))
+        checkAndCreateUser(usernameEmail, "employee", i)
+
 def __createManager():
     admin = User.objects.create_user(username=ADMIN_USERNAME, password=ADMIN_PASS)
     AutoUser.objects.create(email=ADMIN_USERNAME, name="Dan's Auto Management", phoneNumber = "4357551111", user=admin, permission="admin")
     return admin
 
-
-
+def checkAndCreateUser(email, permission, i: int, password = None):
+    if password:
+        user = User.objects.filter(username=email, password=password)
+        if not user:
+            user = AutoUser.objects.filter(email=email)
+    else:
+        password = str(uuid4())
+        for user in AutoUser.objects.all():
+            if user.email == email:
+                return
+    if not user:
+        user = User.objects.create_user(username=email, password=password)
+        autoUser = AutoUser.objects.create(email=email, name=f"Demo {permission} {i}", phoneNumber="111-111-1111", balance=random.randint(0, 10000), user=user, permission=permission, hoursOwed=random.randint(0, 30))
