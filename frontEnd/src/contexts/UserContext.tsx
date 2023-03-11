@@ -17,4 +17,5 @@ export const UserContext = createContext({
   addNewReservation: (reservation: ReservationInfo) => {},
   addMoney: (amount: number) => {},
   subtractMoney: (amount: number) => {},
+  addHours: (amount: number) => {},
 });

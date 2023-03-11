@@ -1,9 +1,11 @@
 # Maxwell Edwards
 from django.http import HttpRequest, HttpResponse
-from django.http import JsonResponse
 import datetime
 import json
-from .models import Reservation
+from .models import AutoUser, Reservation
+from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
+from .serializers import AutoUserSerializer, ReservationSerializer
 
 def update_cors(j: JsonResponse, request: HttpRequest) -> JsonResponse:
     if 'Origin' in request.headers:
@@ -36,3 +38,17 @@ def error401(request: HttpRequest) -> JsonResponse:
 
 def vehicleIsAvailable(startDate, endDate, reservation: Reservation) -> bool:
     return reservation.startDate > endDate or reservation.endDate < startDate
+
+
+def makeUserJSONResponse(userID: int) -> JsonResponse:
+    return JsonResponse(createUserTransferObject(userID))
+
+def createUserTransferObject(userID: int) -> dict:
+    return {"user": __getSerializedUserInfo(userID),
+                         "reservations": __getSerializedReservations(userID)}
+def __getSerializedReservations(userID: int):
+    return [ReservationSerializer(reservation).data for reservation in Reservation.objects.all() if reservation.autoUser.pk ==userID]
+
+def __getSerializedUserInfo(id):
+    userModel = get_object_or_404(AutoUser, pk=id)
+    return AutoUserSerializer(userModel).data

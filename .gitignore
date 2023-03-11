@@ -138,3 +138,5 @@ dmypy.json
 # Pages
 *.pages
 
+*.icloud
+*.*2

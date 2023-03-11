@@ -15,6 +15,7 @@ import {
   ListItemText,
 } from "@material-ui/core";
 import { AccountCircle, DirectionsCar, Payment } from "@material-ui/icons";
+import { ManagerPayEmployees } from "../components/manager/ManagerPayEmployees";
 
 export function ManagerPage() {
   checkUserIsManagerAndRedirect();
@@ -23,10 +24,7 @@ export function ManagerPage() {
     <>
       <ManagerUpdateUser />
       <ManagerPurchaseVehicle />
+      <ManagerPayEmployees />
     </>
   );
 }
-
-
-
-

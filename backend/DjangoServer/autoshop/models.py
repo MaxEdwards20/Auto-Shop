@@ -30,7 +30,8 @@ class AutoUser(models.Model):
     needHelp = models.BooleanField(default=False)
     ethicsViolation = models.TextField(default="None")
     location = models.CharField(max_length=50, default="unknown")
-    hoursWorked = models.IntegerField(default=0)
+    hoursOwed = models.FloatField(default=0)
+    wage = models.FloatField(default=7.25)
 
 class Reservation(models.Model):
     vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE)

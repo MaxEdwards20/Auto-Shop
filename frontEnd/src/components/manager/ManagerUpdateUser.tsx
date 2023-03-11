@@ -9,8 +9,10 @@ import {
   Button,
 } from "@material-ui/core";
 import { Stack, styled, Paper, Grid } from "@mui/material";
+import { checkUserIsManagerAndRedirect } from "../../hooks/validationHooks";
 
 export const ManagerUpdateUser = () => {
+  checkUserIsManagerAndRedirect();
   const [allUsers, setAllUsers] = useState<User[]>([]);
   const { api, user } = useContext(UserContext);
 

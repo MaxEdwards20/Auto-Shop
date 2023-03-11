@@ -10,6 +10,7 @@ import { UpcomingReservationsDashboard } from "../components/user/UpcomingReserv
 import { formatCurrency } from "../hooks/miscFunctions";
 import { VehicleContext } from "../contexts/VehicleContext";
 import { checkUserAndRedirect } from "../hooks/validationHooks";
+import { AccountBalance } from "../components/user/AccountBalance";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,37 +46,14 @@ const useStyles = makeStyles((theme) => ({
 const Dashboard = () => {
   const { user, api, logout, addMoney } = useContext(UserContext);
   const { vehicles } = useContext(VehicleContext);
-  const [amountToAdd, setAmountToAdd] = useState<number>(0);
   // User is signed in
   checkUserAndRedirect();
   const navigate = useNavigate();
   const classes = useStyles();
 
-  const handleAmountToAddChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = parseInt(event.target.value);
-    if (value >= 0) {
-      setAmountToAdd(value);
-    }
-  };
-
   const handleLogout = () => {
     logout();
     navigate("/");
-  };
-
-  const handleUserDepositFunds = () => {
-    if (amountToAdd <= 0) {
-      return;
-    }
-    api.addMoneyToUser(user.id, amountToAdd).then((updateUser) => {
-      if (!updateUser) {
-        return;
-      }
-      addMoney(amountToAdd);
-      setAmountToAdd(0);
-    });
   };
 
   return (
@@ -94,27 +72,8 @@ const Dashboard = () => {
           Logout
         </Button>
       </Stack>
-      <Typography variant="subtitle1" className="m-2 p-3">
-        Your current balance is: {formatCurrency(user.balance)}
-      </Typography>
-      <form className={classes.form} noValidate autoComplete="off">
-        <TextField
-          id="amount"
-          type="number"
-          variant="outlined"
-          className={classes.textField}
-          value={amountToAdd}
-          onChange={handleAmountToAddChange}
-        />
-        <Button
-          variant="contained"
-          color="primary"
-          className={classes.button}
-          onClick={handleUserDepositFunds}
-        >
-          Add Funds
-        </Button>
-      </form>
+      <AccountBalance />
+
       <UpcomingReservationsDashboard
         classes={classes}
       ></UpcomingReservationsDashboard>

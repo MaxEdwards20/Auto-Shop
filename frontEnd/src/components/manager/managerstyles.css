@@ -1,0 +1,32 @@
+.balance-flash {
+  animation-name: balance-flash;
+  animation-duration: 0.5s;
+  animation-timing-function: linear;
+  animation-iteration-count: 10;
+}
+
+.balance-increase {
+  color: green;
+}
+
+.balance-decrease {
+  color: red;
+}
+
+@keyframes balance-flash {
+  0% {
+    color: inherit;
+  }
+  50% {
+    color: inherit;
+  }
+  60% {
+    color: inherit;
+  }
+  80% {
+    color: inherit;
+  }
+  100% {
+    color: inherit;
+  }
+}

@@ -21,6 +21,8 @@ const defaultUser = {
   phoneNumber: "No Phone Number",
   reservations: [],
   isAuthenticated: false,
+  hoursOwed: 0,
+  wage: 0,
 };
 
 export type UserInfo = () => {
@@ -31,6 +33,7 @@ export type UserInfo = () => {
   addMoney: (newBalance: number) => void;
   subtractMoney: (newBalance: number) => void;
   addNewReservation: (newReservation: ReservationInfo) => void;
+  addHours: (hours: number) => void;
 };
 
 export const useUserInfo: UserInfo = () => {
@@ -71,6 +74,12 @@ export const useUserInfo: UserInfo = () => {
     setUser(newUser);
   };
 
+  const addHours = (hours: number) => {
+    const newHours = user.hoursOwed + hours;
+    const newUser = { ...user, hoursOwed: newHours };
+    setUser(newUser);
+  };
+
   return {
     api,
     user,
@@ -79,5 +88,6 @@ export const useUserInfo: UserInfo = () => {
     subtractMoney,
     addNewReservation,
     logout,
+    addHours,
   };
 };

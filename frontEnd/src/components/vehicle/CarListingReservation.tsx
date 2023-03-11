@@ -62,6 +62,7 @@ export const CarListing = ({
       if (!user) {
         console.error("Error updating user balance. Please try again.");
       } else {
+        console.log("Subtracgint: ", totalCost, " from user: ", user.balance);
         subtractMoney(totalCost); // Adjust state to reflect the new balance
       }
       // now we update the manager balance because we took the money from the user
@@ -103,7 +104,7 @@ export const CarListing = ({
       {vehicle.name}
       <span className="outerButtonContainer">
         <span className="buttonContainer">
-          <button id="reserveButton" onClick={() => handleClick()}>
+          <button id="reserveButton" onClick={handleClick}>
             {formatCurrency(vehicle.pricePerDay)}/day
           </button>
         </span>

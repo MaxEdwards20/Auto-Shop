@@ -15,9 +15,13 @@ import {
   EventSeat as ReservationIcon,
   AccountCircle as AccountIcon,
 } from "@material-ui/icons";
+import PeopleIcon from "@mui/icons-material/People";
+
 import { Link as RouterLink } from "react-router-dom";
 
 import { AccountCircle, DirectionsCar, Payment } from "@material-ui/icons";
+import { DrawerBaseList } from "./DrawerBaseList";
+import Divider from "material-ui/Divider";
 
 const useStyles = makeStyles({
   list: {
@@ -34,52 +38,14 @@ export const ManagerDrawer = ({ open, onClose }: DrawerProps) => {
   const classes = useStyles();
   const navigate = useNavigate();
 
-  const handleUpdateUserClick = () => {
-    navigate("/manager/users");
-    onClose();
-  };
-
-  const handlePurchaseVehicleClick = () => {
-    navigate("/manager/purchase");
-    onClose();
-  };
-
-  const handlePayEmployeeClick = () => {
-    navigate("/manager/employees");
-    onClose();
-  };
-
   return (
     <Drawer anchor="left" open={open} onClose={onClose}>
       <div className={classes.list} role="presentation">
         <List>
-          <ListItem button component={RouterLink} to="/">
-            <ListItemIcon>
-              <HomeIcon />
-            </ListItemIcon>
-            <ListItemText primary="Home" />
-          </ListItem>
-          <ListItem button component={RouterLink} to="/vehicles">
-            <ListItemIcon>
-              <CarIcon />
-            </ListItemIcon>
-            <ListItemText primary="View Our Vehicles" />
-          </ListItem>
-          <ListItem button component={RouterLink} to="/reservations">
-            <ListItemIcon>
-              <ReservationIcon />
-            </ListItemIcon>
-            <ListItemText primary="Make a Reservation" />
-          </ListItem>
-          <ListItem button component={RouterLink} to="/account/dashboard">
-            <ListItemIcon>
-              <AccountIcon />
-            </ListItemIcon>
-            <ListItemText primary="Dashboard" />
-          </ListItem>
+          <DrawerBaseList></DrawerBaseList>
           <ListItem button component={RouterLink} to="/manager/users">
             <ListItemIcon>
-              <AccountCircle />
+              <PeopleIcon />
             </ListItemIcon>
             <ListItemText primary="View Users" />
           </ListItem>
@@ -87,7 +53,7 @@ export const ManagerDrawer = ({ open, onClose }: DrawerProps) => {
             <ListItemIcon>
               <DirectionsCar />
             </ListItemIcon>
-            <ListItemText primary="Purchase Vehicle" />
+            <ListItemText primary="Vehicle Management" />
           </ListItem>
           <ListItem button component={RouterLink} to="/manager/employees">
             <ListItemIcon>

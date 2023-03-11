@@ -16,6 +16,7 @@ import {
   AccountCircle as AccountIcon,
 } from "@material-ui/icons";
 import { Link as RouterLink } from "react-router-dom";
+import { DrawerBaseList } from "./DrawerBaseList";
 
 const useStyles = makeStyles({
   list: {
@@ -36,30 +37,7 @@ export const UserDrawer = ({ open, onClose }: DrawerProps) => {
     <Drawer anchor="left" open={open} onClose={onClose}>
       <div className={classes.list} role="presentation">
         <List>
-          <ListItem button component={RouterLink} to="/">
-            <ListItemIcon>
-              <HomeIcon />
-            </ListItemIcon>
-            <ListItemText primary="Home" />
-          </ListItem>
-          <ListItem button component={RouterLink} to="/vehicles">
-            <ListItemIcon>
-              <CarIcon />
-            </ListItemIcon>
-            <ListItemText primary="View Our Vehicles" />
-          </ListItem>
-          <ListItem button component={RouterLink} to="/reservations">
-            <ListItemIcon>
-              <ReservationIcon />
-            </ListItemIcon>
-            <ListItemText primary="Make a Reservation" />
-          </ListItem>
-          <ListItem button component={RouterLink} to="/account/dashboard">
-            <ListItemIcon>
-              <AccountIcon />
-            </ListItemIcon>
-            <ListItemText primary="Dashboard" />
-          </ListItem>
+          <DrawerBaseList></DrawerBaseList>
         </List>
       </div>
     </Drawer>
