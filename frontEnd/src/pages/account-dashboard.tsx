@@ -72,7 +72,7 @@ const Dashboard = () => {
           Logout
         </Button>
       </Stack>
-      <AccountBalance classes={classes} />
+      <AccountBalance />
 
       <UpcomingReservationsDashboard
         classes={classes}

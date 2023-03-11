@@ -2,9 +2,11 @@ import React, { useContext, useEffect, useState } from "react";
 import { User } from "../../types/DataTypes";
 import { UserContext } from "../../contexts/UserContext";
 import { EmployeeCard } from "./EmployeeCard";
-import { Typography, Grid } from "@mui/material";
+import { Typography, Grid, Card } from "@mui/material";
 import { makeStyles } from "@material-ui/core/styles";
 import { checkUserIsManagerAndRedirect } from "../../hooks/validationHooks";
+import { AccountBalance } from "../user/AccountBalance";
+import { Box } from "@mui/system";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,7 +26,8 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "8px",
   },
   header: {
-    margin: "16px 0",
+    margin: "16px auto auto 16px",
+    boxShadow: "0 0 10px rgba(0, 0, 0, 0.2)",
   },
   content: {
     display: "flex",
@@ -39,38 +42,37 @@ const useStyles = makeStyles((theme) => ({
 
 export const ManagerPayEmployees = () => {
   checkUserIsManagerAndRedirect();
-  const { api, user, subtractMoney } = useContext(UserContext);
+  const { api, user: manager, subtractMoney } = useContext(UserContext);
   const [employees, setEmployees] = useState<User[]>([]);
   const [totalPaid, setTotalPaid] = useState(0);
   const classes = useStyles();
 
   useEffect(() => {
-    api.getAllUsers(user.id).then((usersWithRes) => {
+    api.getAllUsers(manager.id).then((usersWithRes) => {
       const users = usersWithRes.map((userWithRes) => userWithRes.user);
       const employees = users.filter((user) => user.permission === "employee");
       setEmployees(employees);
     });
   }, []);
 
-  const handlePayment = (user: User, amount: number) => {
-    const totalPay = user.hoursOwed * user.wage;
-    api.addMoneyToUser(user.id, amount).then((updatedUser) => {
-      if (!updatedUser) {
+  const handlePayment = (employee: User, amount: number) => {
+    const totalPay = employee.hoursOwed * employee.wage;
+    api.payEmployee(employee.id, amount, manager.id).then((updatedEmployee) => {
+      if (!updatedEmployee) {
         return;
       }
       // update users
-      setEmployees((prev) => {
-        const newEmployees = prev.map((employee) => {
-          if (employee.id === user.id) {
-            return updatedUser;
-          }
-          return employee;
-        });
-        return newEmployees;
+      const newEmployees = employees.map((oldEmployee) => {
+        if (oldEmployee.id === employee.id) {
+          return updatedEmployee;
+        }
+        return oldEmployee;
       });
 
+      setEmployees(newEmployees);
+
       // Remove money from manager (the user)
-      api.removeMoneyFromUser(user.id, amount).then(() => {
+      api.removeMoneyFromUser(manager.id, amount).then(() => {
         subtractMoney(amount);
       });
     });
@@ -80,8 +82,19 @@ export const ManagerPayEmployees = () => {
   return (
     <>
       <Typography variant="h4" className={classes.header}>
-        Payroll Manager
+        Payroll Management
       </Typography>
+      <Card className={classes.card}>
+        <Box sx={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <Typography variant="subtitle1">Total Paid: ${totalPaid}</Typography>
+
+          <Typography variant="subtitle1">
+            Total Employees: {employees.length}
+          </Typography>
+          <AccountBalance></AccountBalance>
+        </Box>
+      </Card>
+
       <Grid container spacing={3}>
         {employees.map((employee) => (
           <EmployeeCard
@@ -91,15 +104,6 @@ export const ManagerPayEmployees = () => {
           />
         ))}
       </Grid>
-      <Typography variant="body1" className={classes.header}>
-        Total Paid: ${totalPaid}
-      </Typography>
-      <Typography variant="body1" className={classes.header}>
-        Manager Balance: <span>${user.balance}</span>
-      </Typography>
-      <Typography variant="body1" className={classes.header}>
-        Total Employees: {employees.length}
-      </Typography>
     </>
   );
 };

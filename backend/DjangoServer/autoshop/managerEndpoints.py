@@ -45,7 +45,13 @@ def payEmployee(request: HttpRequest, employeeID: int):
         if key not in parsedBody:
             return error400(request)
     employee: AutoUser = get_object_or_404(AutoUser, pk=employeeID)
-    employee.hoursOwed = 0 # reset hours back to zero
+    amount = int(parsedBody['amount'])
+    totalAmountDue = employee.hoursOwed * employee.wage
+    difference = totalAmountDue - amount
+    if difference == 0:
+        employee.hoursOwed = 0  # reset hours back to zero
+    else:
+        employee.hoursOwed = round(difference/ employee.wage, 2)
     employee.balance += int(parsedBody['amount'])
     employee.save()
     return makeUserJSONResponse(employee.pk)
@@ -72,7 +78,7 @@ def _handleCreateEmployees():
         user = AutoUser.objects.filter(email=usernameEmail)
         if not user:
             user = User.objects.create_user(username=str(uuid4()), password=str(uuid4()))
-            autoUser = AutoUser.objects.create(email=usernameEmail, name=f"Demo Employee {i}", phoneNumber="111-111-1111", balance=random.randint(0, 10000), user=user, permission="employee")
+            autoUser = AutoUser.objects.create(email=usernameEmail, name=f"Demo Employee {i}", phoneNumber="111-111-1111", balance=random.randint(0, 10000), user=user, permission="employee", hoursOwed=random.randint(0, 30))
 def __createManager():
     admin = User.objects.create_user(username=ADMIN_USERNAME, password=ADMIN_PASS)
     AutoUser.objects.create(email=ADMIN_USERNAME, name="Dan's Auto Management", phoneNumber = "4357551111", user=admin, permission="admin")

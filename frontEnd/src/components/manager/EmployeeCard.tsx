@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import {
   Card,
   CardContent,
@@ -9,7 +9,9 @@ import {
   Grid,
 } from "@material-ui/core";
 import { User } from "../../types/DataTypes";
-
+import { UserContext } from "../../contexts/UserContext";
+import { formatCurrency } from "../../hooks/miscFunctions";
+import { format } from "date-fns";
 interface EmployeeCardProps {
   employee: User;
   onPayEmployee: (employee: User, amount: number) => void;
@@ -42,7 +44,12 @@ export const EmployeeCard = ({
   onPayEmployee,
 }: EmployeeCardProps) => {
   const classes = useStyles();
-  const [amount, setAmount] = useState<number>(0);
+  const [totalDue, setTotalDue] = useState(
+    Math.round(employee.hoursOwed * employee.wage * 100) / 100
+  );
+
+  const [amount, setAmount] = useState<number>(totalDue);
+  const { user } = useContext(UserContext);
 
   const handlePay = () => {
     onPayEmployee(employee, amount);
@@ -71,20 +78,34 @@ export const EmployeeCard = ({
             className={classes.textField}
           />
           <TextField
+            label="Total Due"
+            type="text"
+            value={formatCurrency(totalDue)}
+            disabled
+            className={classes.textField}
+          />
+          <TextField
             label="Amount"
             type="number"
             value={amount}
-            onChange={(e) => setAmount(parseInt(e.target.value))}
+            onChange={(e) => {
+              const newAmount = parseFloat(e.target.value);
+              if (newAmount > totalDue) {
+                setAmount(totalDue);
+              } else {
+                setAmount(newAmount);
+              }
+            }}
             className={classes.textField}
           />
           <Button
             variant="contained"
             color="primary"
             onClick={handlePay}
-            disabled={employee.hoursOwed === 0}
+            disabled={employee.hoursOwed <= 0 || user.balance < totalDue}
             fullWidth
           >
-            Pay Employee ${employee.hoursOwed * employee.wage}
+            Pay Employee {formatCurrency(amount)}
           </Button>
         </CardContent>
       </Card>

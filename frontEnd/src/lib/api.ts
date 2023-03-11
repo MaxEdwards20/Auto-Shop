@@ -259,11 +259,11 @@ export class Api {
   }
 
   payEmployee(
-    userID: number,
+    employeeID: number,
     amount: number,
     managerID: number
   ): Promise<User> {
-    return this.post(`manager/${userID}/payEmployee`, {
+    return this.post(`manager/${employeeID}`, {
       amount,
       managerID,
     }).then((res) => {

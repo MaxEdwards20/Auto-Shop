@@ -20,6 +20,8 @@ import PeopleIcon from "@mui/icons-material/People";
 import { Link as RouterLink } from "react-router-dom";
 
 import { AccountCircle, DirectionsCar, Payment } from "@material-ui/icons";
+import { DrawerBaseList } from "./DrawerBaseList";
+import Divider from "material-ui/Divider";
 
 const useStyles = makeStyles({
   list: {
@@ -40,30 +42,7 @@ export const ManagerDrawer = ({ open, onClose }: DrawerProps) => {
     <Drawer anchor="left" open={open} onClose={onClose}>
       <div className={classes.list} role="presentation">
         <List>
-          <ListItem button component={RouterLink} to="/">
-            <ListItemIcon>
-              <HomeIcon />
-            </ListItemIcon>
-            <ListItemText primary="Home" />
-          </ListItem>
-          <ListItem button component={RouterLink} to="/vehicles">
-            <ListItemIcon>
-              <CarIcon />
-            </ListItemIcon>
-            <ListItemText primary="View Our Vehicles" />
-          </ListItem>
-          <ListItem button component={RouterLink} to="/reservations">
-            <ListItemIcon>
-              <ReservationIcon />
-            </ListItemIcon>
-            <ListItemText primary="Make a Reservation" />
-          </ListItem>
-          <ListItem button component={RouterLink} to="/account/dashboard">
-            <ListItemIcon>
-              <AccountIcon />
-            </ListItemIcon>
-            <ListItemText primary="Dashboard" />
-          </ListItem>
+          <DrawerBaseList></DrawerBaseList>
           <ListItem button component={RouterLink} to="/manager/users">
             <ListItemIcon>
               <PeopleIcon />
@@ -74,7 +53,7 @@ export const ManagerDrawer = ({ open, onClose }: DrawerProps) => {
             <ListItemIcon>
               <DirectionsCar />
             </ListItemIcon>
-            <ListItemText primary="Purchase Vehicle" />
+            <ListItemText primary="Vehicle Management" />
           </ListItem>
           <ListItem button component={RouterLink} to="/manager/employees">
             <ListItemIcon>
