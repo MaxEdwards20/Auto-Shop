@@ -54,6 +54,15 @@
   - Open your browser of choice
   - Running the client will find an open port, navigate to localhost:PORT
 
+### Dummy Users
+Use these to test different views on the client side
+- Manager Account:
+  - email: admin123, password: admin123
+- Employee Account:
+  - email: employme, password: employme
+- User Account:
+  - email: abc, password: 123
+
 ## Unit Testing Instructions
 
 From repository root:

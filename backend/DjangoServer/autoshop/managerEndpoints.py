@@ -85,6 +85,9 @@ def _handleCreateManager():
     return  __createManager()
 
 def _handleCreateUsers():
+    USER_USERNAME = "abc"
+    USER_PASS = "123"
+    checkAndCreateUser(USER_USERNAME, "user", 11, password=USER_PASS)
     for i in range(10):
         usernameEmail = f"user{i}@email.com"
         checkAndCreateUser(usernameEmail, "user", i)
