@@ -7,10 +7,12 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@material-ui/core";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { formatCurrency } from "../../hooks/miscFunctions";
 import { Api } from "../../lib/api";
+import { UserContext } from "../../contexts/UserContext";
+import { differenceInDays } from "date-fns";
 
 type ReserveModalProps = {
   vehicle: Vehicle;
@@ -18,10 +20,7 @@ type ReserveModalProps = {
   showModal: boolean;
   startDate: Date;
   endDate: Date;
-  user: User;
-  api: Api;
-  handleReserveClick: () => void;
-  totalCost: number;
+  handleReserveClick: (isInsured: boolean, totalCost: number) => void;
 };
 
 export const ReserveModal = ({
@@ -31,12 +30,37 @@ export const ReserveModal = ({
   startDate,
   endDate,
   handleReserveClick,
-  user,
-  totalCost,
 }: ReserveModalProps) => {
+  const [totalCost, setTotalCost] = useState(0);
   const [userMessage, setUserMessage] = useState("");
   const [reserved, setReserved] = useState(false);
+  const [isInsured, setIsInsured] = useState(false);
+  const { api, user } = useContext(UserContext);
   const navigate = useNavigate();
+
+  const getTotalCostNoInsurance = () => {
+    api
+      .calculateReservationCost(startDate, endDate, vehicle.pricePerDay)
+      .then((res) => {
+        if (!res) {
+          console.error("Error calculating total cost. Please try again.");
+        } else {
+          setTotalCost(res);
+        }
+      });
+    setTotalCost(vehicle.pricePerDay * differenceInDays(endDate, startDate));
+  };
+
+  useEffect(() => {
+    getTotalCostNoInsurance();
+  }, [vehicle, startDate, endDate]);
+
+  const getTotalInsuranceCost = () => {
+    return (
+      0.2 * vehicle.pricePerDay * (differenceInDays(endDate, startDate) + 1)
+    );
+  };
+
   return (
     <Dialog open={showModal} onClose={handleCloseModal}>
       <DialogTitle>{vehicle.name}</DialogTitle>
@@ -53,13 +77,27 @@ export const ReserveModal = ({
         {userMessage && (
           <DialogContentText color="secondary">{userMessage}</DialogContentText>
         )}
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => {
+            setIsInsured(true);
+            setTotalCost(totalCost + getTotalInsuranceCost());
+          }}
+          disabled={user.balance < totalCost || reserved || isInsured}
+        >
+          {isInsured
+            ? "Insured"
+            : `Add Insurance for ${formatCurrency(getTotalInsuranceCost())}`}
+        </Button>
+
         <DialogActions>
           <Button
             type="submit"
             variant="contained"
             color="primary"
             onClick={() => {
-              handleReserveClick();
+              handleReserveClick(isInsured, totalCost);
               setReserved(true);
             }}
             disabled={user.balance < totalCost || reserved}
@@ -76,7 +114,13 @@ export const ReserveModal = ({
             Add Funds
           </Button>
           <Button
-            onClick={handleCloseModal}
+            onClick={() => {
+              if (!reserved) {
+                // Reset the insured value
+                setIsInsured(false);
+              }
+              handleCloseModal();
+            }}
             variant="contained"
             color="secondary"
           >

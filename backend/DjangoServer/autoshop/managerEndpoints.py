@@ -7,7 +7,7 @@ from django.contrib.auth import authenticate
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from .serializers import AutoUserSerializer, ReservationSerializer
-from .helperFunctions import update_cors, getReqBody, error400, error401, makeUserJSONResponse
+from .helperFunctions import update_cors, getReqBody, error400, error401, makeUserJSONResponse, createUserTransferObject
 from uuid import uuid4
 import random
 
@@ -69,19 +69,25 @@ def addHoursWorked(request: HttpRequest, employeeID: int):
     employee.hoursOwed += float(parsedBody['hours'])
     employee.save()
     return makeUserJSONResponse(employee.pk)
+
+
+
+
 def _handleCreateManager():
-    allUsers: List[AutoUser] = AutoUser.objects.all()
-    for user in allUsers:
+    for user in  AutoUser.objects.all():
         if user.email == ADMIN_USERNAME and user.permission == "admin":
             return user
 
     for user in User.objects.all():
-        if user.email == ADMIN_USERNAME and user.password == ADMIN_PASS:
+        if user.username == ADMIN_USERNAME and user.password == ADMIN_PASS:
             return user
     # admin was not there
     return  __createManager()
 
 def _handleCreateUsers():
+    USER_USERNAME = "abc"
+    USER_PASS = "123"
+    checkAndCreateUser(USER_USERNAME, "user", 11, password=USER_PASS)
     for i in range(10):
         usernameEmail = f"user{i}@email.com"
         checkAndCreateUser(usernameEmail, "user", i)
@@ -100,14 +106,14 @@ def __createManager():
 
 def checkAndCreateUser(email, permission, i: int, password = None):
     if password:
-        user = User.objects.filter(username=email, password=password)
-        if not user:
-            user = AutoUser.objects.filter(email=email)
+        for user in User.objects.filter(username=email, password=password):
+            if user.username== email and user.password == password:
+                return user
     else:
         password = str(uuid4())
         for user in AutoUser.objects.all():
             if user.email == email:
                 return
-    if not user:
+
         user = User.objects.create_user(username=email, password=password)
         autoUser = AutoUser.objects.create(email=email, name=f"Demo {permission} {i}", phoneNumber="111-111-1111", balance=random.randint(0, 10000), user=user, permission=permission, hoursOwed=random.randint(0, 30))

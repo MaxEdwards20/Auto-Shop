@@ -18,6 +18,7 @@ import { ManagerPurchaseVehicle } from "../manager/ManagerPurchaseVehicle";
 import { ManagerPayEmployees } from "../manager/ManagerPayEmployees";
 import { LogHours } from "../employee/LogHours";
 import { CheckoutVehicle } from "../employee/CheckoutVehicle";
+import { HelpUsers } from "../employee/HelpUsers";
 function Router() {
   const { setNewVehicles } = useContext(VehicleContext);
   const { setNewManager } = useContext(ManagerContext);
@@ -41,6 +42,7 @@ function Router() {
         <Route path="checkout-vehicle" element={<CheckoutVehicle />}></Route>
       </Route>
       <Route path="/reservations" element={<ReservationPage />} />
+      <Route path="/help-users" element={<HelpUsers />}></Route>
       <Route path="/vehicles" element={<VehiclePage />} />
       <Route path="/account">
         <Route path="dashboard" element={<Dashboard />} />

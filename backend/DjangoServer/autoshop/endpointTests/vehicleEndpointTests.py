@@ -56,7 +56,6 @@ class TestVehicleEndpoints(TestCase):
         self.assertGreaterEqual(len(vehicles), 5)
         vehicle = vehicles[0]
         self.assertTrue('pricePerDay' in vehicle)
-        self.assertTrue('isInsured' in vehicle)
         self.assertTrue('imageURL' in vehicle)
 
 
@@ -68,7 +67,6 @@ class TestVehicleEndpoints(TestCase):
         self.assertGreaterEqual(len(vehicles), 5)
         vehicle = vehicles[0]
         self.assertTrue('pricePerDay' in vehicle)
-        self.assertTrue('isInsured' in vehicle)
         self.assertTrue('imageURL' in vehicle)
         # ensure
         for vehicle in vehicles:

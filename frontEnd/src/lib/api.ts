@@ -1,9 +1,8 @@
 import { CreateUserBody, LoginUserBody } from "../dto/apiTypes";
 import { getToken, setTokenToLocalStorage } from "../hooks/miscFunctions";
 import {
-  ReservationInfo,
+  Reservation,
   User,
-  usersDict as UsersDict,
   UserWithReservation,
   Vehicle,
 } from "../types/DataTypes";
@@ -91,7 +90,7 @@ export class Api {
     });
   }
 
-  getUserReservations(id: number): Promise<ReservationInfo[] | null> {
+  getUserReservations(id: number): Promise<Reservation[] | null> {
     return this.get(`user/${id}`).then((res) => {
       if (!res?.reservations) return null;
       this.setToken(res.token);
@@ -204,13 +203,15 @@ export class Api {
     userID: number,
     vehicleID: number,
     startDate: Date,
-    endDate: Date
-  ): Promise<ReservationInfo | null> {
+    endDate: Date,
+    isInsured: boolean
+  ): Promise<Reservation | null> {
     return this.post(`reservation`, {
       vehicleID,
       startDate,
       endDate,
       userID,
+      isInsured,
     }).then((res) => {
       if (!res?.reservation) return null;
       return res.reservation;
@@ -281,6 +282,24 @@ export class Api {
       managerID,
     }).then((res) => {
       return res.user;
+    });
+  }
+
+  userNeedsHelp(
+    userID: number,
+    needsHelp: boolean,
+    location: string
+  ): Promise<User> {
+    return this.post(`user/${userID}/needs-help`, { needsHelp, location }).then(
+      (res) => {
+        return res.user;
+      }
+    );
+  }
+
+  allUsersNeedHelp(): Promise<UserWithReservation[]> {
+    return this.get(`user/needs-help`).then((res) => {
+      return res.users;
     });
   }
 }

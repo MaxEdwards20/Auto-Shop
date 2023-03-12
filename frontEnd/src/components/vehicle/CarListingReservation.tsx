@@ -9,7 +9,6 @@ import React from "react";
 import { forwardRef } from "react";
 import { checkUserAndRedirect } from "../../hooks/validationHooks";
 import { ManagerContext } from "../../contexts/ManagerContext";
-import { differenceInDays } from "date-fns";
 
 type CarListingProps = {
   vehicle: Vehicle;
@@ -28,25 +27,7 @@ export const CarListing = ({
   const { api, user, subtractMoney, addNewReservation } =
     useContext(UserContext);
   const { manager } = useContext(ManagerContext);
-  const [totalCost, setTotalCost] = useState(0);
   checkUserAndRedirect();
-
-  const getTotalCost = () => {
-    api
-      .calculateReservationCost(startDate, endDate, vehicle.pricePerDay)
-      .then((res) => {
-        if (!res) {
-          console.error("Error calculating total cost. Please try again.");
-        } else {
-          setTotalCost(res);
-        }
-      });
-    setTotalCost(vehicle.pricePerDay * differenceInDays(endDate, startDate));
-  };
-
-  useEffect(() => {
-    getTotalCost();
-  }, [vehicle, startDate, endDate]);
 
   const handleClick = () => {
     setShowModal(true);
@@ -57,12 +38,12 @@ export const CarListing = ({
     updateVehicleList();
   };
 
-  const removeFunds = () => {
+  const removeFunds = (totalCost: number) => {
     api.removeMoneyFromUser(user.id, totalCost).then((user) => {
       if (!user) {
         console.error("Error updating user balance. Please try again.");
       } else {
-        console.log("Subtracgint: ", totalCost, " from user: ", user.balance);
+        console.log("Subtracing: ", totalCost, " from user: ", user.balance);
         subtractMoney(totalCost); // Adjust state to reflect the new balance
       }
       // now we update the manager balance because we took the money from the user
@@ -74,9 +55,9 @@ export const CarListing = ({
     });
   };
 
-  const createReservation = () => {
+  const createReservation = (isInsured: boolean) => {
     api
-      .createReservation(user.id, vehicle.id, startDate, endDate)
+      .createReservation(user.id, vehicle.id, startDate, endDate, isInsured)
       .then((reservation) => {
         if (!reservation) {
           console.error("Error creating reservation. Please try again.");
@@ -86,12 +67,12 @@ export const CarListing = ({
       });
   };
 
-  const handleReserveClick = () => {
+  const handleReserveClick = (isInsured: boolean, totalCost: number) => {
     if (user.balance < totalCost) {
       return;
     }
-    createReservation(); // update the user's reservations
-    removeFunds(); // Reservation is made so update the funds available for the user
+    createReservation(isInsured); // update the user's reservations
+    removeFunds(totalCost); // Reservation is made so update the funds available for the user
   };
 
   return (
@@ -111,15 +92,12 @@ export const CarListing = ({
       </span>
       {user && startDate && endDate && showModal && (
         <ReserveModal
-          user={user}
-          api={api}
           vehicle={vehicle}
           handleCloseModal={handleCloseModal}
           showModal={showModal}
           startDate={startDate}
           endDate={endDate}
           handleReserveClick={handleReserveClick}
-          totalCost={totalCost}
         ></ReserveModal>
       )}
     </li>

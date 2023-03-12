@@ -11,6 +11,7 @@ import { formatCurrency } from "../hooks/miscFunctions";
 import { VehicleContext } from "../contexts/VehicleContext";
 import { checkUserAndRedirect } from "../hooks/validationHooks";
 import { AccountBalance } from "../components/user/AccountBalance";
+import { HelpButton } from "../components/user/HelpButton";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -58,10 +59,13 @@ const Dashboard = () => {
 
   return (
     <div className={classes.root}>
-      <Stack direction="row" spacing={50}>
-        <Typography variant="h5" className={classes.title}>
-          Welcome, {user.name}!
-        </Typography>
+      <Stack direction="row" spacing={30}>
+        <Stack direction="column">
+          <Typography variant="h5" className={classes.title}>
+            Welcome, {user.name}!
+          </Typography>
+          <HelpButton />
+        </Stack>
         <Button
           variant="contained"
           color="secondary"

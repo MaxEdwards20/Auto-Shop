@@ -10,7 +10,6 @@ class Vehicle(models.Model):
     imageFile = models.ImageField(default=None)
     isPurchased = models.BooleanField(default=False)
     isPending = models.BooleanField(default=False)
-    isInsured = models.BooleanField(default=False)
     isLoadJacked = models.BooleanField(default=False)
     pricePerDay = models.IntegerField(default=100)
     purchasePrice = models.IntegerField(default=5000)
@@ -39,6 +38,7 @@ class Reservation(models.Model):
     startDate = models.DateField()
     endDate = models.DateField()
     amountDue = models.FloatField(default=100)
+    isInsured = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Vehicle: {self.vehicle.name} User: {self.autoUser.name} "

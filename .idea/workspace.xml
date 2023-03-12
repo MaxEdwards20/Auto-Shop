@@ -6,21 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="798bd63e-d7e6-4f44-9b5e-3f4cb6158f82" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/DjangoServer/autoshop/endpointTests/managerEndpointTests.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/DjangoServer/autoshop/endpointTests/managerEndpointTests.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/DjangoServer/autoshop/managerEndpoints.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/DjangoServer/autoshop/managerEndpoints.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/DjangoServer/autoshop/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/DjangoServer/autoshop/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/DjangoServer/autoshop/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/DjangoServer/autoshop/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontEnd/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontEnd/src/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontEnd/src/components/navigation/DrawerBaseList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontEnd/src/components/navigation/DrawerBaseList.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontEnd/src/components/navigation/EmployeeDrawer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontEnd/src/components/navigation/EmployeeDrawer.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontEnd/src/components/navigation/Router.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontEnd/src/components/navigation/Router.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontEnd/src/components/vehicle/CarListingReservation.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontEnd/src/components/vehicle/CarListingReservation.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontEnd/src/components/vehicle/ReserveModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontEnd/src/components/vehicle/ReserveModal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontEnd/src/contexts/UserContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontEnd/src/contexts/UserContext.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontEnd/src/hooks/useUserInfo.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontEnd/src/hooks/useUserInfo.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontEnd/src/hooks/validationHooks.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontEnd/src/hooks/validationHooks.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontEnd/src/lib/api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontEnd/src/lib/api.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontEnd/src/pages/reservation-page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontEnd/src/pages/reservation-page.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,6 +26,9 @@
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="ProjectErrors" />
   </component>
   <component name="ProjectId" id="2MKj5XnTCN7Zja6Hu0aMiGg8qm0" />
   <component name="ProjectViewState">
@@ -223,6 +213,13 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/backend/DjangoServer/autoshop/managerEndpoints.py</url>
+          <line>22</line>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+      </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
           <properties notifyOnTerminate="true" exception="BaseException">
