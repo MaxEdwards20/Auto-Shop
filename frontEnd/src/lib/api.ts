@@ -6,7 +6,7 @@ import {
   usersDict as UsersDict,
   UserWithReservation,
   Vehicle,
-} from "../types/DataTypes";
+} from "../types/DataTypes.ts";
 type Method = "get" | "post" | "put" | "del";
 
 export class Api {
@@ -204,13 +204,15 @@ export class Api {
     userID: number,
     vehicleID: number,
     startDate: Date,
-    endDate: Date
+    endDate: Date,
+    isInsured: boolean
   ): Promise<ReservationInfo | null> {
     return this.post(`reservation`, {
       vehicleID,
       startDate,
       endDate,
       userID,
+      isInsured,
     }).then((res) => {
       if (!res?.reservation) return null;
       return res.reservation;
@@ -281,6 +283,18 @@ export class Api {
       managerID,
     }).then((res) => {
       return res.user;
+    });
+  }
+
+  userNeedsHelp(userID: number, needsHelp: boolean): Promise<User> {
+    return this.post(`user/${userID}/needs-help`, { needsHelp }).then((res) => {
+      return res.user;
+    });
+  }
+
+  allUsersNeedHelp(): Promise<UserWithReservation[]> {
+    return this.get(`user/needs-help`).then((res) => {
+      return res.users;
     });
   }
 }

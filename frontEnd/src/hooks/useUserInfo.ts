@@ -67,15 +67,18 @@ export const useUserInfo: UserInfo = () => {
   };
 
   const addNewReservation = (newReservation: ReservationInfo) => {
+    let newReservations = user.reservations;
+    newReservations.push(newReservation);
     const newUser = {
       ...user,
-      reservations: [...user.reservations, newReservation],
+      reservations: newReservations,
     };
     setUser(newUser);
   };
 
   const addHours = (hours: number) => {
-    const newHours = user.hoursOwed + hours;
+    const cleanHours = parseInt(hours.toString());
+    const newHours = user.hoursOwed + cleanHours;
     const newUser = { ...user, hoursOwed: newHours };
     setUser(newUser);
   };

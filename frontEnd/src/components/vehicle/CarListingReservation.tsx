@@ -31,22 +31,7 @@ export const CarListing = ({
   const [totalCost, setTotalCost] = useState(0);
   checkUserAndRedirect();
 
-  const getTotalCost = () => {
-    api
-      .calculateReservationCost(startDate, endDate, vehicle.pricePerDay)
-      .then((res) => {
-        if (!res) {
-          console.error("Error calculating total cost. Please try again.");
-        } else {
-          setTotalCost(res);
-        }
-      });
-    setTotalCost(vehicle.pricePerDay * differenceInDays(endDate, startDate));
-  };
 
-  useEffect(() => {
-    getTotalCost();
-  }, [vehicle, startDate, endDate]);
 
   const handleClick = () => {
     setShowModal(true);
@@ -74,9 +59,9 @@ export const CarListing = ({
     });
   };
 
-  const createReservation = () => {
+  const createReservation = (isInsured: boolean) => {
     api
-      .createReservation(user.id, vehicle.id, startDate, endDate)
+      .createReservation(user.id, vehicle.id, startDate, endDate, isInsured)
       .then((reservation) => {
         if (!reservation) {
           console.error("Error creating reservation. Please try again.");
@@ -86,11 +71,11 @@ export const CarListing = ({
       });
   };
 
-  const handleReserveClick = () => {
+  const handleReserveClick = (isInsured: boolean) => {
     if (user.balance < totalCost) {
       return;
     }
-    createReservation(); // update the user's reservations
+    createReservation(isInsured); // update the user's reservations
     removeFunds(); // Reservation is made so update the funds available for the user
   };
 

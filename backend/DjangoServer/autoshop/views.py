@@ -1,5 +1,6 @@
 from django.views.decorators.csrf import csrf_exempt
-from .userEndpoints import authenticateUser, createUser, deleteUser, getUser, getAllUsers, updateUser, userAddMoney, userRemoveMoney, updateUserPermission
+from .userEndpoints import authenticateUser, createUser, deleteUser, getUser, getAllUsers, updateUser, userAddMoney,\
+    userRemoveMoney, updateUserPermission, needsHelp, everyoneThatNeedsHelp
 from .vehicleEndpoints import createVehicle, deleteVehicle, getVehicle, getAllAvailableVehicles, getAllPurchasedVehicles, \
     updateVehicle, vehicleAvailability, purchaseVehicle, getAllVehicles, sellVehicle
 from .reservationEndpoints import createReservation, deleteReservation, getReservation, calculateCost

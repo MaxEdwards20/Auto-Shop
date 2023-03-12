@@ -109,6 +109,29 @@ def userRemoveMoney(request: HttpRequest, id):
     j = makeUserJSONResponse(user.pk)  # return the newly saved user
     return update_cors(j, request)
 
+@csrf_exempt
+def needsHelp(request: HttpRequest, userID: int):
+    #TODO Unit tests
+    if request.method != "POST":
+        return error400(request)
+    autoUser = get_object_or_404(AutoUser, pk=userID)
+    parsedBody = getReqBody(request)
+    if "needsHelp" not in parsedBody:
+        return error400(request, "Needs a `needsHelp` value")
+    autoUser.needHelp = parsedBody['needsHelp']
+    autoUser.save()
+    return makeUserJSONResponse(autoUser.pk)
+
+@csrf_exempt
+def everyoneThatNeedsHelp(request: HttpRequest):
+    #TODO Add unit tests
+    if request.method != "GET":
+        return error400(request)
+    res = []
+    for autoUser in AutoUser.objects.all():
+        if autoUser.needHelp:
+            res.append(createUserTransferObject(autoUser.pk))
+    return JsonResponse({"users": res}, status=200, safe=False)
 
 def __createUserDatabase(parsedBody) -> AutoUser:
     newUserAuth = User.objects.create_user(

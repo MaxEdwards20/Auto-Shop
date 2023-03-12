@@ -45,10 +45,10 @@ def calculateCost(request: HttpRequest):
     startDate, endDate = parseDates(request)
     diff: timedelta = endDate - startDate
     pricePerDay = int(parsedBody['pricePerDay'])
-    print(f"Diff days is: {diff}")
     total = pricePerDay * (diff.days + 1) # no difference means you rent for 1 day, every day after is another fee
     if total == 0:
         total = pricePerDay
+    print(f'Diff days: {diff}. Total Cost: {total}')
     j = JsonResponse({"total": total})
     return update_cors(j, request)
 
@@ -61,6 +61,7 @@ def __createReservationDatabase(parsedBody: dict, request: HttpRequest) -> Reser
     newReservation.vehicle = vehicle
     newReservation.autoUser = user
     newReservation.startDate, newReservation.endDate = parseDates(request)
+    newReservation.isInsured = parsedBody['isInsured']
     newReservation.save()
     return newReservation
 
@@ -76,9 +77,11 @@ def __getVehicle(vehicleID: int):
 def __validateCreateReservationBody(request: HttpRequest, parsedBody: dict) -> bool:
     if request.method != "POST":
         return False
-    NEEDED_PARAMS = {'startDate', 'endDate', 'vehicleID', "userID"}
+    NEEDED_PARAMS = {'startDate', 'endDate', 'vehicleID', "userID", "isInsured"}
     for key in NEEDED_PARAMS:
-        if key not in parsedBody: return False
+        if key not in parsedBody:
+            print(f"Missing {key}")
+            return False
     return True
 
 def __validateReservationAvailable(request: HttpRequest, parsedBody: dict) -> bool:

@@ -7,7 +7,7 @@ from django.contrib.auth import authenticate
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from .serializers import AutoUserSerializer, ReservationSerializer
-from .helperFunctions import update_cors, getReqBody, error400, error401, makeUserJSONResponse
+from .helperFunctions import update_cors, getReqBody, error400, error401, makeUserJSONResponse, createUserTransferObject
 from uuid import uuid4
 import random
 
@@ -69,14 +69,17 @@ def addHoursWorked(request: HttpRequest, employeeID: int):
     employee.hoursOwed += float(parsedBody['hours'])
     employee.save()
     return makeUserJSONResponse(employee.pk)
+
+
+
+
 def _handleCreateManager():
-    allUsers: List[AutoUser] = AutoUser.objects.all()
-    for user in allUsers:
+    for user in  AutoUser.objects.all():
         if user.email == ADMIN_USERNAME and user.permission == "admin":
             return user
 
     for user in User.objects.all():
-        if user.email == ADMIN_USERNAME and user.password == ADMIN_PASS:
+        if user.username == ADMIN_USERNAME and user.password == ADMIN_PASS:
             return user
     # admin was not there
     return  __createManager()

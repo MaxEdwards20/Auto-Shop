@@ -15,6 +15,8 @@ urlpatterns = [
 
     path('user/login', views.authenticateUser, name='authenticateUser'),
     path('user/<int:id>/reservations', views.getUser, name='getUserReservations'),
+    path('user/<int:userID>/needs-help', views.needsHelp, name="userNeedsHelp"),
+    path("user/needs-help", views.everyoneThatNeedsHelp, name="needsHelp"),
 
     # vehicles
     path('vehicle', views.vehicleRouter, name='createVehicle'),  # POST
