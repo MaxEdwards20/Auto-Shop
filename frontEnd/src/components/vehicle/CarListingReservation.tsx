@@ -9,7 +9,6 @@ import React from "react";
 import { forwardRef } from "react";
 import { checkUserAndRedirect } from "../../hooks/validationHooks";
 import { ManagerContext } from "../../contexts/ManagerContext";
-import { differenceInDays } from "date-fns";
 
 type CarListingProps = {
   vehicle: Vehicle;
@@ -31,8 +30,6 @@ export const CarListing = ({
   const [totalCost, setTotalCost] = useState(0);
   checkUserAndRedirect();
 
-
-
   const handleClick = () => {
     setShowModal(true);
   };
@@ -47,7 +44,7 @@ export const CarListing = ({
       if (!user) {
         console.error("Error updating user balance. Please try again.");
       } else {
-        console.log("Subtracgint: ", totalCost, " from user: ", user.balance);
+        console.log("Subtracing: ", totalCost, " from user: ", user.balance);
         subtractMoney(totalCost); // Adjust state to reflect the new balance
       }
       // now we update the manager balance because we took the money from the user
@@ -71,11 +68,12 @@ export const CarListing = ({
       });
   };
 
-  const handleReserveClick = (isInsured: boolean) => {
+  const handleReserveClick = (isInsured: boolean, totalCost: number) => {
     if (user.balance < totalCost) {
       return;
     }
     createReservation(isInsured); // update the user's reservations
+    setTotalCost(totalCost); // update the total cost
     removeFunds(); // Reservation is made so update the funds available for the user
   };
 
@@ -96,15 +94,12 @@ export const CarListing = ({
       </span>
       {user && startDate && endDate && showModal && (
         <ReserveModal
-          user={user}
-          api={api}
           vehicle={vehicle}
           handleCloseModal={handleCloseModal}
           showModal={showModal}
           startDate={startDate}
           endDate={endDate}
           handleReserveClick={handleReserveClick}
-          totalCost={totalCost}
         ></ReserveModal>
       )}
     </li>

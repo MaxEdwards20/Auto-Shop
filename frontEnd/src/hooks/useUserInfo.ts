@@ -5,7 +5,7 @@ import { useState } from "react";
 import { getToken } from "./miscFunctions";
 import { removeToken } from "./miscFunctions";
 import { LoginUserBody } from "../dto/apiTypes";
-import { ReservationInfo } from "../types/DataTypes";
+import { Reservation } from "../types/DataTypes";
 
 const userPermission: UserPermission = "guest";
 
@@ -32,7 +32,7 @@ export type UserInfo = () => {
   logout: () => void;
   addMoney: (newBalance: number) => void;
   subtractMoney: (newBalance: number) => void;
-  addNewReservation: (newReservation: ReservationInfo) => void;
+  addNewReservation: (newReservation: Reservation) => void;
   addHours: (hours: number) => void;
 };
 
@@ -66,7 +66,7 @@ export const useUserInfo: UserInfo = () => {
     setUser(defaultUser);
   };
 
-  const addNewReservation = (newReservation: ReservationInfo) => {
+  const addNewReservation = (newReservation: Reservation) => {
     let newReservations = user.reservations;
     newReservations.push(newReservation);
     const newUser = {

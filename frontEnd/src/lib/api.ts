@@ -1,12 +1,11 @@
 import { CreateUserBody, LoginUserBody } from "../dto/apiTypes";
 import { getToken, setTokenToLocalStorage } from "../hooks/miscFunctions";
 import {
-  ReservationInfo,
+  Reservation,
   User,
-  usersDict as UsersDict,
   UserWithReservation,
   Vehicle,
-} from "../types/DataTypes.ts";
+} from "../types/DataTypes";
 type Method = "get" | "post" | "put" | "del";
 
 export class Api {

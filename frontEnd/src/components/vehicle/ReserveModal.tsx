@@ -11,7 +11,8 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { formatCurrency } from "../../hooks/miscFunctions";
 import { Api } from "../../lib/api";
-import UserContext from "../../contexts/UserContext";
+import { UserContext } from "../../contexts/UserContext";
+import { differenceInDays } from "date-fns";
 
 type ReserveModalProps = {
   vehicle: Vehicle;
@@ -19,7 +20,7 @@ type ReserveModalProps = {
   showModal: boolean;
   startDate: Date;
   endDate: Date;
-  handleReserveClick: (isInsured: boolean) => void;
+  handleReserveClick: (isInsured: boolean, totalCost: number) => void;
 };
 
 export const ReserveModal = ({
@@ -53,6 +54,13 @@ export const ReserveModal = ({
   useEffect(() => {
     getTotalCostNoInsurance();
   }, [vehicle, startDate, endDate]);
+
+  const getTotalInsuranceCost = () => {
+    return (
+      0.2 * vehicle.pricePerDay * (differenceInDays(endDate, startDate) + 1)
+    );
+  };
+
   return (
     <Dialog open={showModal} onClose={handleCloseModal}>
       <DialogTitle>{vehicle.name}</DialogTitle>
@@ -74,10 +82,13 @@ export const ReserveModal = ({
           color="primary"
           onClick={() => {
             setIsInsured(true);
+            setTotalCost(totalCost + getTotalInsuranceCost());
           }}
-          disabled={user.balance < totalCost || reserved}
+          disabled={user.balance < totalCost || reserved || isInsured}
         >
-          Add insurance for {formatCurrency(totalCost)}?
+          {isInsured
+            ? "Insured"
+            : `Add Insurance for ${formatCurrency(getTotalInsuranceCost())}`}
         </Button>
 
         <DialogActions>
@@ -86,7 +97,7 @@ export const ReserveModal = ({
             variant="contained"
             color="primary"
             onClick={() => {
-              handleReserveClick(isInsured);
+              handleReserveClick(isInsured, totalCost);
               setReserved(true);
             }}
             disabled={user.balance < totalCost || reserved}

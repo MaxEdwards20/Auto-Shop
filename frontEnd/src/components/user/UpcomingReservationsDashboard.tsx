@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import { UserContext } from "../../contexts/UserContext";
 import { ClassNameMap } from "@material-ui/core/styles/withStyles";
-import { Vehicle, ReservationInfo } from "../../types/DataTypes";
+import { Vehicle, Reservation } from "../../types/DataTypes";
 import { VehicleContext } from "../../contexts/VehicleContext";
 
 type UpcomingReservationsDashboardProps = {
@@ -29,7 +29,7 @@ export const UpcomingReservationsDashboard = ({
 
   const navigate = useNavigate();
 
-  const makeReservationInfo = (reservation: ReservationInfo, index: number) => {
+  const makeReservationInfo = (reservation: Reservation, index: number) => {
     //https://mui.com/system/display/
     const vehicle = vehicles.find(
       (vehicle) => vehicle.id === reservation.vehicle
