@@ -116,9 +116,12 @@ def needsHelp(request: HttpRequest, userID: int):
         return error400(request)
     autoUser = get_object_or_404(AutoUser, pk=userID)
     parsedBody = getReqBody(request)
-    if "needsHelp" not in parsedBody:
-        return error400(request, "Needs a `needsHelp` value")
+    NEEDED_ITEMS = ["needsHelp", "location"]
+    for key in NEEDED_ITEMS:
+        if key not in parsedBody:
+            return error400(request, f"Needs a {key} value")
     autoUser.needHelp = parsedBody['needsHelp']
+    autoUser.location = parsedBody['location']
     autoUser.save()
     return makeUserJSONResponse(autoUser.pk)
 

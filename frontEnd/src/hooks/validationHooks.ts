@@ -26,7 +26,11 @@ export function checkUserIsEmployeeAndRedirect() {
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
   useEffect(() => {
-    if (!user.isAuthenticated || user.permission !== "employee") {
+    if (
+      !user.isAuthenticated ||
+      user.permission === "guest" ||
+      user.permission === "user"
+    ) {
       navigate("/unauthorized");
     }
   }, []);

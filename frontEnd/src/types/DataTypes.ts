@@ -46,5 +46,5 @@ export type User = {
 
 export type UserWithReservation = {
   user: User;
-  reservation: Reservation;
+  reservations: Reservation;
 };

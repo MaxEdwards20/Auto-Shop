@@ -90,7 +90,7 @@ export class Api {
     });
   }
 
-  getUserReservations(id: number): Promise<ReservationInfo[] | null> {
+  getUserReservations(id: number): Promise<Reservation[] | null> {
     return this.get(`user/${id}`).then((res) => {
       if (!res?.reservations) return null;
       this.setToken(res.token);
@@ -205,7 +205,7 @@ export class Api {
     startDate: Date,
     endDate: Date,
     isInsured: boolean
-  ): Promise<ReservationInfo | null> {
+  ): Promise<Reservation | null> {
     return this.post(`reservation`, {
       vehicleID,
       startDate,
@@ -285,10 +285,16 @@ export class Api {
     });
   }
 
-  userNeedsHelp(userID: number, needsHelp: boolean): Promise<User> {
-    return this.post(`user/${userID}/needs-help`, { needsHelp }).then((res) => {
-      return res.user;
-    });
+  userNeedsHelp(
+    userID: number,
+    needsHelp: boolean,
+    location: string
+  ): Promise<User> {
+    return this.post(`user/${userID}/needs-help`, { needsHelp, location }).then(
+      (res) => {
+        return res.user;
+      }
+    );
   }
 
   allUsersNeedHelp(): Promise<UserWithReservation[]> {

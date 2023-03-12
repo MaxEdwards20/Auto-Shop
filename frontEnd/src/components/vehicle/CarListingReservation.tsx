@@ -27,7 +27,6 @@ export const CarListing = ({
   const { api, user, subtractMoney, addNewReservation } =
     useContext(UserContext);
   const { manager } = useContext(ManagerContext);
-  const [totalCost, setTotalCost] = useState(0);
   checkUserAndRedirect();
 
   const handleClick = () => {
@@ -39,7 +38,7 @@ export const CarListing = ({
     updateVehicleList();
   };
 
-  const removeFunds = () => {
+  const removeFunds = (totalCost: number) => {
     api.removeMoneyFromUser(user.id, totalCost).then((user) => {
       if (!user) {
         console.error("Error updating user balance. Please try again.");
@@ -73,8 +72,7 @@ export const CarListing = ({
       return;
     }
     createReservation(isInsured); // update the user's reservations
-    setTotalCost(totalCost); // update the total cost
-    removeFunds(); // Reservation is made so update the funds available for the user
+    removeFunds(totalCost); // Reservation is made so update the funds available for the user
   };
 
   return (

@@ -17,6 +17,7 @@ import {
   AccessTime as LogHoursIcon,
   ExitToApp as CheckoutVehicleIcon,
 } from "@material-ui/icons";
+import AssistWalkerIcon from "@mui/icons-material/AssistWalker";
 
 import { Link as RouterLink } from "react-router-dom";
 import { DrawerBaseList } from "./DrawerBaseList";
@@ -55,6 +56,12 @@ export const EmployeeDrawer = ({ open, onClose }: DrawerProps) => {
               <CheckoutVehicleIcon />
             </ListItemIcon>
             <ListItemText primary="Checkout Vehicle" />
+          </ListItem>
+          <ListItem button component={RouterLink} to="/help-users">
+            <ListItemIcon>
+              <AssistWalkerIcon />
+            </ListItemIcon>
+            <ListItemText primary="Help Users" />
           </ListItem>
         </List>
       </div>

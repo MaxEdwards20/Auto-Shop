@@ -114,7 +114,13 @@ export const ReserveModal = ({
             Add Funds
           </Button>
           <Button
-            onClick={handleCloseModal}
+            onClick={() => {
+              if (!reserved) {
+                // Reset the insured value
+                setIsInsured(false);
+              }
+              handleCloseModal();
+            }}
             variant="contained"
             color="secondary"
           >

@@ -16,6 +16,7 @@ import {
   AccountCircle as AccountIcon,
 } from "@material-ui/icons";
 import PeopleIcon from "@mui/icons-material/People";
+import AssistWalkerIcon from "@mui/icons-material/AssistWalker";
 
 import { Link as RouterLink } from "react-router-dom";
 
@@ -60,6 +61,12 @@ export const ManagerDrawer = ({ open, onClose }: DrawerProps) => {
               <Payment />
             </ListItemIcon>
             <ListItemText primary="Pay Employees" />
+          </ListItem>
+          <ListItem button component={RouterLink} to="/help-users">
+            <ListItemIcon>
+              <AssistWalkerIcon />
+            </ListItemIcon>
+            <ListItemText primary="Help Users" />
           </ListItem>
         </List>
       </div>
