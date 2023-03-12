@@ -26,11 +26,10 @@ class TestManagerEndpoints(TestCase):
     def test_initializeDatabase_success(self):
         response = self.client.post(f"{BASE_URL}manager/init", data={})
         self.assertEqual(response.status_code, 200)
-        users: List[AutoUser] = AutoUser.objects.all()
         employeeCount = 0
         userCount = 0
         managerCount = 0
-        for user in users:
+        for user in AutoUser.objects.all():
             if user.permission == "employee":
                 employeeCount += 1
             elif user.permission == "user":

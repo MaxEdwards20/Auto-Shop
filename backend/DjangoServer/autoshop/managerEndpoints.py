@@ -103,14 +103,14 @@ def __createManager():
 
 def checkAndCreateUser(email, permission, i: int, password = None):
     if password:
-        user = User.objects.filter(username=email, password=password)
-        if not user:
-            user = AutoUser.objects.filter(email=email)
+        for user in User.objects.filter(username=email, password=password):
+            if user.username== email and user.password == password:
+                return user
     else:
         password = str(uuid4())
         for user in AutoUser.objects.all():
             if user.email == email:
                 return
-    if not user:
+
         user = User.objects.create_user(username=email, password=password)
         autoUser = AutoUser.objects.create(email=email, name=f"Demo {permission} {i}", phoneNumber="111-111-1111", balance=random.randint(0, 10000), user=user, permission=permission, hoursOwed=random.randint(0, 30))

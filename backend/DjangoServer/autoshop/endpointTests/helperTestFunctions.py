@@ -26,13 +26,15 @@ def createVehicle(client, vehicleData=None) -> dict:
 
 
 
-def createReservation(client, vehicle: dict, user: dict, startDate= None, endDate = None) -> dict:
+def createReservation(client, vehicle: dict, user: dict, startDate= None, endDate = None, isInsured = None) -> dict:
     url = reverse('createReservation')
     if not startDate:
         startDate = datetime.today().date() + timedelta(days=2)
     if not endDate:
         endDate = startDate + timedelta(days=5)
-    data = {'startDate': str(startDate), 'endDate': str(endDate), 'vehicleID': vehicle['id'], 'userID': user['id']}
+    if not isInsured:
+        isInsured = False
+    data = {'startDate': str(startDate), 'endDate': str(endDate), 'vehicleID': vehicle['id'], 'userID': user['id'], 'isInsured': isInsured}
     response = client.post(url, data, format='json')
     assert(response.status_code == 200)
     return json.loads(response.content)['reservation']

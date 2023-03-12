@@ -80,7 +80,6 @@ def __validateCreateReservationBody(request: HttpRequest, parsedBody: dict) -> b
     NEEDED_PARAMS = {'startDate', 'endDate', 'vehicleID', "userID", "isInsured"}
     for key in NEEDED_PARAMS:
         if key not in parsedBody:
-            print(f"Missing {key}")
             return False
     return True
 

@@ -17,11 +17,12 @@ class TestReservationEndpoints(TestCase):
         self.vehicle = createVehicle(self.client)
         self.startDate = datetime.today().date() + timedelta(days=2)
         self.endDate = self.startDate + timedelta(days=5)
+        self.isInsured = False
 
     def testCreateReservation(self):
         url = reverse('createReservation')
         data = {'startDate': str(self.startDate), 'endDate': str(self.endDate), 'vehicleID': self.vehicle['id'],
-                "userID": self.user['id']}
+                "userID": self.user['id'], 'isInsured': False}
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, 200)
         reservation = json.loads(response.content)['reservation']
@@ -40,14 +41,14 @@ class TestReservationEndpoints(TestCase):
     def testCreateReservationInvalidVehicleId(self):
         url = reverse('createReservation')
         data = {'startDate': str(self.startDate), 'endDate': str(self.endDate), 'vehicleID': 100,
-                "userID": self.user['id']}
+                "userID": self.user['id'], 'isInsured': False}
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def testCreateReservationInvalidUserId(self):
         url = reverse('createReservation')
         data = {'startDate': str(self.startDate), 'endDate': str(self.endDate), 'vehicleID': self.vehicle['id'],
-                "userID": 199}
+                "userID": 199, 'isInsured': False}
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
@@ -72,7 +73,7 @@ class TestReservationEndpoints(TestCase):
     def testDeleteReservation(self):
         user = createUser(self.client)
         vehicle = createVehicle(self.client)
-        reservation = createReservation(self.client, user=user, vehicle=vehicle)
+        reservation = createReservation(self.client, user=user, vehicle=vehicle, isInsured = self.isInsured)
         url = f"{BASE_URL}reservation/{reservation['id']}"
         response = self.client.delete(url)
         self.assertEqual(response.status_code, 200)
