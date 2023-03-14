@@ -64,7 +64,6 @@ def getAllUsers(request: HttpRequest, id: int):
 
 @csrf_exempt
 def updateUserPermission(request: HttpRequest, id: int):
-    # TODO: Write unit test for this
     parsedBody = getReqBody(request)
     if request.method != "POST" or 'permission' not in parsedBody:
         return error400(request)
@@ -111,7 +110,6 @@ def userRemoveMoney(request: HttpRequest, id):
 
 @csrf_exempt
 def needsHelp(request: HttpRequest, userID: int):
-    #TODO Unit tests
     if request.method != "POST":
         return error400(request)
     autoUser = get_object_or_404(AutoUser, pk=userID)
