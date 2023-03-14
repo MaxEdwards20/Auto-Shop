@@ -1,112 +1,152 @@
 from django.http import HttpRequest, HttpResponse
-from .models import AutoUser
+from .models import AutoUser, Reservation
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth import authenticate
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.models import User as Person
-from .serializers import UserSerializer
-from .helperFunctions import __update_cors, __getReqBody
+from django.contrib.auth.models import User
+from .serializers import AutoUserSerializer, ReservationSerializer
+from .helperFunctions import update_cors, getReqBody, error400, error401, makeUserJSONResponse, createUserTransferObject
+from .managerEndpoints import ADMIN_USERNAME, ADMIN_PASS
 import json
 
 @csrf_exempt
 def authenticateUser(request: HttpRequest):
-    parsedBody = __getReqBody(request)
+    parsedBody = getReqBody(request)
     # Check if the request has the correct formatting
     response = __validateAuthenticationBody(request, parsedBody)
     if 'error' in response:
-        return __update_cors(JsonResponse(response, status=401), request)
+        return error401(request)
     email = parsedBody['email']
     password = parsedBody['password']
     # Check if actually valid user
     user = authenticate(request, username=email, password=password)
     if not user:
-        return __update_cors(JsonResponse(response, status=401), request)
-    user = get_object_or_404(AutoUser.objects.filter(email=email))
-    j = JsonResponse({"user": UserSerializer(user).data})
-    return __update_cors(j, request)
+        return error401(request)
+    j = makeUserJSONResponse(user.pk)
+    return update_cors(j, request)
 
 @csrf_exempt
 def createUser(request: HttpRequest):
     # https://www.django-rest-framework.org/tutorial/1-serialization/
-    parsedBody = __getReqBody(request)
-    response = __validateCreateUserBody(request, parsedBody)
-    if 'error' in response:
-        return __update_cors(JsonResponse(response, status=400), request)
+    parsedBody = getReqBody(request)
+    if not __validateCreateUserBody(request, parsedBody):
+        return error400(request)
     user = __createUserDatabase(parsedBody)
-    j = JsonResponse({"user": UserSerializer(user).data})
-    return __update_cors(j, request)
+    j = makeUserJSONResponse(user.pk)
+    return update_cors(j, request)
 
 @csrf_exempt
 def deleteUser(request, id):
     user = get_object_or_404(AutoUser, pk=id)
-    response = JsonResponse({"user": UserSerializer(user).data})
+    response = JsonResponse({"user": AutoUserSerializer(user).data})
     user.delete()
-    return __update_cors(response, request)
+    return update_cors(response, request)
 
 @csrf_exempt
 def getUser(request: HttpRequest, id):
-    response = __getSerializedUserInfo(id)
-    j = JsonResponse({"user": response}, safe=False)
-    return __update_cors(j, request)
+    j = makeUserJSONResponse(id)
+    return update_cors(j, request)
 
 @csrf_exempt
-def getUsers(request: HttpRequest):
-    # TODO: Add some validation that id of user requesting this is an admin or manager
-    allUsersList = [UserSerializer(user).data for user in AutoUser.objects.all()]
-    j = JsonResponse({"users": allUsersList}, safe=False)
-    return __update_cors(j, request)
+def getAllUsers(request: HttpRequest, id: int):
+    if request.method != "GET":
+        return error400(request)
+    try:
+        admin = AutoUser.objects.get(permission="admin", email=ADMIN_PASS)
+    except Exception as e:
+        return error400(request, "Admin doesn't exist")
+    if id != admin.pk:
+        return error401(request)
+    allUsersList = [createUserTransferObject(user.pk) for user in AutoUser.objects.all()]
+    j = JsonResponse({"users": allUsersList})
+    return update_cors(j, request)
+
+@csrf_exempt
+def updateUserPermission(request: HttpRequest, id: int):
+    # TODO: Write unit test for this
+    parsedBody = getReqBody(request)
+    if request.method != "POST" or 'permission' not in parsedBody:
+        return error400(request)
+    user: AutoUser = get_object_or_404(AutoUser, pk=id)
+    validPermissionValues = {"user", "admin", "employee"}
+    if parsedBody['permission'] not in validPermissionValues:
+        return error400(request, "Not a valid permission")
+    user.permission = parsedBody['permission']
+    user.save()
+    return makeUserJSONResponse(user.pk)
+
+
 
 @csrf_exempt
 def updateUser(request: HttpRequest, id):
     user = get_object_or_404(AutoUser, pk=id)
-    parsedBody = __getReqBody(request)
+    parsedBody = getReqBody(request)
     # Actually update the user
     for key in ['name', 'permission', 'balance', 'needHelp', 'ethicsViolation', 'location', 'email']:
         if key in parsedBody:
             setattr(user, key, parsedBody[key])
     user.save()
-    j = JsonResponse({"user": UserSerializer(user).data}) # return the newly saved user
-    return __update_cors(j, request)
+    j = makeUserJSONResponse(user.pk) # return the newly saved user
+    return update_cors(j, request)
 @csrf_exempt
 def userAddMoney(request: HttpRequest, id):
     user = get_object_or_404(AutoUser, pk=id)
-    parsedBody = __getReqBody(request)
+    parsedBody = getReqBody(request)
     newBalance = user.balance + abs(int(parsedBody.get('amount')))
     user.balance = newBalance
     user.save()
-    j = JsonResponse({"user": UserSerializer(user).data})  # return the newly saved user
-    return __update_cors(j, request)
+    j = makeUserJSONResponse(user.pk)  # return the newly saved user
+    return update_cors(j, request)
 
 @csrf_exempt
 def userRemoveMoney(request: HttpRequest, id):
     user = get_object_or_404(AutoUser, pk=id)
-    parsedBody = __getReqBody(request)
+    parsedBody = getReqBody(request)
     newBalance = user.balance - abs(int(parsedBody.get('amount')))
     user.balance = newBalance
     user.save()
-    j = JsonResponse({"user": UserSerializer(user).data})  # return the newly saved user
-    return __update_cors(j, request)
+    j = makeUserJSONResponse(user.pk)  # return the newly saved user
+    return update_cors(j, request)
+
+@csrf_exempt
+def needsHelp(request: HttpRequest, userID: int):
+    #TODO Unit tests
+    if request.method != "POST":
+        return error400(request)
+    autoUser = get_object_or_404(AutoUser, pk=userID)
+    parsedBody = getReqBody(request)
+    NEEDED_ITEMS = ["needsHelp", "location"]
+    for key in NEEDED_ITEMS:
+        if key not in parsedBody:
+            return error400(request, f"Needs a {key} value")
+    autoUser.needHelp = parsedBody['needsHelp']
+    autoUser.location = parsedBody['location']
+    autoUser.save()
+    return makeUserJSONResponse(autoUser.pk)
+
+@csrf_exempt
+def everyoneThatNeedsHelp(request: HttpRequest):
+    #TODO Add unit tests
+    if request.method != "GET":
+        return error400(request)
+    res = []
+    for autoUser in AutoUser.objects.all():
+        if autoUser.needHelp:
+            res.append(createUserTransferObject(autoUser.pk))
+    return JsonResponse({"users": res}, status=200, safe=False)
 
 def __createUserDatabase(parsedBody) -> AutoUser:
-    newUserAuth = Person.objects.create_user(first_name=parsedBody['name'],
+    newUserAuth = User.objects.create_user(
                                              username=parsedBody['email'],
                                              password=parsedBody['password'],
                                              )
-    newUserAuth.save()
-    newUser = AutoUser()
-    newUser.email = parsedBody['email']
-    newUser.permission = 'user'
-    newUser.name = parsedBody['name']
-    newUser.phoneNumber = parsedBody['phoneNumber']
-    newUser.save()
+
+
+    newUser = AutoUser.objects.create(email=parsedBody['email'], name=parsedBody['name'], phoneNumber = parsedBody['phoneNumber'], user=newUserAuth, permission=(parsedBody.get('permission') or "user"))
     return newUser
 
 
-def __getSerializedUserInfo(id):
-    userModel = get_object_or_404(AutoUser, pk=id)
-    serializer = UserSerializer(userModel)
-    return serializer.data
 def __validateAuthenticationBody(request, parsedBody: dict) -> dict:
     response = {}
     if request.method == 'POST':
@@ -117,20 +157,20 @@ def __validateAuthenticationBody(request, parsedBody: dict) -> dict:
     if request.method == 'GET':
         response['error'] = 'You must use a post request when authenticating a user.'
     return response
-def __validateCreateUserBody(request: HttpRequest, parsedBody: dict) -> dict:
-    response = {}
+def __validateCreateUserBody(request: HttpRequest, parsedBody: dict) -> bool:
     NEEDED_PARAMS = {'password', 'name', 'email', 'phoneNumber'}
-    if request.method == 'POST':
-        for item in NEEDED_PARAMS:
-            if item not in parsedBody:
-                response['error'] = "Need an email, password, name and phoneNumber"
-    if request.method == 'GET':
-        response['error'] = 'You must use a post request when creating a user.'
+    if request.method != "POST":
+        return False
+    for item in NEEDED_PARAMS:
+        if item not in parsedBody:
+            return False
     # check to see if the email already exists.
-    if 'email' in parsedBody and 'error' not in response:
-        email = parsedBody['email']
-        user = AutoUser.objects.filter(email=email)
-        if user:
-            response['error'] = 'This user already exists.'
-    return response
+    email = parsedBody['email']
+    #TODO: Add a unit test to ensure an existing user will get an error
+    try:
+        AutoUser.objects.get(email=email)
+    except Exception as e:
+        # item doesn't exist, so we are good
+        return True
+    return False
 

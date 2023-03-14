@@ -1,118 +1,124 @@
-from django.http import HttpRequest, HttpResponse
-from .models import Vehicle
+from django.http import HttpRequest, HttpResponse, JsonResponse
+from .models import Vehicle, Reservation, AutoUser
 from django.shortcuts import get_object_or_404
-from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .serializers import VehicleSerializer
-from .helperFunctions import __getReqBody, __update_cors
-import datetime
+from .helperFunctions import getReqBody, update_cors, parseDates, vehicleIsAvailable, error400, error401
 
 @csrf_exempt
 def createVehicle(request: HttpRequest):
-    parsedBody = __getReqBody(request)
-    response = __validateCreateVehicleBody(request, parsedBody)
-    if 'error' in response:
-        return __update_cors(JsonResponse(response, status=400), request)
+    parsedBody = getReqBody(request)
+    if not __validateCreateVehicleBody(request, parsedBody):
+        return error400(request)
     vehicle = __createVehicleDatabase(parsedBody)
-    j = JsonResponse({"vehicle": VehicleSerializer(vehicle).data})
-    return __update_cors(j, request)
+    j = JsonResponse({"vehicle": VehicleSerializer(vehicle).data}, safe=False)
+    return update_cors(j, request)
 
 @csrf_exempt
 def deleteVehicle(request, id):
     vehicle = get_object_or_404(Vehicle, pk=id)
-    j = JsonResponse({"vehicle": VehicleSerializer(vehicle).data})
+    j = JsonResponse({"vehicle": VehicleSerializer(vehicle).data}, safe=False)
     vehicle.delete()
-    return __update_cors(j, request)
+    return update_cors(j, request)
 
 @csrf_exempt
 def getVehicle(request: HttpRequest, id):
-    response = __getSerializedVehicleInfo(id)
+    response = VehicleSerializer(get_object_or_404(Vehicle, pk=id)).data
     j = JsonResponse({"vehicle": response}, safe=False)
-    return __update_cors(j, request)
+    return update_cors(j, request)
 
 @csrf_exempt
 def getAllVehicles(request: HttpRequest):
-    allVehicles = Vehicle.objects.all()
     vehicles = [VehicleSerializer(vehicle).data for vehicle in Vehicle.objects.all()]
     j = JsonResponse({"vehicles": vehicles}, safe=False)
-    return __update_cors(j, request)
+    return update_cors(j, request)
+
+@csrf_exempt
+def getAllPurchasedVehicles(request: HttpRequest):
+    vehicles = [VehicleSerializer(vehicle).data for vehicle in Vehicle.objects.all() if vehicle.isPurchased]
+    j = JsonResponse({"vehicles": vehicles}, safe=False)
+    return update_cors(j, request)
 
 @csrf_exempt
 def getAllAvailableVehicles(request: HttpRequest):
-    # TODO:
-    parsedBody = __getReqBody(request)
-    vehicles = [vehicle for vehicle in Vehicle.objects.all()]
-    startDate = parsedBody['startDate']
-    endDate = parsedBody['endDate']
+    startDate, endDate = parseDates(request)
+    availableVehicles = []
+    alreadyReserved = set()
+    # Note all unavailable vehicles
+    for reservation in Reservation.objects.all():
+        if not vehicleIsAvailable(startDate, endDate, reservation):
+            alreadyReserved.add(reservation.vehicle.pk)
+
+    # Get all vehicles that are not unavailable
+    for vehicle in Vehicle.objects.all():
+        if vehicle.pk not in alreadyReserved and vehicle.isPurchased:
+            availableVehicles.append(VehicleSerializer(vehicle).data)
+
+    vehicles = sorted(availableVehicles, key=lambda vehicle: int(vehicle['pricePerDay']))
+    j = JsonResponse({"vehicles": vehicles}, safe=False)
+    return update_cors(j, request)
+
 
 @csrf_exempt
 def updateVehicle(request: HttpRequest, id):
     vehicle = get_object_or_404(Vehicle, pk=id)
-    parsedBody = __getReqBody(request)
+    parsedBody = getReqBody(request)
     for key in ['name', 'vin', 'isPurchased', 'isPending','location', 'vehicleType','isInsured', 'isLoadJacked', 'image' ]:
         if key in parsedBody:
             setattr(vehicle, key, parsedBody[key])
     vehicle.save()
-    j = JsonResponse({"vehicle": VehicleSerializer(vehicle).data})
-    return __update_cors(j, request)
+    j = JsonResponse({"vehicle": VehicleSerializer(vehicle).data}, safe=False)
+    return update_cors(j, request)
 
-
+@csrf_exempt
 def vehicleAvailability(request: HttpRequest, id):
     vehicle = get_object_or_404(Vehicle, pk=id)
-    response = {'name': vehicle.name,
-                'reservedDays': vehicle.reservedDays,
-                'dateCheckedOut': vehicle.dateCheckedOut,
-                'dateCheckedIn': vehicle.dateCheckedIn,
-                }
-    j = JsonResponse(response)
-    return __update_cors(j, request)
+    j = JsonResponse({"vehicle": VehicleSerializer(vehicle).data}, safe=False)
+    return update_cors(j, request)
 
 
-def __validateCreateVehicleBody(request: HttpRequest, parsedBody: dict):
-    NEEDED_PARAMS = {'name', 'vehicleType', 'image', 'vin'}
-    res = {}
-    if request.method == 'POST':
-        for item in NEEDED_PARAMS:
-            if item not in parsedBody:
-               res['error'] = "Need all " + str(NEEDED_PARAMS)
-    else:
-        res['error'] = 'You must use a post request when creating a vehicle.'
-    # check to see if the vehicle already exists.
-    if 'vin' in parsedBody and 'error' not in parsedBody:
-        vin = parsedBody['vin']
-        vehicle = Vehicle.objects.filter(vin=vin)
-        if vehicle:
-            res['error'] = 'This vehicle already exists.'
-    return res
+@csrf_exempt
+def purchaseVehicle(request: HttpRequest, id: int):
+    parsedBody = getReqBody(request)
+    vehicle = get_object_or_404(Vehicle, pk=id)
+    # verify we have userID
+    if 'userID' not in parsedBody:
+        return error400(request)
+    user: AutoUser = get_object_or_404(AutoUser, pk=int(parsedBody['userID']))
+    # verify the user has proper permissions
+    if user.permission != "admin":
+        return error400(request)
+    vehicle.isPurchased = True
+    vehicle.save()
+    j = JsonResponse({"vehicle": VehicleSerializer(vehicle).data}, safe=False)
+    return update_cors(j, request)
 
-
-def __checkValidGetVehicle(request, response):
-    if 'vin' not in request.GET:
-        response['error'] = "You must enter a valid vin"
-    else:
-        vin = request.GET['vin']
-        try:
-            Vehicle.objects.get(vin=vin)
-        except Vehicle.DoesNotExist:
-            response['error'] = 'you must enter a valid vin'
-    return response
-
+@csrf_exempt
+def sellVehicle(request: HttpRequest, id: int):
+    # TODO: Unit tests
+    # TODO: Delete all reservations associated with this vehicle because it is no longer available
+    # TODO: Return the number of current reservations with this object
+    if not request.method == "POST":
+        return error400(request)
+    parsedBody = getReqBody(request)
+    vehicle = get_object_or_404(Vehicle, pk=id)
+    vehicle.isPurchased = False
+    vehicle.save()
+    j = JsonResponse({"vehicle": VehicleSerializer(vehicle).data}, safe=False)
+    return update_cors(j, request)
+def __validateCreateVehicleBody(request: HttpRequest, parsedBody: dict) -> bool:
+    NEEDED_PARAMS = {'name', 'image'}
+    if request.method != "POST": return False
+    for item in NEEDED_PARAMS:
+        if item not in parsedBody:
+            return False
+    return True
 
 def __createVehicleDatabase(parsedBody: dict):
     newVehicle = Vehicle()
     newVehicle.name = parsedBody['name']
     newVehicle.vehicleType = parsedBody['vehicleType']
-    newVehicle.image = parsedBody['image']
-    newVehicle.vin = parsedBody['vin']
-    newVehicle.isInsured = False
-    newVehicle.isPending = False
-    newVehicle.isLoadJacked = False
-    newVehicle.location = "lot"
-    newVehicle.isPurchased = False
+    newVehicle.imageURL = parsedBody['image']
     newVehicle.save()
     return newVehicle
 
-def __getSerializedVehicleInfo(id):
-    vehicleModel = get_object_or_404(Vehicle, pk=id)
-    serializer = VehicleSerializer(vehicleModel)
-    return serializer.data

@@ -1,33 +1,41 @@
 
-
-
-
-
-
 from django.urls import path
 
 from . import views
 
 urlpatterns = [
-
-
     # See documentation here https://docs.djangoproject.com/en/4.1/topics/http/urls/
     # users
-    path('user', views.userRouter, name='createUser'), #POST create user
-    path('user/<int:id>', views.userRouter, name='updateUser'), # endpoint for GET, PUT, and DEL requests
-    path('user/<int:id>/addMoney', views.addMoney, name="addMoney"),
-    path('user/<int:id>/removeMoney', views.removeMoney, name="removeMoney"),
-    path('user/<int:id>/reservation', views.createReservation, name="createReservation"),
-    path('user/login', views.authenticateUser, name='authenticateUser'),
-    path('user/all', views.getUsers, name="getAllUsers"), # Get all Users to show
+    path('user', views.userRouter, name='createUser'),  # POST
+    path('user/<int:id>', views.userRouter, name='userRouter'), #  GET, PUT, DEL
+    path('user/<int:id>/addMoney', views.userAddMoney, name="addMoney"),
+    path('user/<int:id>/removeMoney', views.userRemoveMoney, name="removeMoney"),
+    path('user/<int:id>/all', views.getAllUsers, name="getAllUsers"),  # Get all Users to show
+    path('user/<int:id>/permission', views.updateUserPermission, name="updatePermission"),  # Get all Users to show
 
+    path('user/login', views.authenticateUser, name='authenticateUser'),
+    path('user/<int:id>/reservations', views.getUser, name='getUserReservations'),
+    path('user/<int:userID>/needs-help', views.needsHelp, name="userNeedsHelp"),
+    path("user/needs-help", views.everyoneThatNeedsHelp, name="needsHelp"),
 
     # vehicles
-    path('vehicle', views.createVehicle, name='createVehicle'), #POST create vehicle
-    path('vehicle/<int:id>', views.vehicleRouter, name='vehicleRouter',),# endpoint for GET, PUT, and DEL requests
-    path('vehicle/all', views.getAllVehicles, name="getAllVehicles"), # Get all vehicles to show
-    path('vehicle/available', views.getAllAvailableVehicles, name="getAllAvailableVehicles"),
+    path('vehicle', views.vehicleRouter, name='createVehicle'),  # POST
+    path('vehicle/<int:id>', views.vehicleRouter, name='vehicleRouter' ),# GET, PUT, DEL
     path('vehicle/<int:id>/available', views.vehicleAvailability, name='vehicleAvailability'),
-    path('vehicle/all', views.getAllVehicles, name="getAllVehicles") # Get all vehicles to show
+    path('vehicle/<int:id>/purchase', views.purchaseVehicle, name='purchaseVehicle'),
+    path('vehicle/<int:id>/sell', views.sellVehicle, name='sellVehicle'),
+    path('vehicle/all', views.getAllVehicles, name="getAllVehicles"), # Get all vehicles to show
+    path('vehicle/all/purchased', views.getAllPurchasedVehicles, name="getAllPurchasedVehicles"),
+    path('vehicle/available', views.getAllAvailableVehicles, name="getAllAvailableVehicles"),
 
+    # reservations
+    path('reservation', views.reservationRouter, name='createReservation'),  # POST
+    path('reservation/<int:id>', views.reservationRouter, name='reservationRouter'), # GET, DEL
+    path('reservation/cost', views.calculateCost, name="calculateCost"),
+
+    # manager
+    path("manager/init", views.initializeDatabase, name="initalizeDatabase"),
+    path("manager/<int:employeeID>", views.payEmployee, name="payEmployee"),
+    path("manager/<int:employeeID>/hours", views.addHoursWorked, name="logHours"),
+    path("manager", views.getManager, name="getManager"),
 ]

@@ -1,21 +1,25 @@
-import { Rentals } from "../DummyData"
-import CarListing from '../components/CarListingTile';
-import { Car } from '../types/DataTypes';
-import { useState } from "react";
+import CarListingTile from "../components/vehicle/CarListingTile";
+import { Vehicle } from "../types/DataTypes";
+import { useState, useEffect, useContext } from "react";
+import { UserContext } from "../contexts/UserContext";
+import { Typography } from "@mui/material";
+import { VehicleContext } from "../contexts/VehicleContext";
 
 function VehiclePage() {
-  const [carList, setCarList] = useState<Car[]>(Rentals);
+  const { vehicles } = useContext(VehicleContext);
+  const [userMessage, setUserMessage] = useState("");
+
   return (
     <div className="root">
       <div className="carListContainer">
-        {carList.map((rental) => (
-          <div className='carListTile'>
-            <CarListing car={rental} />
+        {vehicles.map((vehicle) => (
+          <div className="carListTile" key={vehicle.id}>
+            <CarListingTile {...vehicle} />
           </div>
-          )
-        )}
+        ))}
+        {userMessage && <Typography> {userMessage}</Typography>}
       </div>
     </div>
-  )
+  );
 }
 export default VehiclePage;

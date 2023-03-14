@@ -1,8 +1,11 @@
-from .serializers import UserSerializer, VehicleSerializer
-from .userEndpoints import *
-from .vehicleEndpoints import *
-
-
+from django.views.decorators.csrf import csrf_exempt
+from .userEndpoints import authenticateUser, createUser, deleteUser, getUser, getAllUsers, updateUser, userAddMoney,\
+    userRemoveMoney, updateUserPermission, needsHelp, everyoneThatNeedsHelp
+from .vehicleEndpoints import createVehicle, deleteVehicle, getVehicle, getAllAvailableVehicles, getAllPurchasedVehicles, \
+    updateVehicle, vehicleAvailability, purchaseVehicle, getAllVehicles, sellVehicle
+from .reservationEndpoints import createReservation, deleteReservation, getReservation, calculateCost
+from .managerEndpoints import initializeDatabase, getManager, payEmployee, addHoursWorked
+from django.http import HttpRequest
 @csrf_exempt
 def userRouter(request: HttpRequest, id = 0):
     if request.method == "PUT":
@@ -16,22 +19,23 @@ def userRouter(request: HttpRequest, id = 0):
 
 
 @csrf_exempt
-def vehicleRouter(request: HttpRequest, id):
+def vehicleRouter(request: HttpRequest, id = 0):
     if request.method == "PUT":
         return updateVehicle(request, id)
     elif request.method == "GET":
         return getVehicle(request, id)
     elif request.method == "DELETE":
         return deleteVehicle(request, id)
+    elif request.method == "POST":
+        return createVehicle(request)
+
+
 
 @csrf_exempt
-def addMoney(request: HttpRequest, id):
-    return userAddMoney(request, id)
-@csrf_exempt
-def removeMoney(request: HttpRequest, id):
-    return userRemoveMoney(request, id)
-
-@csrf_exempt
-def createReservation():
-    return None
-
+def reservationRouter(request: HttpRequest, id=0):
+    if request.method == "GET":
+        return getReservation(request, id)
+    elif request.method == "DELETE":
+        return deleteReservation(request, id)
+    elif request.method == "POST":
+        return createReservation(request)

@@ -1,14 +1,20 @@
 from rest_framework import serializers
-from .models import AutoUser, Vehicle
+from .models import AutoUser, Vehicle, Reservation
 
-
-class UserSerializer(serializers.ModelSerializer):
+class AutoUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = AutoUser
         fields = ('name', 'id', 'permission', 'balance', 'needHelp', 'ethicsViolation',
-                  'location', 'email', 'phoneNumber')
+                  'location', 'email', 'phoneNumber', 'hoursOwed', 'wage')
 
 class VehicleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Vehicle
-        fields = ('name', 'id', 'vin', 'location', 'isPurchased', 'isPending', 'vehicleType', 'isInsured', 'isLoadJacked', 'image')
+        fields = ('name', 'id', 'vin', 'vehicleType', 'location', 'isPurchased', 'isPending', 'vehicleType',
+                   'isLoadJacked', 'imageURL', 'pricePerDay', 'purchasePrice')
+
+
+class ReservationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Reservation
+        fields = ('vehicle', 'autoUser', 'startDate', 'endDate', 'amountDue', 'id', 'isInsured')

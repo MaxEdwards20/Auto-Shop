@@ -4,11 +4,10 @@
 
 - High-level design and planning can be found in the [docs](./docs/) directory. Inside this directory can be found:
   - [Project requirements](./docs/Requirements%20Definition.pdf) for the project
-  - [Use case diagrams](./docs/use_cases/)) to illustrate product usage
+  - [Use case diagrams](./docs/use_cases/) to illustrate product usage
 - The actual code will be stored in this repo
 - Each Git Branch will be named after the task on the Jira story board
-- Commit messages directly describe the changes made
-- Jira board is accessible here
+- Jira board is accessible [here](https://dastardlydansrentacar.atlassian.net/jira/software/projects/DDRAC/boards/1)
 
 ## Version-control Procedures
 
@@ -28,7 +27,7 @@
   - We will be using GitHub for version control, Django for backend, and a yet to be determined technology for the frontend (React, Vue, Angular, or Python templates are among options)
   - Project management
 
-    - Use Jira Project Board to create, track, and complete tasks. Link [here](https://dastardlydansrentacar.atlassian.net/jira/software/projects/DDRAC/boards/1/backlog)
+    - Use Jira Project Board to create, track, and complete tasks. See [here](https://dastardlydansrentacar.atlassian.net/jira/software/projects/DDRAC/boards/1/backlog)
     - Utilize built-in Jira features to generate burndown chart and other useful analytics
 
 - Setup
@@ -48,32 +47,29 @@
 ## Build Instructions
 
 - Running the server:
-  - Navigate to backend/DjangoServer from the command line
-  - To start the server, run the following command:
-    - python manage.py runserver
-  - To change the server's port (for example, to port 8800), use the following command:
-    - python manage.py runserver 8800
-  - To change the server's IP, follow the below example:
-    - python manage.py runserver 0.0.0.0:8000
-  - For more information on django configurations, please reference [https://docs.djangoproject.com/en/4.1/ref/django-admin/#django-admin-runserver](https://docs.djangoproject.com/en/4.1/ref/django-admin/#django-admin-runserver)
+  - See instructions [here](/backend/DjangoServer/README.md)
+- Running the Client
+  - See instructions [here](/frontend/README.md)
 - Visiting the website:
   - Open your browser of choice
-  - In the address bar, type the following address (assuming the server is hosting on port 8000)
-    - http://localhost:8000/
+  - Running the client will find an open port, navigate to localhost:PORT
 
-- Running the client:
-  - cd into frontend
-  - `$ yarn` to install dependencies
-  - `$ yarn dev` to run the client 
-  - Open the corresponding link to view the page
+### Dummy Users
+Use these to test different views on the client side
+- Manager Account:
+  - email: admin123, password: admin123
+- Employee Account:
+  - email: employme, password: employme
+- User Account:
+  - email: abc, password: 123
+
 ## Unit Testing Instructions
 
-cd into backend/DjangoServer
+From repository root:
 
-run `$ python3 manage.py test`
+`$ cd backend/DjangoServer`
 
-- After each function is created, create a unit test in tests.py to exercise that function and ensure stability across limits of scope
-- Run all unit tests before merging back into dev or main. Ensure they all pass
+`$ python3 manage.py test`
 
 ## System Testing Instructions
 

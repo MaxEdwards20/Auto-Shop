@@ -1,27 +1,29 @@
-export type Car = {
+export type Vehicle = {
   vin: string;
-  make: string;
-  model: string;
-  edition: string;
-  year: number;
-  color: string;
-  mileage: number;
-  titleType: string;
-  imageSrc: string;
+  name: string;
+  vehicleType: string;
+  imageURL: string;
+  pricePerDay: number;
+  isPurchased: boolean;
+  id: number;
+  purchasePrice: number;
 };
 
-export type ReservationInfo = {
+export type Reservation = {
   startDate: string;
   endDate: string;
-  vehicle: string;
+  vehicle: number; // api returns the id of the vehicle
+  autoUser: number; // api returns the id of the user
   amountDue: number;
+  id: number;
+  isInsured: boolean;
 };
 
 export type UserCheckinInfo = {
   name: string;
   email: string;
   phone: string;
-  upcomingReservations: ReservationInfo[];
+  upcomingReservations: Reservation[];
 };
 
 export type UserPermission = "admin" | "user" | "employee" | "guest";
@@ -35,6 +37,14 @@ export type User = {
   email: string;
   ethicsViolation: string;
   phoneNumber: string;
-  reservations: ReservationInfo[];
-  id: number; // only get id after creating the user
+  reservations: Reservation[];
+  id: number;
+  isAuthenticated: boolean;
+  hoursOwed: number;
+  wage: number;
+};
+
+export type UserWithReservation = {
+  user: User;
+  reservations: Reservation;
 };

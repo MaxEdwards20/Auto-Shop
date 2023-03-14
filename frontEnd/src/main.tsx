@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import Router from "./components/Router";
-import NavBar from "./components/Navbar";
+import NavBar from "./components/navigation/Navbar";
 import App from "./App";
 import "./index.css";
 import "react-bootstrap";

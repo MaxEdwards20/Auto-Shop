@@ -1,27 +1,49 @@
-Create a virtual environment to isolate your packages.
+# Getting Started
+
+Create a virtual environment to isolate your packages:
 
 `$ python3 -m venv .venv`
 
+Activate it:
+
 `$ source .venv/bin/activate`
 
-Run the following command to start the server:
-To install dependencies:
+Download dependencies
 
 `$ pip install -r requirements.txt`
 
+Create and populate the database
+
+`$ python manage.py makemigrations`
+
+`$ python manage.py migrate`
+
+Run the following command to start the server:
+
 `$ python manage.py runserver`
 
-Once you have confirmed that the server is running, use the url in a browser to serve the
-site locally. Use the url http://localhost:8000/
+This will start the server at: http://localhost:8000/
 
-To create an Admin account and add dummy data:
+The frontend instructions are found in the [frontend](../../frontend/README.md) of this repository. Be sure to start the server first, then do the frontend.
 
-`$ python manage.py createsuperuser`
+### Admin abilities
 
-Enter a username, email, and password
+We configured the frontend to create an admin for you. Start the server <Strong>before </Strong>starting the client.
 
-Start the server and add in data
+- email: admin123
+- password: admin123
 
-admin
-admin@email.com
-admin123
+### To Adjust Filler Data:
+
+Delete the db.sqlite3 file
+
+Make desired adjustments to the `populate` migration
+
+To Create a new Migration Script:
+
+- `$ python manage.py makemigrations --empty autoshop --name populateVehicles`
+
+Create and populate the database:
+
+- `$ python3 manage.py makemigrations `
+- `$ python manage.py migrate`
