@@ -4,7 +4,7 @@ from .models import AutoUser, Vehicle, Reservation
 class AutoUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = AutoUser
-        fields = ('name', 'id', 'permission', 'balance', 'needHelp', 'ethicsViolation',
+        fields = ('name', 'id', 'permission', 'balance', 'needsHelp', 'ethicsViolation',
                   'location', 'email', 'phoneNumber', 'hoursOwed', 'wage')
 
 class VehicleSerializer(serializers.ModelSerializer):

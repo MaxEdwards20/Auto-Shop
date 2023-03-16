@@ -64,7 +64,6 @@ def getAllUsers(request: HttpRequest, id: int):
 
 @csrf_exempt
 def updateUserPermission(request: HttpRequest, id: int):
-    # TODO: Write unit test for this
     parsedBody = getReqBody(request)
     if request.method != "POST" or 'permission' not in parsedBody:
         return error400(request)
@@ -111,7 +110,6 @@ def userRemoveMoney(request: HttpRequest, id):
 
 @csrf_exempt
 def needsHelp(request: HttpRequest, userID: int):
-    #TODO Unit tests
     if request.method != "POST":
         return error400(request)
     autoUser = get_object_or_404(AutoUser, pk=userID)
@@ -120,19 +118,18 @@ def needsHelp(request: HttpRequest, userID: int):
     for key in NEEDED_ITEMS:
         if key not in parsedBody:
             return error400(request, f"Needs a {key} value")
-    autoUser.needHelp = parsedBody['needsHelp']
+    autoUser.needsHelp = parsedBody['needsHelp']
     autoUser.location = parsedBody['location']
     autoUser.save()
     return makeUserJSONResponse(autoUser.pk)
 
 @csrf_exempt
 def everyoneThatNeedsHelp(request: HttpRequest):
-    #TODO Add unit tests
     if request.method != "GET":
         return error400(request)
     res = []
     for autoUser in AutoUser.objects.all():
-        if autoUser.needHelp:
+        if autoUser.needsHelp:
             res.append(createUserTransferObject(autoUser.pk))
     return JsonResponse({"users": res}, status=200, safe=False)
 
@@ -166,7 +163,6 @@ def __validateCreateUserBody(request: HttpRequest, parsedBody: dict) -> bool:
             return False
     # check to see if the email already exists.
     email = parsedBody['email']
-    #TODO: Add a unit test to ensure an existing user will get an error
     try:
         AutoUser.objects.get(email=email)
     except Exception as e:
