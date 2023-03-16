@@ -57,6 +57,22 @@ def getAllAvailableVehicles(request: HttpRequest):
     vehicles = sorted(availableVehicles, key=lambda vehicle: int(vehicle['pricePerDay']))
     j = JsonResponse({"vehicles": vehicles}, safe=False)
     return update_cors(j, request)
+@csrf_exempt
+def loadJackVehicle(request: HttpRequest, vehicleId: int):
+    # Todo create unit tests
+    if request.method != 'POST':
+        return error400(request)
+    NEEDED_PARAMS = {'isLoadJacked'}
+    parsedBody = getReqBody(request)
+    for key in NEEDED_PARAMS:
+        if key not in parsedBody:
+            return error400(request)
+    vehicle = get_object_or_404(Vehicle, pk=vehicleId)
+    vehicle.isLoadJacked = parsedBody['isLoadJacked']
+    vehicle.save()
+    j = JsonResponse({"vehicle": VehicleSerializer(vehicle).data}, safe=False)
+    return update_cors(j, request)
+
 
 
 @csrf_exempt
@@ -95,15 +111,14 @@ def purchaseVehicle(request: HttpRequest, id: int):
 
 @csrf_exempt
 def sellVehicle(request: HttpRequest, id: int):
-    # TODO: Unit tests
-    # TODO: Delete all reservations associated with this vehicle because it is no longer available
-    # TODO: Return the number of current reservations with this object
     if not request.method == "POST":
         return error400(request)
-    parsedBody = getReqBody(request)
     vehicle = get_object_or_404(Vehicle, pk=id)
     vehicle.isPurchased = False
     vehicle.save()
+    for reservation in Reservation.objects.all():
+        if reservation.vehicle.pk == id:
+            reservation.delete()
     j = JsonResponse({"vehicle": VehicleSerializer(vehicle).data}, safe=False)
     return update_cors(j, request)
 def __validateCreateVehicleBody(request: HttpRequest, parsedBody: dict) -> bool:

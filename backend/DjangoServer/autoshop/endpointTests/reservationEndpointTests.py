@@ -71,17 +71,31 @@ class TestReservationEndpoints(TestCase):
         createReservation(self.client, vehicle2, user)
 
     def testDeleteReservation(self):
-        user = createUser(self.client)
+        user = createUser(self.client, permission='admin')
         vehicle = createVehicle(self.client)
         reservation = createReservation(self.client, user=user, vehicle=vehicle, isInsured = self.isInsured)
         url = f"{BASE_URL}reservation/{reservation['id']}"
         response = self.client.delete(url)
         self.assertEqual(response.status_code, 200)
-        # make sure we can't get that user anymore
+        # make sure we can't get that reservation anymore
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
-        # make sure we can't delete a user that doesn't exist
+        # make sure we can't delete a reservation that doesn't exist
         response = self.client.delete(f"{BASE_URL}reservation/19999")
         self.assertEqual(response.status_code, 404)
         response = self.client.delete(f"{BASE_URL}reservation/INVALID")
         self.assertEqual(response.status_code, 404)
+        # test to make sure user has a reservation associated
+        reservation = createReservation(self.client, user=user, vehicle=vehicle, isInsured=self.isInsured)
+        testReservation = Reservation.objects.get(pk=reservation['id'])
+        self.assertEqual(testReservation.autoUser.pk, user['id'])
+        # now that user is associated make sure that after vehicle is sold the reservation is
+        # deleted from the user
+        self.client.post(f"{BASE_URL}vehicle/{vehicle['id']}/sell")
+        for reservation in Reservation.objects.all():
+            if reservation.vehicle.pk == vehicle['id']:
+                self.assertFalse(False)
+            if reservation.autoUser.pk == user['id']:
+                self.assertFalse(False)
+
+

@@ -26,7 +26,7 @@ class AutoUser(models.Model):
     phoneNumber = models.CharField(max_length=50)
     permission = models.CharField(max_length=20, choices=PERMISSION_CHOICES, default="user")
     balance = models.FloatField(default=0)
-    needHelp = models.BooleanField(default=False)
+    needsHelp = models.BooleanField(default=False)
     ethicsViolation = models.TextField(default="None")
     location = models.CharField(max_length=50, default="unknown")
     hoursOwed = models.FloatField(default=0)
