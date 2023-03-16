@@ -8,13 +8,16 @@ import {
   ImageListItem,
   ImageList,
   ImageListItemBar,
+  Container,
 } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import { UserContext } from "../../contexts/UserContext";
 import { ClassNameMap } from "@material-ui/core/styles/withStyles";
 import { Vehicle, Reservation } from "../../types/DataTypes";
 import { VehicleContext } from "../../contexts/VehicleContext";
+import { IconButton } from "material-ui";
 
 type UpcomingReservationsDashboardProps = {
   classes: ClassNameMap;
@@ -23,11 +26,21 @@ type UpcomingReservationsDashboardProps = {
 export const UpcomingReservationsDashboard = ({
   classes,
 }: UpcomingReservationsDashboardProps) => {
-  const { user, api } = useContext(UserContext);
+  const { user, api, setNewUser } = useContext(UserContext);
   const { vehicles } = useContext(VehicleContext);
   const { reservations } = user;
 
   const navigate = useNavigate();
+
+  const deleteReservation = async (reservation: Reservation) => {
+    const res = await api.deleteReservation(reservation);
+    if (res) {
+      const newReservations = reservations.filter(
+        (r) => r.id !== reservation.id
+      );
+      setNewUser({ ...user, reservations: newReservations });
+    }
+  };
 
   const makeReservationInfo = (reservation: Reservation, index: number) => {
     //https://mui.com/system/display/
@@ -74,11 +87,16 @@ export const UpcomingReservationsDashboard = ({
   return (
     <>
       <Typography variant="h6">Upcoming Reservations</Typography>
-      <ImageList>
-        {reservations.map((reservation) =>
-          makeReservationInfo(reservation, reservation.id)
-        )}
-      </ImageList>
+      <Container>
+        <ImageList>
+          {reservations.map((reservation) =>
+            makeReservationInfo(reservation, reservation.id)
+          )}
+        </ImageList>
+        {reservations.map((reservation) => (
+          <Button onClick={() => deleteReservation(reservation)}>Delete</Button>
+        ))}
+      </Container>
     </>
   );
 };

@@ -5,9 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="798bd63e-d7e6-4f44-9b5e-3f4cb6158f82" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/DjangoServer/autoshop/managerEndpoints.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/DjangoServer/autoshop/managerEndpoints.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontEnd/src/components/user/UpcomingReservationsDashboard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontEnd/src/components/user/UpcomingReservationsDashboard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontEnd/src/lib/api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontEnd/src/lib/api.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,7 +44,7 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;
   }
 }</component>
-  <component name="RunManager" selected="Python.run tests">
+  <component name="RunManager" selected="Python.run server">
     <configuration name="migrations" type="PythonConfigurationType" factoryName="Python">
       <module name="Auto-Shop" />
       <option name="INTERPRETER_OPTIONS" value="" />

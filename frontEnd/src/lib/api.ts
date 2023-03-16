@@ -6,7 +6,7 @@ import {
   UserWithReservation,
   Vehicle,
 } from "../types/DataTypes";
-type Method = "get" | "post" | "put" | "del";
+type Method = "get" | "post" | "put" | "delete";
 
 export class Api {
   private token = "";
@@ -53,7 +53,7 @@ export class Api {
   }
 
   del(path: string) {
-    return this.makeRequest(path, "del");
+    return this.makeRequest(path, "delete");
   }
 
   setToken(token: string) {
@@ -214,6 +214,15 @@ export class Api {
       isInsured,
     }).then((res) => {
       if (!res?.reservation) return null;
+      return res.reservation;
+    });
+  }
+
+  deleteReservation(reservation: Reservation): Promise<Reservation> {
+    return this.del(`reservation/${reservation.id}`).then((res) => {
+      if (!res.success) {
+        console.error("Problem deleting the reservation");
+      }
       return res.reservation;
     });
   }
