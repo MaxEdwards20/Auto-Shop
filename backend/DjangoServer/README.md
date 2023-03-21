@@ -1,4 +1,6 @@
 # Getting Started
+Move into the Django server directory (from the root directory, run the following):
+`cd backend/DjangoServer`
 
 Create a virtual environment to isolate your packages:
 
@@ -7,6 +9,7 @@ Create a virtual environment to isolate your packages:
 Activate it:
 
 `$ source .venv/bin/activate`
+
 
 Download dependencies
 
