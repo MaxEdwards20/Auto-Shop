@@ -9,6 +9,7 @@ import React from "react";
 import { forwardRef } from "react";
 import { checkUserAndRedirect } from "../../hooks/validationHooks";
 import { ManagerContext } from "../../contexts/ManagerContext";
+import Dialog from "material-ui/Dialog";
 
 type CarListingProps = {
   vehicle: Vehicle;

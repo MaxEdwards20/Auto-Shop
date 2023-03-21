@@ -77,21 +77,32 @@ export const ReserveModal = ({
         {userMessage && (
           <DialogContentText color="secondary">{userMessage}</DialogContentText>
         )}
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => {
-            setIsInsured(true);
-            setTotalCost(totalCost + getTotalInsuranceCost());
-          }}
-          disabled={user.balance < totalCost || reserved || isInsured}
-        >
-          {isInsured
-            ? "Insured"
-            : `Add Insurance for ${formatCurrency(getTotalInsuranceCost())}`}
-        </Button>
 
         <DialogActions>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              setIsInsured(true);
+              setTotalCost(totalCost + getTotalInsuranceCost());
+            }}
+            disabled={user.balance < totalCost || reserved || isInsured}
+          >
+            {isInsured
+              ? "Insured"
+              : `Add Insurance for ${formatCurrency(getTotalInsuranceCost())}`}
+          </Button>
+
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              navigate("/account/dashboard");
+            }}
+          >
+            Add Funds
+          </Button>
+
           <Button
             type="submit"
             variant="contained"
@@ -102,16 +113,7 @@ export const ReserveModal = ({
             }}
             disabled={user.balance < totalCost || reserved}
           >
-            Reserve
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => {
-              navigate("/account/dashboard");
-            }}
-          >
-            Add Funds
+            Make Reservation
           </Button>
           <Button
             onClick={() => {

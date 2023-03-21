@@ -19,6 +19,7 @@ import { ManagerPayEmployees } from "../manager/ManagerPayEmployees";
 import { LogHours } from "../employee/LogHours";
 import { CheckoutVehicle } from "../employee/CheckoutVehicle";
 import { HelpUsers } from "../employee/HelpUsers";
+import { EthicsViolation } from "../user/EthicsViolation";
 function Router() {
   const { setNewVehicles } = useContext(VehicleContext);
   const { setNewManager } = useContext(ManagerContext);
@@ -44,6 +45,7 @@ function Router() {
       <Route path="/reservations" element={<ReservationPage />} />
       <Route path="/help-users" element={<HelpUsers />}></Route>
       <Route path="/vehicles" element={<VehiclePage />} />
+      <Route path="/user/ethics-violation" element={<EthicsViolation />} />
       <Route path="/account">
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="login" element={<LoginPage />} />

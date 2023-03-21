@@ -9,6 +9,7 @@ import {
 import { useContext } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import { UserContext } from "../../contexts/UserContext";
+import ReportIcon from "@mui/icons-material/Report";
 
 export const DrawerBaseList = () => {
   const { user } = useContext(UserContext);
@@ -40,10 +41,17 @@ export const DrawerBaseList = () => {
             </ListItemIcon>
             <ListItemText primary="Dashboard" />
           </ListItem>
+          <ListItem button component={RouterLink} to="/user/ethics-violation">
+            <ListItemIcon>
+              <ReportIcon />
+            </ListItemIcon>
+            <ListItemText primary="Ethics Violation" />
+          </ListItem>
         </>
       )}
 
       {user.isAuthenticated ? (
+        // logout component is on the dashboard
         <ListItem button divider component={RouterLink} to="/account/dashboard">
           <ListItemIcon>
             <AccountIcon />
