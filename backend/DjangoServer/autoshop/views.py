@@ -3,9 +3,11 @@ from .userEndpoints import authenticateUser, createUser, deleteUser, getUser, ge
     userRemoveMoney, updateUserPermission, needsHelp, everyoneThatNeedsHelp
 from .vehicleEndpoints import createVehicle, deleteVehicle, getVehicle, getAllAvailableVehicles, getAllPurchasedVehicles, \
     updateVehicle, vehicleAvailability, purchaseVehicle, getAllVehicles, sellVehicle
-from .reservationEndpoints import createReservation, deleteReservation, getReservation, calculateCost
+from .reservationEndpoints import createReservation, deleteReservation, getReservation, calculateCost, getAllReservations, getAllCheckedInReservations, getAllCheckedOutReservations
 from .managerEndpoints import initializeDatabase, getManager, payEmployee, addHoursWorked
 from django.http import HttpRequest
+
+
 @csrf_exempt
 def userRouter(request: HttpRequest, id = 0):
     if request.method == "PUT":

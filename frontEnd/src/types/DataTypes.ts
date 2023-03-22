@@ -17,6 +17,7 @@ export type Reservation = {
   amountDue: number;
   id: number;
   isInsured: boolean;
+  isCheckedOut: boolean;
 };
 
 export type UserCheckinInfo = {

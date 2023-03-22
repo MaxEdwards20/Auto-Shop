@@ -90,14 +90,17 @@ def _handleCreateUsers():
     checkAndCreateUser(USER_USERNAME, "user", 11, password=USER_PASS)
     for i in range(10):
         usernameEmail = f"user{i}@email.com"
-        checkAndCreateUser(usernameEmail, "user", i)
+        checkAndCreateUser(usernameEmail, "user", i, password=None)
+
+
 def _handleCreateEmployees():
-    EMPLOYEE_USERNAME = "employme"
-    EMPLOYEE_PASS = "employme"
+    EMPLOYEE_USERNAME = "employ"
+    EMPLOYEE_PASS = "123"
     checkAndCreateUser(EMPLOYEE_USERNAME, "employee", 11, password=EMPLOYEE_PASS)
     for i in range(10):
-        usernameEmail = f"employee{i}@dansauto.com"
-        checkAndCreateUser(usernameEmail, "employee", i)
+        usernameEmail = f"employee{i}@email.com"
+        checkAndCreateUser(usernameEmail, "employee", i, password=None)
+
 
 def __createManager():
     admin = User.objects.create_user(username=ADMIN_USERNAME, password=ADMIN_PASS)
@@ -105,15 +108,20 @@ def __createManager():
     return admin
 
 def checkAndCreateUser(email, permission, i: int, password = None):
-    if password:
-        for user in User.objects.filter(username=email, password=password):
-            if user.username== email and user.password == password:
+    if password and password != None:
+        for user in AutoUser.objects.all():
+            print(f"User object: {user}  ")
+            if user.email== email :
                 return user
+        # user doesn't exist
+        user = User.objects.create_user(username=email, password=password)
+        user.save()
+        autoUser = AutoUser.objects.create(email=email, name=f"Demo {permission} {i}", phoneNumber="111-111-1111", balance=random.randint(0, 10000), user=user, permission=permission, hoursOwed=random.randint(0, 30))
+        autoUser.save()
     else:
-        password = str(uuid4())
+        print("-----NO PASSWORD -----")
         for user in AutoUser.objects.all():
             if user.email == email:
-                return
-
-        user = User.objects.create_user(username=email, password=password)
+                return user
+        user = User.objects.create_user(username=email, password=str(uuid4()))
         autoUser = AutoUser.objects.create(email=email, name=f"Demo {permission} {i}", phoneNumber="111-111-1111", balance=random.randint(0, 10000), user=user, permission=permission, hoursOwed=random.randint(0, 30))

@@ -32,6 +32,9 @@ urlpatterns = [
     path('reservation', views.reservationRouter, name='createReservation'),  # POST
     path('reservation/<int:id>', views.reservationRouter, name='reservationRouter'), # GET, DEL
     path('reservation/cost', views.calculateCost, name="calculateCost"),
+    path('reservation/all', views.getAllReservations, name="getAllReservations"), # Get all reservations to show,
+    path('reservation/checked-out', views.getAllCheckedOutReservations, name="getAllCheckedOutReservations"),
+    path('reservation/checked-in', views.getAllCheckedInReservations, name="getAllCheckedInReservations"),
 
     # manager
     path("manager/init", views.initializeDatabase, name="initalizeDatabase"),

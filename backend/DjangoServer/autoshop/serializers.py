@@ -17,4 +17,4 @@ class VehicleSerializer(serializers.ModelSerializer):
 class ReservationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reservation
-        fields = ('vehicle', 'autoUser', 'startDate', 'endDate', 'amountDue', 'id', 'isInsured')
+        fields = ('vehicle', 'autoUser', 'startDate', 'endDate', 'amountDue', 'id', 'isInsured', 'isCheckedOut')

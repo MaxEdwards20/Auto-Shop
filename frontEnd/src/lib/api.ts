@@ -227,6 +227,29 @@ export class Api {
     });
   }
 
+  getAllReservations(): Promise<Reservation[]> {
+    return this.get("reservation/all").then((res) => {
+      if (!res?.reservations) console.error("Problem getting all reservations");
+      return res.reservations;
+    });
+  }
+
+  getCheckedInReservations(): Promise<Reservation[]> {
+    return this.get("reservation/checked-in").then((res) => {
+      if (!res?.reservations)
+        console.error("Problem getting checked in reservations");
+      return res.reservations;
+    });
+  }
+
+  getCheckedOutReservations(): Promise<Reservation[]> {
+    return this.get("reservation/checked-out").then((res) => {
+      if (!res?.reservations)
+        console.error("Problem getting checked out reservations");
+      return res.reservations;
+    });
+  }
+
   initializeDatabase(): Promise<User | null> {
     return this.post("manager/init", {}).then((res) => {
       if (!res?.user) return null;
