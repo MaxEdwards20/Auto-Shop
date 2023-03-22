@@ -199,6 +199,16 @@ export class Api {
     });
   }
 
+  lowJackVehicle(vehicleID: number, isLoadJacked: boolean): Promise<Vehicle> {
+    return this.post(`vehicle/${vehicleID}/low-jack`, {
+      isLoadJacked,
+    }).then((res) => {
+      if (!res?.vehicle) console.error("Problem low jacking the vehicle");
+      this.setToken(res.token);
+      return res.vehicle;
+    });
+  }
+
   createReservation(
     userID: number,
     vehicleID: number,
@@ -248,6 +258,25 @@ export class Api {
         console.error("Problem getting checked out reservations");
       return res.reservations;
     });
+  }
+
+  checkInReservation(reservation: Reservation): Promise<Reservation> {
+    return this.post(`reservation/${reservation.id}/check-in`, {}).then(
+      (res) => {
+        if (!res?.reservation) console.error("Problem checking in reservation");
+        return res.reservation;
+      }
+    );
+  }
+
+  checkOutReservation(reservation: Reservation): Promise<Reservation> {
+    return this.post(`reservation/${reservation.id}/check-out`, {}).then(
+      (res) => {
+        if (!res?.reservation)
+          console.error("Problem checking out reservation");
+        return res.reservation;
+      }
+    );
   }
 
   initializeDatabase(): Promise<User | null> {

@@ -72,6 +72,26 @@ def getAllCheckedInReservations(request: HttpRequest):
     j = JsonResponse({"reservations": [ReservationSerializer(reservation).data for reservation in reservations if not reservation.isCheckedOut]})
     return update_cors(j, request)
 
+@csrf_exempt
+def checkIn(request: HttpRequest, id: int):
+    if not request.method == "POST":
+        return error400(request)
+    reservation = get_object_or_404(Reservation, pk=id)
+    reservation.isCheckedOut = False
+    reservation.save()
+    j = JsonResponse({"reservation": ReservationSerializer(reservation).data})
+    return update_cors(j, request)
+
+@csrf_exempt
+def checkOut(request: HttpRequest, id: int):
+    if not request.method == "POST":
+        return error400(request)
+    reservation = get_object_or_404(Reservation, pk=id)
+    reservation.isCheckedOut = True
+    reservation.save()
+    j = JsonResponse({"reservation": ReservationSerializer(reservation).data})
+    return update_cors(j, request)
+
 
 def __createReservationDatabase(parsedBody: dict, request: HttpRequest) -> Reservation:
     vehicle = __getVehicle(int(parsedBody['vehicleID']))

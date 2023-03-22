@@ -110,7 +110,6 @@ def __createManager():
 def checkAndCreateUser(email, permission, i: int, password = None):
     if password and password != None:
         for user in AutoUser.objects.all():
-            print(f"User object: {user}  ")
             if user.email== email :
                 return user
         # user doesn't exist
@@ -119,7 +118,6 @@ def checkAndCreateUser(email, permission, i: int, password = None):
         autoUser = AutoUser.objects.create(email=email, name=f"Demo {permission} {i}", phoneNumber="111-111-1111", balance=random.randint(0, 10000), user=user, permission=permission, hoursOwed=random.randint(0, 30))
         autoUser.save()
     else:
-        print("-----NO PASSWORD -----")
         for user in AutoUser.objects.all():
             if user.email == email:
                 return user

@@ -7,6 +7,7 @@ export type Vehicle = {
   isPurchased: boolean;
   id: number;
   purchasePrice: number;
+  isLoadJacked: boolean;
 };
 
 export type Reservation = {

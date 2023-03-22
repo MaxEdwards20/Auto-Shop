@@ -2,8 +2,8 @@ from django.views.decorators.csrf import csrf_exempt
 from .userEndpoints import authenticateUser, createUser, deleteUser, getUser, getAllUsers, updateUser, userAddMoney,\
     userRemoveMoney, updateUserPermission, needsHelp, everyoneThatNeedsHelp
 from .vehicleEndpoints import createVehicle, deleteVehicle, getVehicle, getAllAvailableVehicles, getAllPurchasedVehicles, \
-    updateVehicle, vehicleAvailability, purchaseVehicle, getAllVehicles, sellVehicle
-from .reservationEndpoints import createReservation, deleteReservation, getReservation, calculateCost, getAllReservations, getAllCheckedInReservations, getAllCheckedOutReservations
+    updateVehicle, vehicleAvailability, purchaseVehicle, getAllVehicles, sellVehicle, lowJackVehicle
+from .reservationEndpoints import createReservation, deleteReservation, getReservation, calculateCost, getAllReservations, getAllCheckedInReservations, getAllCheckedOutReservations, checkIn, checkOut
 from .managerEndpoints import initializeDatabase, getManager, payEmployee, addHoursWorked
 from django.http import HttpRequest
 
