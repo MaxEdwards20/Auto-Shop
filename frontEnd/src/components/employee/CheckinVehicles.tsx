@@ -29,10 +29,12 @@ export const CheckInVehicle = () => {
           return (
             resDay === date.getDate() &&
             resMonth === date.getMonth() + 1 && // Months are 0 indexed
-            resYear === date.getFullYear()
+            resYear === date.getFullYear() &&
+            reservation.isCheckedOut
           );
         });
         console.log(todayReservations);
+
         setTodayCheckins(todayReservations);
       }
     });
@@ -58,13 +60,15 @@ export const CheckInVehicle = () => {
   };
 
   const unLowJackVehicle = (reservation: Reservation) => {
-    api.lowJackVehicle(reservation.vehicle, false).then((vehicle: Vehicle) => {
-      if (!vehicle) {
-        console.error("Error low jacking vehicle");
-      } else {
-        return;
-      }
-    });
+    api
+      .lowJackVehicle(reservation.vehicle.id, false)
+      .then((vehicle: Vehicle) => {
+        if (!vehicle) {
+          console.error("Error low jacking vehicle");
+        } else {
+          return;
+        }
+      });
   };
 
   return (
@@ -83,8 +87,8 @@ export const CheckInVehicle = () => {
           <TableRow key={reservation.id}>
             <TableCell>{reservation.startDate}</TableCell>
             <TableCell>{reservation.endDate}</TableCell>
-            <TableCell>{reservation.vehicle}</TableCell>
-            <TableCell>{reservation.autoUser}</TableCell>
+            <TableCell>{reservation.vehicle.name}</TableCell>
+            <TableCell>{reservation.autoUser.name}</TableCell>
             <TableCell>{reservation.isInsured ? "Yes" : "No"}</TableCell>
             <TableCell>
               <Button

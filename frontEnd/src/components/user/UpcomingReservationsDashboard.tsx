@@ -46,7 +46,7 @@ export const UpcomingReservationsDashboard = ({
   const reservationCard = (reservation: Reservation, index: number) => {
     //https://mui.com/system/display/
     const vehicle = vehicles.find(
-      (vehicle) => vehicle.id === reservation.vehicle
+      (vehicle) => vehicle.id === reservation.vehicleID
     );
     if (!vehicle) {
       return null;

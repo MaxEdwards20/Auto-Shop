@@ -14,6 +14,12 @@ import random
 ADMIN_USERNAME = "admin123"
 ADMIN_PASS = "admin123"
 
+EMPLOYEE_USERNAME = "employme"
+EMPLOYEE_PASS = "employme"
+
+USER_USERNAME = "abc"
+USER_PASS = "123"
+
 @csrf_exempt
 def initializeDatabase(request: HttpRequest):
     if request.method != "POST":
@@ -71,8 +77,6 @@ def addHoursWorked(request: HttpRequest, employeeID: int):
     return makeUserJSONResponse(employee.pk)
 
 
-
-
 def _handleCreateManager():
     for user in  AutoUser.objects.all():
         if user.email == ADMIN_USERNAME and user.permission == "admin":
@@ -85,8 +89,6 @@ def _handleCreateManager():
     return  __createManager()
 
 def _handleCreateUsers():
-    USER_USERNAME = "abc"
-    USER_PASS = "123"
     checkAndCreateUser(USER_USERNAME, "user", 11, password=USER_PASS)
     for i in range(10):
         usernameEmail = f"user{i}@email.com"
@@ -94,8 +96,7 @@ def _handleCreateUsers():
 
 
 def _handleCreateEmployees():
-    EMPLOYEE_USERNAME = "employ"
-    EMPLOYEE_PASS = "123"
+
     checkAndCreateUser(EMPLOYEE_USERNAME, "employee", 11, password=EMPLOYEE_PASS)
     for i in range(10):
         usernameEmail = f"employee{i}@email.com"

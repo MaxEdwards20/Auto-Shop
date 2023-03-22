@@ -32,10 +32,12 @@ export const CheckoutVehicle = () => {
           return (
             resDay === date.getDate() &&
             resMonth === date.getMonth() + 1 && // Months are 0 indexed
-            resYear === date.getFullYear()
+            resYear === date.getFullYear() &&
+            !reservation.isCheckedOut
           );
         });
         console.log(todayReservations);
+
         setTodayReservations(todayReservations);
       }
     });
@@ -59,14 +61,19 @@ export const CheckoutVehicle = () => {
   };
 
   const lowJackVehicle = (reservation: Reservation) => {
-    api.lowJackVehicle(reservation.vehicle, true).then((vehicle: Vehicle) => {
-      if (!vehicle) {
-        console.error("Error low jacking vehicle");
-      } else {
-        setDisabledLowJackButtons([...disabledLowJackButtons, reservation.id]);
-        return;
-      }
-    });
+    api
+      .lowJackVehicle(reservation.vehicle.id, true)
+      .then((vehicle: Vehicle) => {
+        if (!vehicle) {
+          console.error("Error low jacking vehicle");
+        } else {
+          setDisabledLowJackButtons([
+            ...disabledLowJackButtons,
+            reservation.id,
+          ]);
+          return;
+        }
+      });
   };
 
   return (
@@ -87,8 +94,8 @@ export const CheckoutVehicle = () => {
           <TableRow key={reservation.id}>
             <TableCell>{reservation.startDate}</TableCell>
             <TableCell>{reservation.endDate}</TableCell>
-            <TableCell>{reservation.vehicle}</TableCell>
-            <TableCell>{reservation.autoUser}</TableCell>
+            <TableCell>{reservation.vehicle.name}</TableCell>
+            <TableCell>{reservation.autoUser.name}</TableCell>
             <TableCell>{reservation.isInsured ? "Yes" : "No"}</TableCell>
             <TableCell>{reservation.isCheckedOut ? "Yes" : "No"}</TableCell>
             <TableCell>
@@ -103,6 +110,7 @@ export const CheckoutVehicle = () => {
                 onClick={() => lowJackVehicle(reservation)}
                 disabled={
                   reservation.isInsured ||
+                  reservation.vehicle.isLoadJacked ||
                   disabledLowJackButtons.includes(reservation.id)
                 }
               >

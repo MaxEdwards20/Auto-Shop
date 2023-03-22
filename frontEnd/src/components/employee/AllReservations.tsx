@@ -51,8 +51,8 @@ export const CheckoutVehicle = () => {
           <TableRow key={reservation.id}>
             <TableCell>{reservation.startDate}</TableCell>
             <TableCell>{reservation.endDate}</TableCell>
-            <TableCell>{reservation.vehicle}</TableCell>
-            <TableCell>{reservation.autoUser}</TableCell>
+            <TableCell>{reservation.vehicle.name}</TableCell>
+            <TableCell>{reservation.autoUser.name}</TableCell>
             <TableCell>{reservation.isInsured ? "Yes" : "No"}</TableCell>
             <TableCell>{reservation.isCheckedOut ? "Yes" : "No"}</TableCell>
             <TableCell></TableCell>

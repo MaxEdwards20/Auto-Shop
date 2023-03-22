@@ -182,20 +182,20 @@ export class Api {
     });
   }
 
-  getAllUsers(userID: number): Promise<UserWithReservation[]> {
-    return this.get(`user/${userID}/all`).then((res) => {
-      if (!res?.users) return null;
-      this.setToken(res.token);
-      return res.users;
-    });
-  }
-
-  getVehicle(id: number): Promise<Vehicle | null> {
+  getVehicle(id: number): Promise<Vehicle> {
     return this.get(`vehicle/${id}`).then((res) => {
       console.log(res);
       if (!res?.vehicle) return null;
       this.setToken(res.token);
       return res.vehicle;
+    });
+  }
+
+  getAllUsers(userID: number): Promise<UserWithReservation[]> {
+    return this.get(`user/${userID}/all`).then((res) => {
+      if (!res?.users) return null;
+      this.setToken(res.token);
+      return res.users;
     });
   }
 
