@@ -67,6 +67,12 @@ export const EmployeeDrawer = ({ open, onClose }: DrawerProps) => {
             </ListItemIcon>
             <ListItemText primary="Check-in Vehicle" />
           </ListItem>
+          <ListItem button component={RouterLink} to="/employee/reservations">
+            <ListItemIcon>
+              <CheckoutVehicleIcon />
+            </ListItemIcon>
+            <ListItemText primary="View All Reservations" />
+          </ListItem>
 
           <ListItem button component={RouterLink} to="/help-users">
             <ListItemIcon>

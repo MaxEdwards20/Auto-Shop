@@ -11,7 +11,7 @@ import {
   Button,
 } from "@material-ui/core";
 
-export const CheckoutVehicle = () => {
+export const AllReservations = () => {
   const { api } = useContext(UserContext);
   checkUserIsEmployeeAndRedirect();
   const [todayReservations, setTodayReservations] = useState<Reservation[]>([]);
@@ -43,7 +43,6 @@ export const CheckoutVehicle = () => {
           <TableCell>Auto User</TableCell>
           <TableCell>Insured</TableCell>
           <TableCell>Checked Out</TableCell>
-          <TableCell>Action</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
