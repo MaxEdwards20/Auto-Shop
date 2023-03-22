@@ -21,6 +21,7 @@ type ReserveModalProps = {
   startDate: Date;
   endDate: Date;
   handleReserveClick: (isInsured: boolean, totalCost: number) => void;
+  user: User;
 };
 
 export const ReserveModal = ({
@@ -30,12 +31,13 @@ export const ReserveModal = ({
   startDate,
   endDate,
   handleReserveClick,
+  user,
 }: ReserveModalProps) => {
   const [totalCost, setTotalCost] = useState(0);
   const [userMessage, setUserMessage] = useState("");
   const [reserved, setReserved] = useState(false);
   const [isInsured, setIsInsured] = useState(false);
-  const { api, user } = useContext(UserContext);
+  const { api } = useContext(UserContext);
   const navigate = useNavigate();
 
   const getTotalCostNoInsurance = () => {

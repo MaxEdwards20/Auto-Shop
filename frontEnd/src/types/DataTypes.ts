@@ -7,16 +7,18 @@ export type Vehicle = {
   isPurchased: boolean;
   id: number;
   purchasePrice: number;
+  isLoadJacked: boolean;
 };
 
 export type Reservation = {
   startDate: string;
   endDate: string;
-  vehicle: number; // api returns the id of the vehicle
-  autoUser: number; // api returns the id of the user
+  vehicle: Vehicle;
+  autoUser: User;
   amountDue: number;
   id: number;
   isInsured: boolean;
+  isCheckedOut: boolean;
 };
 
 export type UserCheckinInfo = {

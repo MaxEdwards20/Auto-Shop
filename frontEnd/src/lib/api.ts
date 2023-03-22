@@ -182,6 +182,15 @@ export class Api {
     });
   }
 
+  getVehicle(id: number): Promise<Vehicle> {
+    return this.get(`vehicle/${id}`).then((res) => {
+      console.log(res);
+      if (!res?.vehicle) return null;
+      this.setToken(res.token);
+      return res.vehicle;
+    });
+  }
+
   getAllUsers(userID: number): Promise<UserWithReservation[]> {
     return this.get(`user/${userID}/all`).then((res) => {
       if (!res?.users) return null;
@@ -190,10 +199,11 @@ export class Api {
     });
   }
 
-  getVehicle(id: number): Promise<Vehicle | null> {
-    return this.get(`vehicle/${id}`).then((res) => {
-      console.log(res);
-      if (!res?.vehicle) return null;
+  lowJackVehicle(vehicleID: number, isLoadJacked: boolean): Promise<Vehicle> {
+    return this.post(`vehicle/${vehicleID}/low-jack`, {
+      isLoadJacked,
+    }).then((res) => {
+      if (!res?.vehicle) console.error("Problem low jacking the vehicle");
       this.setToken(res.token);
       return res.vehicle;
     });
@@ -225,6 +235,48 @@ export class Api {
       }
       return res.reservation;
     });
+  }
+
+  getAllReservations(): Promise<Reservation[]> {
+    return this.get("reservation/all").then((res) => {
+      if (!res?.reservations) console.error("Problem getting all reservations");
+      return res.reservations;
+    });
+  }
+
+  getCheckedInReservations(): Promise<Reservation[]> {
+    return this.get("reservation/checked-in").then((res) => {
+      if (!res?.reservations)
+        console.error("Problem getting checked in reservations");
+      return res.reservations;
+    });
+  }
+
+  getCheckedOutReservations(): Promise<Reservation[]> {
+    return this.get("reservation/checked-out").then((res) => {
+      if (!res?.reservations)
+        console.error("Problem getting checked out reservations");
+      return res.reservations;
+    });
+  }
+
+  checkInReservation(reservation: Reservation): Promise<Reservation> {
+    return this.post(`reservation/${reservation.id}/check-in`, {}).then(
+      (res) => {
+        if (!res?.reservation) console.error("Problem checking in reservation");
+        return res.reservation;
+      }
+    );
+  }
+
+  checkOutReservation(reservation: Reservation): Promise<Reservation> {
+    return this.post(`reservation/${reservation.id}/check-out`, {}).then(
+      (res) => {
+        if (!res?.reservation)
+          console.error("Problem checking out reservation");
+        return res.reservation;
+      }
+    );
   }
 
   initializeDatabase(): Promise<User | null> {

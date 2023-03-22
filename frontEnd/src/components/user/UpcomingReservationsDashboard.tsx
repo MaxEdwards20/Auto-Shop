@@ -18,6 +18,7 @@ import { ClassNameMap } from "@material-ui/core/styles/withStyles";
 import { Vehicle, Reservation } from "../../types/DataTypes";
 import { VehicleContext } from "../../contexts/VehicleContext";
 import { IconButton } from "material-ui";
+import { Card } from "@mui/material";
 
 type UpcomingReservationsDashboardProps = {
   classes: ClassNameMap;
@@ -42,26 +43,30 @@ export const UpcomingReservationsDashboard = ({
     }
   };
 
-  const makeReservationInfo = (reservation: Reservation, index: number) => {
+  const reservationCard = (reservation: Reservation, index: number) => {
     //https://mui.com/system/display/
     const vehicle = vehicles.find(
-      (vehicle) => vehicle.id === reservation.vehicle
+      (vehicle) => vehicle.id === reservation.vehicleID
     );
     if (!vehicle) {
       return null;
     }
     return (
-      <ImageListItem key={index}>
-        <img
-          src={vehicle.imageURL}
-          alt="Sick superhero vehicle"
-          className="vehicleListingImage"
-        ></img>
-        <ImageListItemBar
-          title={vehicle.name}
-          subtitle={`${reservation.startDate} to ${reservation.endDate} `}
-        ></ImageListItemBar>
-      </ImageListItem>
+      <Card>
+        <ImageListItem key={index}>
+          <img
+            src={vehicle.imageURL}
+            alt="Sick superhero vehicle"
+            className="vehicleListingImage"
+          ></img>
+          <ImageListItemBar
+            title={vehicle.name}
+            subtitle={`${reservation.startDate} to ${reservation.endDate} `}
+          ></ImageListItemBar>
+        </ImageListItem>
+
+        <Button onClick={() => deleteReservation(reservation)}>Delete</Button>
+      </Card>
     );
   };
 
@@ -90,12 +95,9 @@ export const UpcomingReservationsDashboard = ({
       <Container>
         <ImageList>
           {reservations.map((reservation) =>
-            makeReservationInfo(reservation, reservation.id)
+            reservationCard(reservation, reservation.id)
           )}
         </ImageList>
-        {reservations.map((reservation) => (
-          <Button onClick={() => deleteReservation(reservation)}>Delete</Button>
-        ))}
       </Container>
     </>
   );

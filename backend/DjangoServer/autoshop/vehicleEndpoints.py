@@ -57,8 +57,10 @@ def getAllAvailableVehicles(request: HttpRequest):
     vehicles = sorted(availableVehicles, key=lambda vehicle: int(vehicle['pricePerDay']))
     j = JsonResponse({"vehicles": vehicles}, safe=False)
     return update_cors(j, request)
+
+
 @csrf_exempt
-def loadJackVehicle(request: HttpRequest, vehicleId: int):
+def lowJackVehicle(request: HttpRequest, id: int):
     # Todo create unit tests
     if request.method != 'POST':
         return error400(request)
@@ -67,12 +69,11 @@ def loadJackVehicle(request: HttpRequest, vehicleId: int):
     for key in NEEDED_PARAMS:
         if key not in parsedBody:
             return error400(request)
-    vehicle = get_object_or_404(Vehicle, pk=vehicleId)
+    vehicle = get_object_or_404(Vehicle, pk=id)
     vehicle.isLoadJacked = parsedBody['isLoadJacked']
     vehicle.save()
     j = JsonResponse({"vehicle": VehicleSerializer(vehicle).data}, safe=False)
     return update_cors(j, request)
-
 
 
 @csrf_exempt

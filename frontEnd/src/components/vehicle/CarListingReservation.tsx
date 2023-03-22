@@ -44,8 +44,9 @@ export const CarListing = ({
       if (!user) {
         console.error("Error updating user balance. Please try again.");
       } else {
-        console.log("Subtracing: ", totalCost, " from user: ", user.balance);
+        console.log("Subtracting: ", totalCost, " from user: ", user.balance);
         subtractMoney(totalCost); // Adjust state to reflect the new balance
+        user.balance = user.balance - totalCost; // For the modal
       }
       // now we update the manager balance because we took the money from the user
       api.addMoneyToManager(manager.id, totalCost).then((manager) => {
@@ -70,6 +71,7 @@ export const CarListing = ({
 
   const handleReserveClick = (isInsured: boolean, totalCost: number) => {
     if (user.balance < totalCost) {
+      console.error("Not enough funds to make reservation.");
       return;
     }
     createReservation(isInsured); // update the user's reservations
@@ -93,6 +95,7 @@ export const CarListing = ({
       </span>
       {user && startDate && endDate && showModal && (
         <ReserveModal
+          user={user}
           vehicle={vehicle}
           handleCloseModal={handleCloseModal}
           showModal={showModal}

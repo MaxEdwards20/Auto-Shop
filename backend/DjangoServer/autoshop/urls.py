@@ -24,6 +24,7 @@ urlpatterns = [
     path('vehicle/<int:id>/available', views.vehicleAvailability, name='vehicleAvailability'),
     path('vehicle/<int:id>/purchase', views.purchaseVehicle, name='purchaseVehicle'),
     path('vehicle/<int:id>/sell', views.sellVehicle, name='sellVehicle'),
+    path('vehicle/<int:id>/low-jack', views.lowJackVehicle, name='lowJackVehicle'),
     path('vehicle/all', views.getAllVehicles, name="getAllVehicles"), # Get all vehicles to show
     path('vehicle/all/purchased', views.getAllPurchasedVehicles, name="getAllPurchasedVehicles"),
     path('vehicle/available', views.getAllAvailableVehicles, name="getAllAvailableVehicles"),
@@ -32,6 +33,11 @@ urlpatterns = [
     path('reservation', views.reservationRouter, name='createReservation'),  # POST
     path('reservation/<int:id>', views.reservationRouter, name='reservationRouter'), # GET, DEL
     path('reservation/cost', views.calculateCost, name="calculateCost"),
+    path('reservation/all', views.getAllReservations, name="getAllReservations"), # Get all reservations to show,
+    path('reservation/checked-out', views.getAllCheckedOutReservations, name="getAllCheckedOutReservations"),
+    path('reservation/checked-in', views.getAllCheckedInReservations, name="getAllCheckedInReservations"),
+    path('reservation/<int:id>/check-in', views.checkIn, name="checkInReservation"),
+    path('reservation/<int:id>/check-out', views.checkOut, name="checkoutReservation"),
 
     # manager
     path("manager/init", views.initializeDatabase, name="initalizeDatabase"),

@@ -17,7 +17,6 @@ class Vehicle(models.Model):
     def __str__(self):
         return self.name
 
-
 class AutoUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     PERMISSION_CHOICES = (("user", "user"), ("admin", "admin"), ("employee", "employee"))
@@ -39,6 +38,7 @@ class Reservation(models.Model):
     endDate = models.DateField()
     amountDue = models.FloatField(default=100)
     isInsured = models.BooleanField(default=False)
+    isCheckedOut = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Vehicle: {self.vehicle.name} User: {self.autoUser.name} "
