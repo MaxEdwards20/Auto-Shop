@@ -1,8 +1,19 @@
 # Getting Started
+Online Install Guide: https://docs.djangoproject.com/en/4.1/intro/install/
+
+Online Install The Latest Version of Python: https://www.python.org/downloads/
+
+You can verify that Python is installed by typing python from your shell; you should see something like:
+
+`Python 3.9.7 (tags/v3.9.7:1016ef3, Aug 30 2021, 20:19:38) [MSC v.1929 64 bit (AMD64)] on win32
+`
+
+
 Move into the Django server directory (from the root directory, run the following):
+
 `cd backend/DjangoServer`
 
-Create a virtual environment to isolate your packages:
+Create a virtual environment to https://docs.djangoproject.com/en/4.1/intro/install/isolate your packages:
 
 `$ python3 -m venv .venv`
 
@@ -31,7 +42,7 @@ The frontend instructions are found in the [frontend](../../frontend/README.md) 
 
 ### Admin abilities
 
-We configured the frontend to create an admin for you. Start the server <Strong>before </Strong>starting the client.
+We configured the frontend to create an admin for you. Start the server by running `$ python manage.py runserver`  <Strong>before </Strong>starting the client.
 
 - email: admin123
 - password: admin123
@@ -50,3 +61,11 @@ Create and populate the database:
 
 - `$ python3 manage.py makemigrations `
 - `$ python manage.py migrate`
+
+should see something like: 
+
+`$ python manage.py migrate
+Operations to perform:
+  Apply all migrations: example1, example2, Running migrations:
+  Rendering model states... DONE
+  Applying EXAMPLE.0001_initial... OK`

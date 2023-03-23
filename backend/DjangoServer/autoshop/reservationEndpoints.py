@@ -36,7 +36,7 @@ def getReservation(request: HttpRequest, id:int):
 
 @csrf_exempt
 def calculateCost(request: HttpRequest):
-    #TODO Write unit tests for this
+
     if request.method != "POST":
         return error400(request)
     parsedBody = getReqBody(request)
@@ -60,14 +60,14 @@ def getAllReservations(request: HttpRequest):
 
 @csrf_exempt
 def getAllCheckedOutReservations(request: HttpRequest):
-    #TODO Unit tests
+
     reservations = Reservation.objects.all()
     j = JsonResponse({"reservations": [ReservationSerializer(reservation).data for reservation in reservations if reservation.isCheckedOut]})
     return update_cors(j, request)
 
 @csrf_exempt
 def getAllCheckedInReservations(request: HttpRequest):
-    # TODO unit tests
+
     reservations = Reservation.objects.all()
     j = JsonResponse({"reservations": [ReservationSerializer(reservation).data for reservation in reservations if not reservation.isCheckedOut]})
     return update_cors(j, request)

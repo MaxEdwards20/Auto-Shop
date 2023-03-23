@@ -63,7 +63,7 @@ def payEmployee(request: HttpRequest, employeeID: int):
 
 @csrf_exempt
 def addHoursWorked(request: HttpRequest, employeeID: int):
-    #TODO: Unit tests
+
     if  request.method != "POST":
         return error400(request)
     parsedBody = getReqBody(request)
