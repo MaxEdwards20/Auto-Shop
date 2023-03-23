@@ -61,7 +61,7 @@ def getAllAvailableVehicles(request: HttpRequest):
 
 @csrf_exempt
 def lowJackVehicle(request: HttpRequest, id: int):
-    # Todo create unit tests
+
     if request.method != 'POST':
         return error400(request)
     NEEDED_PARAMS = {'isLoadJacked'}
