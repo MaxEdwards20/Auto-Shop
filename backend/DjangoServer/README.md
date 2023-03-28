@@ -21,6 +21,9 @@ Activate it:
 
 `$ source .venv/bin/activate`
 
+If that doesn't work, try the following command:
+
+`$ source .venv/Scripts/activate`
 
 Download dependencies
 

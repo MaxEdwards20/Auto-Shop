@@ -56,6 +56,23 @@ export default function CreateAccountForm() {
       setErrorMessage("Please enter all fields");
       return;
     }
+    
+    if (!email.includes("@") || !email.includes(".")) {
+      setErrorMessage("Please enter a valid email address");
+      return;
+    }
+    
+    if (password.length < 10) {
+      setErrorMessage("Please make your password at least 10 characters long.");
+      return;
+    }
+    
+    const cleanedPhone = phoneNumber.replaceAll('-', '')
+    if (cleanedPhone.length !== 10) {
+      setErrorMessage("Please enter a valid phone number");
+      return;
+    }
+
     const data = { email, password, name, phoneNumber };
     api.createUser(data).then((user) => {
       setErrorMessage("Creating account...");
@@ -97,6 +114,7 @@ export default function CreateAccountForm() {
         onChange={(event) => setPassword(event.target.value)}
         className={classes.input}
       />
+      <p>Please make your password at least 10 characters long*.</p>
       <TextField
         label="Phone Number"
         type="text"
@@ -104,6 +122,7 @@ export default function CreateAccountForm() {
         onChange={(event) => setPhoneNumber(event.target.value)}
         className={classes.input}
       />
+      <p>*We strongly encourage that you also include uppercase and lowercase letters, special characters, and numbers.</p>
       <Button
         variant="contained"
         color="primary"
