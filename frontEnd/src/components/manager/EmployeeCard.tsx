@@ -1,17 +1,17 @@
-import { useState, useContext } from "react";
 import {
+  Button,
   Card,
   CardContent,
-  Typography,
-  Button,
-  TextField,
-  makeStyles,
   Grid,
+  makeStyles,
+  TextField,
+  Typography,
 } from "@material-ui/core";
-import { User } from "../../types/DataTypes";
+import { format } from "date-fns";
+import { useContext, useState } from "react";
 import { UserContext } from "../../contexts/UserContext";
 import { formatCurrency } from "../../hooks/miscFunctions";
-import { format } from "date-fns";
+import { User } from "../../types/DataTypes";
 interface EmployeeCardProps {
   employee: User;
   onPayEmployee: (employee: User, amount: number) => void;
@@ -47,12 +47,20 @@ export const EmployeeCard = ({
   const [totalDue, setTotalDue] = useState(
     Math.round(employee.hoursOwed * employee.wage * 100) / 100
   );
+  const [counter, setCounter] = useState(0);
 
   const [amount, setAmount] = useState<number>(totalDue);
   const { user } = useContext(UserContext);
 
+  // write a function to round a number to 2 decimal places
+  const round = (num: number) => {
+    return Math.round(num * 100) / 100;
+  };
+
   const handlePay = () => {
-    onPayEmployee(employee, amount);
+    onPayEmployee(employee, round(amount));
+
+    setTotalDue((totalDue) => totalDue - round(amount));
     setAmount(0);
   };
 
@@ -102,7 +110,10 @@ export const EmployeeCard = ({
             variant="contained"
             color="primary"
             onClick={handlePay}
-            disabled={employee.hoursOwed <= 0 || user.balance < totalDue}
+            disabled={
+              Math.round(employee.hoursOwed) <= 0 ||
+              Math.round(user.balance) < Math.round(totalDue)
+            }
             fullWidth
           >
             Pay Employee {formatCurrency(amount)}
