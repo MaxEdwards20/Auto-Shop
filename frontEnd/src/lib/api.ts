@@ -11,7 +11,7 @@ type Method = "get" | "post" | "put" | "delete";
 export class Api {
   private token = "";
   private baseUrl = "http://localhost:8000";
-
+  
   constructor() {
     const token = getToken();
     if (token) {

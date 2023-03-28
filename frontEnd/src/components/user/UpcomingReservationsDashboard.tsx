@@ -1,24 +1,24 @@
+import { ClassNameMap } from "@material-ui/core/styles/withStyles";
+import DeleteIcon from "@mui/icons-material/Delete";
 import {
-  Typography,
+  Box,
+  Button,
+  Card,
+  Container,
+  ImageList,
+  ImageListItem,
+  ImageListItemBar,
   List,
   ListItem,
   ListItemText,
-  Button,
-  Box,
-  ImageListItem,
-  ImageList,
-  ImageListItemBar,
-  Container,
+  Typography,
 } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { useNavigate } from "react-router-dom";
-import { useContext, useState } from "react";
-import { UserContext } from "../../contexts/UserContext";
-import { ClassNameMap } from "@material-ui/core/styles/withStyles";
-import { Vehicle, Reservation } from "../../types/DataTypes";
-import { VehicleContext } from "../../contexts/VehicleContext";
 import { IconButton } from "material-ui";
-import { Card } from "@mui/material";
+import { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { UserContext } from "../../contexts/UserContext";
+import { VehicleContext } from "../../contexts/VehicleContext";
+import { Reservation, Vehicle } from "../../types/DataTypes";
 
 type UpcomingReservationsDashboardProps = {
   classes: ClassNameMap;
@@ -46,7 +46,7 @@ export const UpcomingReservationsDashboard = ({
   const reservationCard = (reservation: Reservation, index: number) => {
     //https://mui.com/system/display/
     const vehicle = vehicles.find(
-      (vehicle) => vehicle.id === reservation.vehicleID
+      (vehicle) => vehicle.id === reservation.vehicle.id
     );
     if (!vehicle) {
       return null;
