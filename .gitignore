@@ -3,6 +3,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+.idea/
+*.idea
 # C extensions
 *.so
 
@@ -16,7 +18,6 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
 lib64/
 parts/
 sdist/
@@ -138,3 +139,6 @@ dmypy.json
 
 # Pages
 *.pages
+
+*.icloud
+*.*2

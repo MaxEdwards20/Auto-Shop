@@ -1,4 +1,25 @@
+import CarListingTile from "../components/vehicle/CarListingTile";
+import { Vehicle } from "../types/DataTypes";
+import { useState, useEffect, useContext } from "react";
+import { UserContext } from "../contexts/UserContext";
+import { Typography } from "@mui/material";
+import { VehicleContext } from "../contexts/VehicleContext";
+
 function VehiclePage() {
-  return <h1>View your vehicles here</h1>;
+  const { vehicles } = useContext(VehicleContext);
+  const [userMessage, setUserMessage] = useState("");
+
+  return (
+    <div className="root">
+      <div className="carListContainer">
+        {vehicles.map((vehicle) => (
+          <div className="carListTile" key={vehicle.id}>
+            <CarListingTile {...vehicle} />
+          </div>
+        ))}
+        {userMessage && <Typography> {userMessage}</Typography>}
+      </div>
+    </div>
+  );
 }
 export default VehiclePage;

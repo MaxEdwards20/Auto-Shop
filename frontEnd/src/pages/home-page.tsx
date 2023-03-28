@@ -1,4 +1,9 @@
-function HomePage() {
-  return <h1>Welcome to the home page!</h1>;
+import { Link } from "react-router-dom";
+
+export default function HomePage() {
+  return (
+    <div>
+      <h1>Welcome to Dan's Autoshop</h1>
+    </div>
+  );
 }
-export default HomePage;

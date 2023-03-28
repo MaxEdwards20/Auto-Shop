@@ -1,19 +1,17 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import Router from "./Router";
-import NavBar from "./components/Navbar";
+import Router from "./components/Router";
+import NavBar from "./components/navigation/Navbar";
+import App from "./App";
 import "./index.css";
 import "react-bootstrap";
-import { BrowserRouter } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
+import { BrowserRouter } from "react-router-dom";
 
 // See tutorial at https://reactrouter.com/en/main/start/tutorial
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <BrowserRouter>
-      <NavBar />
-      <Router></Router>
-    </BrowserRouter>
+    <App></App>
   </React.StrictMode>
 );
