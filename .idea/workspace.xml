@@ -5,10 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="798bd63e-d7e6-4f44-9b5e-3f4cb6158f82" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontEnd/src/components/user/UpcomingReservationsDashboard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontEnd/src/components/user/UpcomingReservationsDashboard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontEnd/src/lib/api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontEnd/src/lib/api.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/DjangoServer/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/backend/DjangoServer/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/DjangoServer/autoshop/endpointTests/managerEndpointTests.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/DjangoServer/autoshop/endpointTests/managerEndpointTests.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/DjangoServer/autoshop/managerEndpoints.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/DjangoServer/autoshop/managerEndpoints.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/DjangoServer/autoshop/reservationEndpoints.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/DjangoServer/autoshop/reservationEndpoints.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/DjangoServer/autoshop/vehicleEndpoints.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/DjangoServer/autoshop/vehicleEndpoints.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,14 +39,10 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/maxwell/Documents/College/Spring 2023/Software Engineering/Auto-Shop&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;
-  }
-}</component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+  </component>
   <component name="RunManager" selected="Python.run server">
     <configuration name="migrations" type="PythonConfigurationType" factoryName="Python">
       <module name="Auto-Shop" />
@@ -211,16 +210,10 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/backend/DjangoServer/autoshop/managerEndpoints.py</url>
-          <line>22</line>
-          <option name="timeStamp" value="7" />
-        </line-breakpoint>
-      </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
           <properties notifyOnTerminate="true" exception="BaseException">

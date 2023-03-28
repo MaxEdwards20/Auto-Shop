@@ -47,9 +47,9 @@
 ## Build Instructions
 
 - Running the server:
-  - See instructions [here](/backend/DjangoServer/README.md)
+  - See instructions [here](./backend/DjangoServer/README.md)
 - Running the Client
-  - See instructions [here](/frontend/README.md)
+  - See instructions [here](./frontend/README.md)
 - Visiting the website:
   - Open your browser of choice
   - Running the client will find an open port, navigate to localhost:PORT
