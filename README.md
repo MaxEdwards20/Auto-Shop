@@ -1,13 +1,17 @@
-# Auto-Shop Team 2
+# Super Auto-Shop
+
+This is a full-stack rental shop application for vehicles. We have logins for employees, management, and users that support functionality for:
+* Renting a vehicle
+* Reserving a vehicle
+* Admins purchasing new vehicles
+* Paying employees
+* Checking vehicles in and out
 
 ## Organization and Name Scheme
 
 - High-level design and planning can be found in the [docs](./docs/) directory. Inside this directory can be found:
   - [Project requirements](./docs/Requirements%20Definition.pdf) for the project
   - [Use case diagrams](./docs/use_cases/) to illustrate product usage
-- The actual code will be stored in this repo
-- Each Git Branch will be named after the task on the Jira story board
-- Jira board is accessible [here](https://dastardlydansrentacar.atlassian.net/jira/software/projects/DDRAC/boards/1)
 
 ## Version-control Procedures
 
@@ -78,11 +82,3 @@ From repository root:
 - Go through as lot attendant and make sure vehicles can be checked out and edited
 - Go through as auto retrieval specialist and pick up the vehicle
 
-##
-
-## Group Member Contact Information
-
-- cmiller14 chase.miller1428@gmail.com
-- jvhansen08 jvhansen08@gmail.com
-- satchelF satchcollege@gmail.com
-- maxedwards20 maxedwards20@gmail.com
